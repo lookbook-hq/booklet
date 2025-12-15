@@ -1,5 +1,5 @@
-require "lookbook/manifest"
 require "zeitwerk"
+require "lookbook/manifest"
 
 loader = Zeitwerk::Loader.new
 loader.push_dir("#{__dir__}/lookbook", namespace: Lookbook)
