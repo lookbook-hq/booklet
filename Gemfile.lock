@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    lookbook-manifest (0.0.0)
+    lookbooklet (0.0.0)
       activesupport (>= 7.2)
       literal (~> 1.8)
       zeitwerk (~> 2.7)
@@ -130,7 +130,7 @@ PLATFORMS
 
 DEPENDENCIES
   debug
-  lookbook-manifest!
+  lookbooklet!
   minitest
   minitest-reporters
   puts_debuggerer

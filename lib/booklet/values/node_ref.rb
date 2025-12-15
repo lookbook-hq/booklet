@@ -1,0 +1,30 @@
+module Booklet
+  class NodeRef < Value
+    prop :segments, _Union(String, _Array(String)), :positional do |value|
+      Array.wrap(value)
+    end
+
+    prop :default_separator, _String(length: 1), :positional, default: ".".freeze
+
+    def value
+      Digest::MD5.hexdigest(to_path)[0..6]
+    end
+
+    alias_method :to_s, :value
+    alias_method :to_param, :value
+    alias_method :as_json, :value
+
+    def to_path(separator: default_separator)
+      segments.join(separator)
+    end
+
+    delegate :to_sym, to: :value
+    def <=>(other)
+      return nil if !other.is_a?(self.class)
+
+      value <=> other.value
+    end
+
+    include Comparable
+  end
+end

@@ -1,4 +1,4 @@
-require "test_helper"
+require "support/test_helper"
 
 module Booklet
   class BookletTest < Minitest::Test
