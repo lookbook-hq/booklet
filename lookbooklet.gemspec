@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative "lib/lookbook/manifest/version"
+require_relative "lib/booklet/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "lookbook-manifest"
-  spec.version = Lookbook::Manifest::VERSION
+  spec.name = "lookbooklet"
+  spec.version = Booklet::VERSION
   spec.authors = ["Mark Perkins"]
-  spec.homepage = "https://github.com/lookbook-hq/manifest"
-  spec.summary = "Experimental file parser & entity tree generator for Lookbook"
+  spec.homepage = "https://github.com/lookbook-hq/booklet"
+  spec.summary = "An experimental new parser engine for Lookbook"
   spec.license = "MIT"
 
   spec.files = Dir["lib/**/*", "LICENSE.txt", "README.md"]

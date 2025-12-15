@@ -1,5 +1,5 @@
-# Manifest
+# Booklet
 
-`Manifest` is an experimental file parser & entity tree generator for Lookbook.
+An experimental new parser engine for Lookbook.
 
-_Work-in-progress._
+_Work-in-progress_

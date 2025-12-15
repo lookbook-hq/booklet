@@ -1,10 +1,10 @@
 require "test_helper"
 
-module Lookbook
-  class ManifestTest < Minitest::Test
+module Booklet
+  class BookletTest < Minitest::Test
     context ".version" do
       should "return the version number" do
-        assert_equal "0.0.0", Manifest.version
+        assert_equal "0.0.0", Booklet.version
       end
     end
   end

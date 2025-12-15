@@ -1,4 +1,4 @@
-require "lookbook-manifest"
+require "lookbooklet"
 require "minitest/autorun"
 require "shoulda"
 require "minitest/reporters"
