@@ -1,9 +1,11 @@
 require "test_helper"
 
-describe Lookbook::Manifest do
-  describe "#version" do
-    it "returns the version number" do
-      expect(Lookbook::Manifest.version).must_equal "0.0.0"
+module Lookbook
+  class ManifestTest < Minitest::Test
+    context ".version" do
+      should "return the version number" do
+        assert_equal "0.0.0", Manifest.version
+      end
     end
   end
 end

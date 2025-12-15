@@ -50,8 +50,6 @@ GEM
       zeitwerk
     logger (1.7.0)
     minitest (5.27.0)
-    minitest-hooks (1.5.2)
-      minitest (> 5.3)
     minitest-reporters (1.7.1)
       ansi
       builder
@@ -99,6 +97,12 @@ GEM
       rubocop-ast (>= 1.47.1, < 2.0)
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
+    shoulda (4.0.0)
+      shoulda-context (~> 2.0)
+      shoulda-matchers (~> 4.0)
+    shoulda-context (2.0.0)
+    shoulda-matchers (4.5.1)
+      activesupport (>= 4.2.0)
     standard (1.52.0)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.0)
@@ -128,10 +132,10 @@ DEPENDENCIES
   debug
   lookbook-manifest!
   minitest
-  minitest-hooks
   minitest-reporters
   puts_debuggerer
   rubocop
+  shoulda
   standard
 
 BUNDLED WITH
