@@ -36,16 +36,15 @@ module Booklet
 
     delegate :to_sym, to: :value
 
-    def <=>(other)
-      if other.is_a?(NodeType)
-        value <=> other.value
-      elsif other.is_a?(Class)
-        to_class <=> other
+    def ==(other)
+      case other
+      when NodeType
+        value == other.value
+      when Class
+        to_class == other
       else
-        to_s <=> other.to_s
+        false
       end
     end
-
-    include Comparable
   end
 end

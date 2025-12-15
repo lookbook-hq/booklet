@@ -25,7 +25,7 @@ module Booklet
     end
 
     def ext
-      basename.to_s.gsub(/^([^.]+)/, "") if file?
+      basename.to_s.gsub(/^([^.]+)/, "") unless directory?
     end
 
     def ext?(*extensions)
@@ -33,7 +33,7 @@ module Booklet
     end
 
     def name
-      (file? ? basename(ext) : basename).to_s
+      (directory? ? basename : basename(ext)).to_s
     end
 
     def basename(*)
@@ -41,7 +41,7 @@ module Booklet
     end
 
     def mime_type
-      Marcel::MimeType.for(path, name: basename) if file?
+      Marcel::MimeType.for(path, name: basename) unless directory?
     end
 
     def mtime
@@ -49,25 +49,25 @@ module Booklet
     end
 
     def contents
-      raise "Cannot read contents of a directory" unless file?
+      raise "Cannot read contents of a directory" if directory?
 
       ::File.read(path)
     end
 
     def parent_directory_of?(child_path)
-      return false if file?
+      return false unless directory?
 
       self.class.new(child_path).dirname == path
     end
 
     def anscestor_directory_of?(descendant_path)
-      return false if file?
+      return false unless directory?
 
       self.class.new(descendant_path).path.to_s.start_with?("#{path}/")
     end
 
     def to_h
-      {path:, basename:, name:, ext:, directory: directory?, file: file?}.compact
+      {path:, basename:, name:, ext:, directory: directory?}.compact
     end
 
     def to_s

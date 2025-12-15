@@ -1,10 +1,13 @@
 module Booklet
   class Node < Booklet::Object
     include Enumerable
+    include Comparable
     include Callbackable
     include Values
 
-    prop :id, String, :positional, reader: :public
+    prop :name, NodeName, :positional, reader: :public do |value|
+      NodeName(value) unless value.nil?
+    end
 
     protected attr_reader :parent
 
@@ -15,7 +18,7 @@ module Booklet
 
     def ref
       @ref ||= begin
-        path_segments = [ancestors&.map(&:ref)&.reverse, id].flatten.compact
+        path_segments = [ancestors&.map(&:ref)&.reverse, name.to_s].flatten.compact
         NodeRef(path_segments)
       end
     end
@@ -34,7 +37,7 @@ module Booklet
 
     def parent=(node)
       @parent = node
-      @id = nil
+      @name = nil
     end
 
     def ancestors
@@ -85,7 +88,7 @@ module Booklet
     end
 
     def has_child?(node)
-      children.map(&:id).include?(node.id)
+      children.map(&:name).include?(node.name)
     end
 
     # @!endgroup
@@ -94,8 +97,8 @@ module Booklet
 
     def add(node)
       raise ArgumentError, "Only Node instances can be added as children" unless node.is_a?(Node)
-      raise ArgumentError, "`#{node.id}` is already a child of node `#{id}`" if has_child?(node)
-      raise ArgumentError, "`#{node.id}` is already attached to another node" unless node.root?
+      raise ArgumentError, "`#{node.name}` is already a child of node `#{name}`" if has_child?(node)
+      raise ArgumentError, "`#{node.name}` is already attached to another node" unless node.root?
 
       @children << node
       node.parent = self
@@ -138,10 +141,6 @@ module Booklet
 
     # @!endgroup
 
-    # @!group Conversion
-
-    # @!endgroup
-
     # @!group Type & type checking
 
     def type
@@ -161,7 +160,7 @@ module Booklet
     # @!group Utilities
 
     def inspect
-      "#<#{self.class.name} @id=#{id}>"
+      "#<#{self.class.name} @name=#{name}>"
     end
 
     # @!endgroup

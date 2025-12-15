@@ -19,12 +19,5 @@ module Booklet
     end
 
     delegate :to_sym, to: :value
-    def <=>(other)
-      return nil if !other.is_a?(self.class)
-
-      value <=> other.value
-    end
-
-    include Comparable
   end
 end

@@ -6,11 +6,11 @@ module Booklet
 
     context "class methods" do
       context ".new" do
-        should "succeed when instatiated with a <String> id and a <Pathname> for the path kwarg" do
+        should "succeed when instatiated with a <String> name and a <Pathname> for the path kwarg" do
           assert_kind_of FileNode, FileNode.new("foxes", path: Pathname("the.foxes-4b.png"))
         end
 
-        should "raise an argument error if an id is not provided" do
+        should "raise an argument error if an name is not provided" do
           assert_raises(ArgumentError) { FileNode.new(path: Pathname("the.foxes-4b.png")) }
         end
 
