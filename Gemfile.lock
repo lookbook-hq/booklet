@@ -50,6 +50,8 @@ GEM
       zeitwerk
     logger (1.7.0)
     minitest (5.27.0)
+    minitest-hooks (1.5.2)
+      minitest (> 5.3)
     minitest-reporters (1.7.1)
       ansi
       builder
@@ -126,6 +128,7 @@ DEPENDENCIES
   debug
   lookbook-manifest!
   minitest
+  minitest-hooks
   minitest-reporters
   puts_debuggerer
   rubocop

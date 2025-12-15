@@ -9,5 +9,6 @@ gem "puts_debuggerer"
 
 group :test do
   gem "minitest"
+  gem "minitest-hooks"
   gem "minitest-reporters"
 end
