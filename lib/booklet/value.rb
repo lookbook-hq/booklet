@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Booklet
   class Value < Literal::Data
     include Comparable

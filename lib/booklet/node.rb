@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Booklet
   class Node < Booklet::Object
     include Enumerable

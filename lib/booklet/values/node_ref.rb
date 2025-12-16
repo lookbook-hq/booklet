@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Booklet
   class NodeRef < Value
     prop :segments, _Union(String, _Array(String)), :positional do |value|
       Array.wrap(value)
     end
 
-    prop :default_separator, _String(length: 1), :positional, default: ".".freeze
+    prop :default_separator, _String(length: 1), :positional, default: "."
 
     def value
       Digest::MD5.hexdigest(to_path)[0..6]

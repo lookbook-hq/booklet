@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Booklet
   class NodeType < Value
     prop :raw, _Union(String, Class), :positional

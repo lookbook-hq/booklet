@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Booklet
   class FilesystemLoader < Visitor
     node DirectoryNode do |node|

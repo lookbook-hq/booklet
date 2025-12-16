@@ -1,7 +1,7 @@
+# frozen_string_literal: true
+
 module Booklet
   class Object < Literal::Object
-    # include Values
-
     class << self
       include Values
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Booklet
   # Double-dispatch node visitor base class. Adapted from the Refract gem (https://github.com/yippee-fun/refract).
   #
