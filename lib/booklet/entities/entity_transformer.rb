@@ -3,13 +3,14 @@
 module Booklet
   class EntityTransformer < Visitor
     node DirectoryNode do |node|
-      directory = FolderNode.new(node.file.name, file: node.file)
-      node.children.each { directory << visit(_1) }
-      directory
+      folder = FolderNode.new(node.file.name, file: node.file)
+      node.children.each { folder << visit(_1) }
+      folder
     end
 
     node FileNode do |node|
-      EntityNode.from(node.file)
+      type = EntityNode.subclasses.find { _1.matches?(node.file) }
+      type.from(node.file)
     end
   end
 end

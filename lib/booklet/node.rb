@@ -156,7 +156,7 @@ module Booklet
     # @!group Type & type checking
 
     def type
-      self.class.type
+      @type ||= NodeType(self.class)
     end
 
     def method_missing(name, ...)
@@ -180,27 +180,39 @@ module Booklet
     # @!group Child type constraints
 
     class_attribute :valid_child_types,
-      instance_reader: true,
-      instance_writer: true,
       instance_predicate: false,
-      default: nil
+      default: []
 
-    def accept_children_of_type(*args)
+    class_attribute :file_matcher,
+      instance_reader: false,
+      instance_writer: false,
+      instance_predicate: false,
+      default: lambda { false }
+
+    def permit_child_types(*args)
       args.flatten!
       self.valid_child_types = args.map { NodeType(_1) } unless args.first.nil?
     end
 
     class << self
-      def type
-        @type ||= NodeType(name)
-      end
-
-      def accept_children_of_type(*args)
+      def permit_child_types(*args)
         args.flatten!
         self.valid_child_types = args.map { NodeType(_1) } unless args.first.nil?
       end
+
+      def type
+        NodeType.new(self)
+      end
+
+      def match(&block)
+        self.file_matcher = block
+      end
+
+      def matches?(file)
+        file_matcher.call(file)
+      end
     end
 
-    accept_children_of_type Node
+    permit_child_types Node
   end
 end

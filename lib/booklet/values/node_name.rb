@@ -2,7 +2,9 @@
 
 module Booklet
   class NodeName < Value
-    prop :raw, _Union(String, Symbol), :positional
+    prop :raw, String, :positional do |value|
+      value.to_s unless value.nil?
+    end
 
     def value
       raw.to_s

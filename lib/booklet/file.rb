@@ -31,7 +31,7 @@ module Booklet
     end
 
     def ext?(*extensions)
-      extensions.any? { ".#{_1.to_s.delete_prefix(".")}" == ext }
+      basename.end_with?(*extensions)
     end
 
     def name
@@ -66,14 +66,6 @@ module Booklet
       return false unless directory?
 
       self.class.new(descendant_path).path.to_s.start_with?("#{path}/")
-    end
-
-    def file?
-      exist? ? @path.file? : basename.include?(".")
-    end
-
-    def directory?
-      exist? ? @path.directory? : !basename.include?(".")
     end
 
     def to_h

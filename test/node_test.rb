@@ -11,11 +11,6 @@ module Booklet
         should "raise an argument error if an name is not provided" do
           assert_raises(ArgumentError) { Node.new }
         end
-
-        should "raise an type error if an non-<String> name is provided" do
-          assert_raises(TypeError) { Node.new(1) }
-          # assert_raises(TypeError) { Node.new(:ham) }
-        end
       end
     end
 

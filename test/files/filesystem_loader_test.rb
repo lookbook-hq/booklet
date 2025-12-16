@@ -13,7 +13,7 @@ module Booklet
       should "recursively create file nodes for all files" do
         @root.accept(FilesystemLoader.new)
 
-        assert_equal fixture_dir_descendant_count(@root_path), @root.descendants.size
+        assert_equal fixture_file_descendants(@root_path).size, @root.descendants.size
       end
     end
   end

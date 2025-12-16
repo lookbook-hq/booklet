@@ -2,6 +2,10 @@
 
 module Booklet
   class DirectoryNode < FileNode
-    accept_children_of_type FileNode, DirectoryNode
+    match do |file|
+      file.directory?
+    end
+
+    permit_child_types FileNode, DirectoryNode
   end
 end

@@ -3,12 +3,12 @@ module FixtureHelpers
     Pathname(::File.dirname(__FILE__)).join("../fixtures").join(path).expand_path
   end
 
-  def fixture_dir_child_count(path)
-    Dir[%(#{fixture_file(path)}/*)].size
+  def fixture_file_children(path)
+    Dir[%(#{fixture_file(path)}/*)].map { Pathname(_1) }
   end
 
-  def fixture_dir_descendant_count(path)
-    Dir[%(#{fixture_file(path)}/**/*)].size
+  def fixture_file_descendants(path)
+    Dir[%(#{fixture_file(path)}/**/*)].map { Pathname(_1) }
   end
 
   extend self

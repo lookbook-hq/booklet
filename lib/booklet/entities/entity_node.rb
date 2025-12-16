@@ -1,15 +1,16 @@
+# frozen_string_literal: true
+
 module Booklet
   class EntityNode < Node
     prop :file, File, reader: :public, writer: false
 
     class << self
       def from(file)
-        type = EntityNode.types.find { _1.match?(file) }
-        type.to_class.from(file)
+        new(file.name, file:)
       end
 
-      def types
-        [FolderNode, AnonymousNode].map(&:type)
+      def subclasses
+        [FolderNode, SpecNode, DocumentNode, AssetNode, AnonNode]
       end
     end
   end

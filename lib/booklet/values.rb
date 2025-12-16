@@ -10,8 +10,8 @@ module Booklet
       NodeName.new(...)
     end
 
-    def NodeType(raw)
-      raw.is_a?(Booklet::NodeType) ? raw : NodeType.new(raw)
+    def NodeType(...)
+      NodeType.new(...)
     end
 
     extend self

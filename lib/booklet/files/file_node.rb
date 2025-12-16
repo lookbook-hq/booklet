@@ -2,6 +2,10 @@
 
 module Booklet
   class FileNode < Node
+    match do |file|
+      file.file?
+    end
+
     prop :path, Pathname, reader: :public, writer: false
 
     def file

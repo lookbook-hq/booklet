@@ -2,22 +2,28 @@
 
 module Booklet
   class NodeType < Value
-    prop :raw, _Union(String, Class), :positional
+    prop :type, _Class(Node), :positional, reader: :public
 
-    def value
-      raw.to_s.demodulize.underscore.delete_suffix("_node")
+    def name
+      @type.name.to_s.demodulize.underscore.delete_suffix("_node")
     end
+
+    alias_method :value, :type
+    alias_method :to_s, :name
+
+    delegate :to_sym, to: :name
+    delegate :pluralize, to: :name
 
     def enquirer
-      ActiveSupport::StringInquirer.new(value)
+      ActiveSupport::StringInquirer.new(name)
     end
 
-    def pluralize
-      value.pluralize
+    def entity?
+      @type < EntityNode
     end
 
-    def to_class
-      raw.is_a?(Class) ? raw : "booklet/#{value}_node".classify.constantize
+    def file?
+      @type < FileNode
     end
 
     def method_missing(name, ...)
@@ -28,24 +34,14 @@ module Booklet
       name.end_with?("?") || super
     end
 
-    def match?(arg)
-      to_class.match?(arg)
-    end
-
-    alias_method :to_s, :value
-    alias_method :to_param, :value
-    alias_method :as_json, :value
-
-    delegate :to_sym, to: :value
-
     def ==(other)
       case other
       when NodeType
-        value == other.value
+        type == other.type
       when Class
-        to_class == other
+        type == other
       else
-        false
+        name == other.to_s
       end
     end
   end
