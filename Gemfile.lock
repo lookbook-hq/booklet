@@ -4,6 +4,7 @@ PATH
     lookbooklet (0.0.0)
       activesupport (>= 7.2)
       literal (~> 1.8)
+      marcel (>= 1.0)
       zeitwerk (~> 2.7)
 
 GEM
@@ -49,6 +50,7 @@ GEM
     literal (1.8.1)
       zeitwerk
     logger (1.7.0)
+    marcel (1.1.0)
     minitest (5.27.0)
     minitest-reporters (1.7.1)
       ansi
