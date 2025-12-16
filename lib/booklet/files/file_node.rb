@@ -6,6 +6,6 @@ module Booklet
       @file ||= File.new(path)
     end
 
-    delegate :directory?, :ext, :ext?, :dirname, :basename, :path_segments, :mime_type, :to_pathname, :contents, to: :file
+    delegate :file?, :directory?, :ext, :ext?, :dirname, :basename, :path_segments, :mime_type, :to_pathname, :contents, to: :file
   end
 end

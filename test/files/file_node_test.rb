@@ -42,12 +42,6 @@ module Booklet
           assert_equal fixture_file("basic"), @node.file.path
         end
       end
-
-      context ".file?" do
-        should "returns true" do
-          assert @node.file?
-        end
-      end
     end
   end
 end

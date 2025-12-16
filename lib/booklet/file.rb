@@ -66,6 +66,14 @@ module Booklet
       self.class.new(descendant_path).path.to_s.start_with?("#{path}/")
     end
 
+    def file?
+      exist? ? @path.file? : basename.include?(".")
+    end
+
+    def directory?
+      exist? ? @path.directory? : !basename.include?(".")
+    end
+
     def to_h
       {path:, basename:, name:, ext:, directory: directory?}.compact
     end

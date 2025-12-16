@@ -80,7 +80,7 @@ module Booklet
     end
 
     def leaf?
-      children.any?
+      valid_child_types.nil?
     end
 
     def branch?
@@ -96,9 +96,7 @@ module Booklet
     # @!group Adding children
 
     def add(node)
-      raise ArgumentError, "Only Node instances can be added as children" unless node.is_a?(Node)
-      raise ArgumentError, "`#{node.name}` is already a child of node `#{name}`" if has_child?(node)
-      raise ArgumentError, "`#{node.name}` is already attached to another node" unless node.root?
+      validate_child!(node)
 
       @children << node
       node.parent = self
@@ -106,6 +104,18 @@ module Booklet
     end
 
     alias_method :<<, :add
+
+    def validate_child!(node)
+      raise ArgumentError, "Only Node instances can be added as children" unless node.is_a?(Node)
+      raise ArgumentError, "`#{node.name}` is already a child of node `#{name}`" if has_child?(node)
+      raise ArgumentError, "`#{node.name}` is already attached to another node" unless node.root?
+
+      raise ArgumentError, "Cannot add children to a leaf node" if valid_child_types.nil?
+
+      unless valid_child_types.include?(node.type)
+        raise TypeError, "Invalid node type '#{node.type}' - must be one of [#{valid_child_types.join(", ")}]"
+      end
+    end
 
     # @!endgroup
 
@@ -165,10 +175,30 @@ module Booklet
 
     # @!endgroup
 
+    # @!group Child type constraints
+
+    class_attribute :valid_child_types,
+      instance_reader: true,
+      instance_writer: true,
+      instance_predicate: false,
+      default: nil
+
+    def accept_children_of_type(*args)
+      args.flatten!
+      self.valid_child_types = args.map { NodeType(_1) } unless args.first.nil?
+    end
+
     class << self
       def type
         @type ||= NodeType(name)
       end
+
+      def accept_children_of_type(*args)
+        args.flatten!
+        self.valid_child_types = args.map { NodeType(_1) } unless args.first.nil?
+      end
     end
+
+    accept_children_of_type Node
   end
 end
