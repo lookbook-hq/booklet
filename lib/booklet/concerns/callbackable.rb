@@ -3,21 +3,19 @@
 module Booklet
   module Callbackable
     extend ActiveSupport::Concern
+    include ActiveSupport::Callbacks
 
     included do
-      class_attribute :after_initialize_callbacks,
-        instance_writer: false,
-        instance_predicate: false,
-        default: []
+      define_callbacks :initialize
 
       def after_initialize
-        after_initialize_callbacks.reverse_each { instance_exec(&_1) }
+        run_callbacks :initialize
       end
     end
 
     class_methods do
-      def after_initialize(&callback)
-        self.after_initialize_callbacks += [callback]
+      def after_initialize(&)
+        set_callback :initialize, :after, &
       end
     end
   end
