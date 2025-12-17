@@ -5,8 +5,6 @@ module Booklet
   #
   # @see https://github.com/yippee-fun/refract/blob/main/lib/refract/basic_visitor.rb
   class Visitor < Booklet::Object
-    include Callbackable
-
     after_initialize do
       @stack = []
     end

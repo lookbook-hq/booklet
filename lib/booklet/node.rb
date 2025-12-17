@@ -4,7 +4,6 @@ module Booklet
   class Node < Booklet::Object
     include Enumerable
     include Comparable
-    include Callbackable
     include Values
 
     prop :name, String, :positional, reader: :public do |value|

@@ -4,8 +4,6 @@ require "marcel"
 
 module Booklet
   class File < Booklet::Object
-    include Callbackable
-
     prop :path, Pathname, :positional, reader: false do |value|
       Pathname(value.to_s) unless value.nil?
     end
