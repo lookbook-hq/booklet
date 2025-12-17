@@ -7,8 +7,8 @@ module Booklet
     include Callbackable
     include Values
 
-    prop :name, NodeName, :positional, reader: :public do |value|
-      NodeName(value) unless value.nil?
+    prop :name, String, :positional, reader: :public do |value|
+      value&.to_s
     end
 
     protected attr_reader :parent
@@ -20,7 +20,7 @@ module Booklet
 
     def ref
       @ref ||= begin
-        path_segments = [ancestors&.map(&:ref)&.reverse, name.to_s].flatten.compact
+        path_segments = [ancestors&.map(&:ref)&.reverse, name].flatten.compact
         NodeRef(path_segments)
       end
     end
@@ -37,10 +37,7 @@ module Booklet
       parent.nil?
     end
 
-    def parent=(node)
-      @parent = node
-      @name = nil
-    end
+    attr_writer :parent
 
     def ancestors
       return nil if root?
@@ -90,7 +87,7 @@ module Booklet
     end
 
     def has_child?(node)
-      children.map(&:name).include?(node.name)
+      children.find { _1.name == node.name && _1.type == node.type }
     end
 
     # @!endgroup
@@ -119,11 +116,16 @@ module Booklet
       end
     end
 
+    def push(*children)
+      children.each { add(_1) }
+      self
+    end
+
     # @!endgroup
 
     # @!group Iteration
 
-    def each
+    def each_node
       return to_enum unless block_given?
 
       node_stack = [self]
@@ -137,12 +139,14 @@ module Booklet
       self if block_given?
     end
 
+    protected alias_method :each, :each_node
+
     # @!endgroup
 
     # @!group Visting
 
     def accept(visitor)
-      self.class.class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
+      class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
         def accept(visitor)
         	visitor.visit_#{type}(self)
         end
@@ -160,11 +164,18 @@ module Booklet
     end
 
     def method_missing(name, ...)
-      name.end_with?("?") ? type.public_send(name) : super
+      if name.end_with?("?")
+        type.public_send(name)
+      elsif name.start_with?("each_")
+        filter_type = name.to_s.delete_prefix("each_")
+        filter { _1.type == filter_type }
+      else
+        super
+      end
     end
 
     def respond_to_missing?(name, ...)
-      name.end_with?("?") || super
+      name.end_with?("?") || name.start_with?("each_") || super
     end
 
     # @!endgroup

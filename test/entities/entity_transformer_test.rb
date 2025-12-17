@@ -7,22 +7,22 @@ module Booklet
     context "the transformer" do
       setup do
         @root_path = fixture_file("entities")
-        @files = DirectoryNode.new("root", path: @root_path).accept(FilesystemLoader.new)
+        @files = DirectoryNode.new("entities", path: @root_path).accept(FilesystemLoader.new)
       end
 
       context "when visiting a tree of file nodes" do
         should "transform all nodes to entity nodes" do
           entities = @files.accept(EntityTransformer.new)
-          entities.each do |node|
+          entities.each_node do |node|
             assert_kind_of EntityNode, node
           end
 
-          assert_equal fixture_file_descendants(@root_path).size, @files.descendants.size
+          assert_equal fixture_file_descendants(@root_path).size, entities.descendants.size
         end
 
         should "not mutate the original file tree" do
           @files.accept(EntityTransformer.new)
-          @files.each do |node|
+          @files.each_node do |node|
             assert_kind_of FileNode, node
           end
         end

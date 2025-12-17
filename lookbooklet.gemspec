@@ -18,5 +18,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "activesupport", ">= 7.2"
   spec.add_dependency "literal", "~> 1.8"
   spec.add_dependency "marcel", ">= 1.0"
+  spec.add_dependency "yard", "~> 0.9"
   spec.add_dependency "zeitwerk", "~> 2.7"
 end

@@ -8,18 +8,17 @@ module Booklet
 
     prop :default_separator, _String(length: 1), :positional, default: "."
 
-    def value
+    def digest
       Digest::MD5.hexdigest(to_path)[0..6]
     end
 
-    alias_method :to_s, :value
-    alias_method :to_param, :value
-    alias_method :as_json, :value
+    alias_method :to_s, :digest
+    alias_method :value, :digest
 
     def to_path(separator: default_separator)
       segments.join(separator)
     end
 
-    delegate :to_sym, to: :value
+    delegate :to_sym, to: :digest
   end
 end

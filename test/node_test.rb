@@ -23,6 +23,7 @@ module Booklet
         @child_3 = Node.new("section-3")
         @grandchild = Node.new("chapter-1")
         @greatgrandchild = Node.new("paragraph-1")
+        @greatgrandchild_2 = Node.new("paragraph-2")
       end
 
       context "#add" do
@@ -87,8 +88,35 @@ module Booklet
 
           assert_equal @child_2, children[0]
           assert_equal @child, @root.children[0]
+        end
+      end
 
-          # children[0]
+      context "#each_node" do
+        setup do
+          @root << @child
+          @root << @child_2
+          @root << @child_3
+          @child_2 << @grandchild << @greatgrandchild
+          @grandchild << @greatgrandchild_2
+
+          @node_names = %w[book section-1 section-2 chapter-1 paragraph-1 paragraph-2 section-3]
+        end
+
+        should "return a _depth-first_, _left-to-right_ iterator for [node, *descendants]" do
+          assert_equal 7, @root.each_node.count
+
+          assert_equal @node_names, @root.each_node.map(&:name)
+        end
+
+        should "yield each node from [node, *descendants] when a block is provided" do
+          names = []
+
+          @root.each_node do |node|
+            assert_kind_of Node, node
+            names << node.name
+          end
+
+          assert_equal @node_names, names
         end
       end
 

@@ -6,6 +6,6 @@ module Booklet
       file.directory?
     end
 
-    permit_child_types EntityNode.all
+    permit_child_types EntityNode.types
   end
 end

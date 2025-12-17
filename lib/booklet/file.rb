@@ -7,7 +7,7 @@ module Booklet
     include Callbackable
 
     prop :path, Pathname, :positional, reader: false do |value|
-      Pathname(value) unless value.nil?
+      Pathname(value.to_s) unless value.nil?
     end
 
     after_initialize do

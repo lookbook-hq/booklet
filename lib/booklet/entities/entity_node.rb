@@ -9,7 +9,7 @@ module Booklet
         new(file.name, file:)
       end
 
-      def subclasses
+      def types
         [FolderNode, SpecNode, DocumentNode, AssetNode, AnonNode]
       end
     end

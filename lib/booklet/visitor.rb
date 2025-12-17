@@ -37,7 +37,7 @@ module Booklet
 
     class << self
       def node(node_class, &)
-        define_method("visit_#{node_class.type}", &)
+        define_method("visit_#{node_class.type.name}", &)
       end
     end
   end

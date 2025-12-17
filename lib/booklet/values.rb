@@ -14,6 +14,18 @@ module Booklet
       NodeType.new(...)
     end
 
+    def Snippet(...)
+      Snippet.new(...)
+    end
+
+    def MethodSnippet(...)
+      MethodSnippet.new(...)
+    end
+
+    def SourceLocation(...)
+      SourceLocation.new(...)
+    end
+
     extend self
   end
 end

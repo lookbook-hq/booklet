@@ -2,7 +2,14 @@
 
 module Booklet
   class NodeType < Value
-    prop :type, _Class(Node), :positional, reader: :public
+    prop :type, _Class(Booklet::Node), :positional, reader: :public do |value|
+      if value.is_a?(String) || value.is_a?(Symbol)
+        value = "#{value}_node" unless value.downcase == "node"
+        "Booklet::#{value.classify}".constantize
+      else
+        value
+      end
+    end
 
     def name
       @type.name.to_s.demodulize.underscore.delete_suffix("_node")
