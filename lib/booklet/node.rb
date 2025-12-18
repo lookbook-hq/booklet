@@ -142,6 +142,19 @@ module Booklet
 
     # @!endgroup
 
+    # @!group Comparison
+
+    def <=>(other)
+      return nil if other.nil? || !other.is_a?(Node)
+
+      self_index = root.each_node.to_a.index(self)
+      other_index = root.each_node.to_a.index(other)
+
+      return nil if other_index.nil?
+
+      other_index <=> self_index
+    end
+
     # @!group Visting
 
     def accept(visitor)

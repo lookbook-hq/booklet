@@ -128,6 +128,32 @@ module Booklet
           assert @root.name == "book"
         end
       end
+
+      context "comparison" do
+        setup do
+          @root << @child
+          @root << @child_2
+          @root << @child_3
+          @child_2 << @grandchild << @greatgrandchild
+          @grandchild << @greatgrandchild_2
+        end
+
+        context "greater than" do
+          should "return true for a node above/before the other" do
+            assert @root > @child
+            assert @child > @grandchild
+            assert @child_2 > @child_3
+          end
+        end
+
+        context "less than" do
+          should "return true for a node below/after the other" do
+            assert @greatgrandchild_2 < @child
+            assert @child_2 < @child
+            assert @child_2 < @root
+          end
+        end
+      end
     end
   end
 end
