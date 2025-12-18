@@ -1,7 +1,6 @@
 require "lookbooklet"
 require "minitest/autorun"
 require "shoulda-context"
-require "minitest/reporters"
 
 require "pretty_please"
 require "pd"
@@ -18,5 +17,3 @@ PutsDebuggerer.print_engine = lambda do |object|
   end
   puts output
 end
-
-Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new

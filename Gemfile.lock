@@ -65,7 +65,8 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     marcel (1.1.0)
-    minitest (5.27.0)
+    minitest (6.0.0)
+      prism (~> 1.5)
     minitest-reporters (1.7.1)
       ansi
       builder
