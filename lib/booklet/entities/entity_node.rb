@@ -10,7 +10,7 @@ module Booklet
       end
 
       def types
-        [FolderNode, SpecNode, DocumentNode, AssetNode, AnonNode]
+        [FolderNode, VSpecNode, DocumentNode, AssetNode, AnonNode]
       end
     end
   end

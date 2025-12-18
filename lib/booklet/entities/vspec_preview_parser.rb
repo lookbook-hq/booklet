@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Booklet
-  class PreviewClassParser < SpecParser
+  class VSpecPreviewParser < VSpecParser
     after_initialize do
       @parser = YardParser.new
     end

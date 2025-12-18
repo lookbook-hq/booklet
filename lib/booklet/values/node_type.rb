@@ -12,7 +12,7 @@ module Booklet
     end
 
     def name
-      @type.name.to_s.demodulize.underscore.delete_suffix("_node")
+      @type.name.to_s.demodulize.underscore.gsub("v_spec", "vspec").delete_suffix("_node")
     end
 
     alias_method :value, :type

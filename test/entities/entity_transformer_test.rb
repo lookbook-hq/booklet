@@ -44,16 +44,17 @@ module Booklet
           end
         end
 
-        context "spec nodes" do
+        context "view spec nodes" do
           should "be created from *_preview.rb files" do
-            spec_files = fixture_file_descendants(@root_path).filter { _1.to_s.end_with?("_preview.rb") }
-            assert spec_files.size
-            assert_equal spec_files.size, @entities.count(&:spec?)
+            vspec_files = fixture_file_descendants(@root_path).filter { _1.to_s.end_with?("_preview.rb") }
 
-            spec_files.each do |path|
-              spec = @entities.find { _1.file.path == path }
-              assert_kind_of SpecNode, spec
-              assert spec.spec?
+            assert vspec_files.size
+            assert_equal vspec_files.size, @entities.count(&:vspec?)
+
+            vspec_files.each do |path|
+              vspec = @entities.find { _1.file.path == path }
+              assert_kind_of VSpecNode, vspec
+              assert vspec.vspec?
             end
           end
         end
