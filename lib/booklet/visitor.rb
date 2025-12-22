@@ -20,10 +20,15 @@ module Booklet
       nodes.compact.each { visit(_1) }
     end
 
-    def method_missing(name, node)
-      if name.start_with?("visit_")
-        visit_each(node.children) if node.children?
-        node
+    def method_missing(name, *args, &block)
+      if args.any? && name.start_with?("visit_")
+        node = args.first
+        if respond_to?(:visit_any)
+          visit_any(node)
+        else
+          visit_each(node.children) if node.children?
+          node
+        end
       else
         super
       end
@@ -34,8 +39,15 @@ module Booklet
     end
 
     class << self
-      def node(node_class, &)
-        define_method("visit_#{node_class.type.name}", &)
+      def visit(*node_classes, &block)
+        node_classes.flatten!
+        if node_classes.any?
+          node_classes.each do |node_class|
+            define_method("visit_#{node_class.type.name}", &block)
+          end
+        else
+          define_method(:visit_any, &block)
+        end
       end
     end
   end

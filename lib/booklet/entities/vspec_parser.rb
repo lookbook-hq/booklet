@@ -2,7 +2,7 @@
 
 module Booklet
   class VSpecParser < Visitor
-    node VSpecNode do |spec|
+    visit VSpecNode do |spec|
       parse(spec.file, spec)
       spec
     end
