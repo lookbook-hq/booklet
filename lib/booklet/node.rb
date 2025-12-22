@@ -7,10 +7,11 @@ module Booklet
     include Values
 
     prop :name, String, :positional, reader: :public do |value|
-      value&.to_s
+      value.to_s unless value.nil?
     end
 
-    protected attr_reader :parent
+    attr_reader :parent
+    protected attr_writer :parent
 
     after_initialize do
       @parent = nil
@@ -35,8 +36,6 @@ module Booklet
     def root?
       parent.nil?
     end
-
-    attr_writer :parent
 
     def ancestors
       return nil if root?
@@ -66,7 +65,7 @@ module Booklet
     delegate :[], to: :children
 
     def children?
-      !@children.empty?
+      children.any?
     end
 
     def depth
@@ -77,16 +76,76 @@ module Booklet
       filter { _1 != self }
     end
 
+    def first_child
+      @children.first
+    end
+
+    def last_child
+      @children.last
+    end
+
+    def first_child?
+      self == first_child
+    end
+
+    def last_child?
+      self == last_child
+    end
+
+    def has_child?(node)
+      children.find { _1.name == node.name && _1.type == node.type }
+    end
+
     def leaf?
-      valid_child_types.nil?
+      !children?
     end
 
     def branch?
       !leaf?
     end
 
-    def has_child?(node)
-      children.find { _1.name == node.name && _1.type == node.type }
+    # @!endgroup
+
+    # @!group Siblings
+
+    def siblings
+      siblings = root? ? [] : parent.children.filter { _1 != self }
+      if block_given?
+        children.each(&block)
+        self
+      else
+        siblings
+      end
+    end
+
+    def first_sibling
+      root? ? self : parent.children.first
+    end
+
+    def first_sibling?
+      self == first_sibling
+    end
+
+    def last_sibling
+      root? ? self : parent.children.last
+    end
+
+    def last_sibling?
+      self == last_sibling
+    end
+
+    def next_sibling
+      return nil if root?
+
+      position = parent.children.index(self)
+      parent.children.at(position + 1) if position
+    end
+
+    def previous_sibling
+      return nil if root?
+
+      position = parent.children.index(self)
+      parent.children.at(position - 1) if position&.positive?
     end
 
     # @!endgroup
@@ -108,7 +167,7 @@ module Booklet
       raise ArgumentError, "`#{node.name}` is already a child of node `#{name}`" if has_child?(node)
       raise ArgumentError, "`#{node.name}` is already attached to another node" unless node.root?
 
-      raise ArgumentError, "Cannot add children to a leaf node" if valid_child_types.nil?
+      raise ArgumentError, "Parent node does not accept children" if valid_child_types.nil?
 
       unless valid_child_types.include?(node.type)
         raise TypeError, "Invalid node type '#{node.type}' - must be one of [#{valid_child_types.join(", ")}]"
