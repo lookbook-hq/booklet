@@ -7,6 +7,11 @@ module Booklet
     LEAF = "└──"
     SPACE = " "
 
+    LABEL_PROC = proc { _1.respond_to?(:label) ? _1.label : _1.name }
+
+    prop :indent, Integer, default: 0
+    prop :to_label, _Nilable(Proc), :&, reader: :protected, default: -> { LABEL_PROC }
+
     after_initialize do
       @lines = []
       @prefix = +""
@@ -16,9 +21,9 @@ module Booklet
       memo = @prefix
 
       if node.root?
-        @lines << node.name
+        @lines << (SPACE * @indent) + to_label.call(node)
       else
-        @lines << @prefix + (node.last_sibling? ? LEAF : BRANCH) + SPACE + node.name
+        @lines << (SPACE * @indent) + @prefix + (node.last_sibling? ? LEAF : BRANCH) + SPACE + to_label.call(node)
         @prefix += (node.last_sibling? ? SPACE : PIPE) + (SPACE * BRANCH.size)
       end
 

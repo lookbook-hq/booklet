@@ -4,6 +4,10 @@ module Booklet
   class EntityNode < Node
     prop :file, File, reader: :public, writer: false
 
+    def label
+      name.titleize
+    end
+
     class << self
       def from(file)
         new(file.name, file:)
