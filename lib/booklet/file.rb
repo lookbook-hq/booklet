@@ -4,9 +4,11 @@ require "marcel"
 
 module Booklet
   class File < Booklet::Object
-    prop :path, Pathname, :positional, reader: false do |value|
+    prop :path, Pathname, :positional do |value|
       Pathname(value.to_s) unless value.nil?
     end
+
+    prop :contents, _Nilable(String), :positional
 
     after_initialize do
       raise ArgumentError, "File paths must be absolute" unless @path.absolute?
@@ -51,7 +53,7 @@ module Booklet
     def contents
       raise "Cannot read contents of a directory" if directory?
 
-      ::File.read(path)
+      @contents || ::File.read(path)
     end
 
     def parent_directory_of?(child_path)

@@ -9,7 +9,7 @@ require "booklet/version"
 loader = Zeitwerk::Loader.new
 loader.push_dir("#{__dir__}/booklet", namespace: Booklet)
 loader.collapse("#{__dir__}/booklet/**/*")
-loader.ignore("#{__dir__}/booklet/{version}.rb")
+loader.ignore("#{__dir__}/booklet/version.rb")
 loader.inflector.inflect(
   "cli" => "CLI"
 )
@@ -19,6 +19,11 @@ module Booklet
   class << self
     def version
       VERSION
+    end
+
+    def parse(dir_path, **props)
+      parser = Parser.new(**props)
+      parser.parse(dir_path)
     end
   end
 end
