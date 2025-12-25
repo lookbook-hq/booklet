@@ -1,7 +1,7 @@
 require "support/test_helper"
 
 module Booklet
-  class VSpecParserTest < Minitest::Test
+  class SpecParserTest < Minitest::Test
     include FixtureHelpers
 
     context "view specifications in the ViewComponent-style `Preview` class format" do
@@ -11,7 +11,7 @@ module Booklet
         @entities = @files.accept(EntityTransformer.new)
 
         @view_specs = @entities.find { _1.file.basename == "preview_class_spec_parser_preview.rb" }
-        @view_specs.accept(VSpecPreviewParser.new)
+        @view_specs.accept(PreviewClassSpecParser.new)
       end
 
       context "view spec" do

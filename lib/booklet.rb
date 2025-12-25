@@ -11,9 +11,7 @@ loader.push_dir("#{__dir__}/booklet", namespace: Booklet)
 loader.collapse("#{__dir__}/booklet/**/*")
 loader.ignore("#{__dir__}/booklet/{version}.rb")
 loader.inflector.inflect(
-  "vspec_node" => "VSpecNode",
-  "vspec_parser" => "VSpecParser",
-  "vspec_preview_parser" => "VSpecPreviewParser"
+  "cli" => "CLI"
 )
 loader.setup
 

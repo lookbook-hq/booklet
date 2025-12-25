@@ -2,7 +2,7 @@
 # -----------------
 #
 # General notes about the spec _subject_.
-class PreviewClassVSpecParserPreview < ViewComponent::Preview
+class PreviewClassSpecParserPreview < ViewComponent::Preview
   # Notes specific to the _default_ scenario.
   def default
     render ExampleComponent.new
