@@ -10,8 +10,8 @@ module Booklet
         @files = DirectoryNode.new("entities", path: @root_path).accept(FilesystemLoader.new)
         @entities = @files.accept(EntityTransformer.new)
 
-        @view_specs = @entities.find { _1.file.basename == "preview_class_spec_parser_preview.rb" }
-        @view_specs.accept(PreviewClassSpecParser.new)
+        @specs = @entities.find { _1.file.basename == "preview_class_spec_parser_preview.rb" }
+        @specs.accept(PreviewClassSpecParser.new)
       end
 
       context "view spec" do
@@ -19,21 +19,21 @@ module Booklet
 
       context "scenarios" do
         should "be created for each public instance method" do
-          assert_equal ["default", "with_notes", "no_notes"], @view_specs.scenarios.map { _1.name }
+          assert_equal ["default", "with_notes", "no_notes"], @specs.scenarios.map { _1.ref }
 
-          @view_specs.each_scenario do |node|
+          @specs.each_scenario do |node|
             assert_kind_of ScenarioNode, node
           end
         end
 
         should "not be created for private methods" do
-          refute @view_specs.scenarios.find { _1.name == "not_a_scenario" }
+          refute @specs.scenarios.find { _1.ref == "not_a_scenario" }
         end
       end
 
       context "default scenario" do
         setup do
-          @scenario = @view_specs.scenarios.find { _1.name == "default" }
+          @scenario = @specs.scenarios.find { _1.ref == "default" }
         end
 
         should "have a source snippet" do
@@ -44,7 +44,7 @@ module Booklet
 
       context "with_notes scenario" do
         setup do
-          @scenario = @view_specs.scenarios.find { _1.name == "with_notes" }
+          @scenario = @specs.scenarios.find { _1.ref == "with_notes" }
         end
 
         should "have notes" do
@@ -55,7 +55,7 @@ module Booklet
 
       context "no_notes scenario" do
         setup do
-          @scenario = @view_specs.scenarios.find { _1.name == "no_notes" }
+          @scenario = @specs.scenarios.find { _1.ref == "no_notes" }
         end
 
         should "not have notes" do

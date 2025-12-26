@@ -3,7 +3,7 @@
 module Booklet
   class EntityTransformer < Visitor
     visit DirectoryNode do |node|
-      folder = FolderNode.new(node.file.name, file: node.file)
+      folder = FolderNode.new(node.file.basename, file: node.file)
       node.children.each { folder << visit(_1) }
       folder
     end

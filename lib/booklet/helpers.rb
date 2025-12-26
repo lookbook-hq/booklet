@@ -10,6 +10,10 @@ module Booklet
       value.to_s.strip
     end
 
+    def hexdigest(str)
+      Digest::MD5.hexdigest(str.to_s)[0..6] if str.present?
+    end
+
     extend self
   end
 end

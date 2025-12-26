@@ -6,7 +6,7 @@ module Booklet
     include Comparable
     include Values
 
-    prop :name, String, :positional, reader: :public do |value|
+    prop :ref, String, :positional, reader: :public do |value|
       value.to_s unless value.nil?
     end
 
@@ -18,11 +18,8 @@ module Booklet
       @children = []
     end
 
-    def ref
-      @ref ||= begin
-        path_segments = [ancestors&.map(&:ref)&.reverse, name].flatten.compact
-        NodeRef(path_segments)
-      end
+    def ref_path
+      @ref_path ||= [ancestors&.map(&:ref)&.reverse, ref].flatten.compact.join("/")
     end
 
     # @!group Ancestry
@@ -93,7 +90,7 @@ module Booklet
     end
 
     def has_child?(node)
-      children.find { _1.name == node.name && _1.type == node.type }
+      children.find { _1.ref == node.ref && _1.type == node.type }
     end
 
     def leaf?
@@ -164,8 +161,8 @@ module Booklet
 
     def validate_child!(node)
       raise ArgumentError, "Only Node instances can be added as children" unless node.is_a?(Node)
-      raise ArgumentError, "`#{node.name}` is already a child of node `#{name}`" if has_child?(node)
-      raise ArgumentError, "`#{node.name}` is already attached to another node" unless node.root?
+      raise ArgumentError, "`#{node.ref}` is already a child of node `#{ref}`" if has_child?(node)
+      raise ArgumentError, "`#{node.ref}` is already attached to another node" unless node.root?
 
       raise ArgumentError, "Parent node does not accept children" if valid_child_types.nil?
 
@@ -254,7 +251,7 @@ module Booklet
     # @!group Utilities
 
     def inspect
-      "#<#{self.class.name} @name=#{name}>"
+      "#<#{self.class.name} @ref=#{ref}>"
     end
 
     # @!endgroup
