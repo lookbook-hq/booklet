@@ -1,30 +1,67 @@
 # Booklet
 
-An experimental new parser engine for [Lookbook](https://lookbook.build).
+A work-in-progress, experimental new parser-transformer engine for [Lookbook](https://lookbook.build).
 
-> [!WARNING]
-> _Booklet is at a very early stage of development and is not yet ready for public use!_
+> [!IMPORTANT]
+> Booklet is in a very early stage of development and is not yet ready for public use.
 
-## Background info
+## Aims and objectives
 
-### Filesystem parsing in Lookbook
+Booklet has been created to provide a standalone, extendable parser-transformer engine that can be used as a robust foundation for future versions of Lookbook.
 
-[Lookbook](https://lookbook.build) is based on a filesystem parser that takes a directory of files and generates a tree of entity objects from them. These entities each represent a key concept in Lookbook such as a [component preview](https://lookbook.build/guide/previews) or a [documentation page](https://lookbook.build/guide/pages).
+Booklet aims to:
 
-The data used to initialize each entity object is derived from a mix of file metadata and from data extracted via static analysis (parsing) of its contents. The hierarchy of entities within the trees is broadly reflective of the nested structure of the files and folders that were used to construct them.
+* Build upon common, tried-and-tested parser implementation patterns to help reduce the cognitive overhead for developers looking to contribute to Lookbook/Booklet.
+* Use a middleware-style approach to break down the implementation of the core parser-transformer functionality into a set of small incremental steps.
+* Expose the same middleware pipeline to third-party plugins/extensions to allow deep customisation of the parsing process with as little 'special casing' of core functionality as possible.
+* Maintain backwards compatablity with the existing Lookbook parser wherever possible.
+* Provide a base to allow other Lookbook-related tools to be built without needing to include the entire Lookbook gem with all its Rails integration and UI/app-specific code (i.e. Lookbook CLI, MCP server etc).
 
-### Issues with the current implementation 😩
+## Parsing overview and terminology
 
-Unfortunately the existing implementation of this parsing process is **rather convoluted, hard to understand & reason about and does not allow for any modification of the underlying data** by plugins (or via middleware of any sort).
+Lookbook works by analyzing a directory of files, identifying those which are of interest (primarily [component preview files](https://lookbook.build/guide/previews) and Markdown-based [documentation pages](https://lookbook.build/guide/pages)) and then parsing their contents to extract any relevant data.
 
- The current parser is also quite slow when dealing with a large number of files, does not have good test coverage and has many unintentional and undocumented quirks.
+Both the **data obtained from parsing the file** and the **location of the file relative to its root directory** are important to Lookbook. The organisational hierarchy of files and folders within the root directory is reflected in the Lookbook navigation structure and is used to map requests to target entities in controller actions within the app.
 
- The overly complex nature of the current implementation means that it is very hard to make changes to the code without breaking things. This is obviously not a great setup for trying to encourage community contributions either.
+To facilitate this, the current parser implementation builds up a **collection of nested entity objects** using a combination of data from the parsed files, the relative paths of the files themselves and other bits of file metadata.
 
-### A fresh start: Booklet
+### Entity types
 
-The aim of the Booklet project is to create a completely new parser engine for Lookbook, designed to address the issues outlined above and to serve as a strong, well-tested foundation for future versions of Lookbook to build upon.
+Each entity type represents a key concept in Lookbook. The current implementation defines the following entity types:
 
-## The Booklet parser pipeline
+* **Previews** (which represent [preview classes](https://lookbook.build/guide/previews))
+* **Scenarios** (which represent [methods within the preview classes](https://lookbook.build/guide/previews#scenarios)) and **scenario groups** 
+* **Pages** (markdown-based documentation pages)
+
+However Booklet aims to expand/update/clarify this set of entities to help support development of new features and to allow for finer-grained customisation of the parsing process and app UI. The updated set of entity types will consist of the following:
+
+* **Specs:** These are 'view specification' documents that are comprised of one or more _scenarios_. The ViewComponent-style **preview class files** that Lookbook currently uses is one such implementation of a view specification (and the only one supported by Lookbook at this time).
+* **Subjects:** The components, partials, helpers etc that are the subject of the view specs.
+* **Scenarios:** Representative examples of different variants or aspects of the view spec subject that can be used to preview, document and test it in different states.
+* **Pages**
+* **Assets**
+* **Folders**
 
 _More details coming soon..._
+
+## Booklet parser architecture
+
+> [!NOTE]
+> In relation to Lookbook/Booklet the term '**parsing**' should be understood to encompass both the traversal of the filesystem structure within the root directory _and_ the actual extraction of data from the contents of the files.
+
+<!-- Booklet breaks down the filesystem parsing process into a number of discrete steps: -->
+
+_More details coming soon..._
+
+
+---
+
+## Further info
+
+### Why a new parser engine?
+
+Unfortunately the current filesystem parser implementation in Lookbook is rather convoluted, hard to understand and does not allow for any modification of the underlying data by plugins (or via middleware of any sort).
+
+It is slow when dealing with a large number of files, does not have good test coverage and has many unintentional and undocumented quirks.
+
+The 'collection of nested objects' that is generated by the parser is _tree-like_ in structure but is not formally defined as a tree of any kind. The objects do not have a consistent structure and this means the collection cannot be easily traversed or transformed without detailed knowlege of the makeup of all the objects within it. This in turn has resulted in a 'bespoke', overly complex underlying data model that can be difficult to make changes to without introducing hard-to-spot bugs caused by unintended consequences of the updates.
