@@ -39,7 +39,7 @@ module Booklet
     end
 
     def respond_to_missing?(name, ...)
-      name.start_with?("visit_") || super
+      (name != :visit_any && name.start_with?("visit_")) || super
     end
 
     class << self

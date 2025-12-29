@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module Booklet
-  class PreviewClassSpecParser < SpecParser
+  class PreviewClassParser < Visitor
     after_initialize do
-      @parser = YardParser.new
+      @yard = YardParser.new
     end
 
-    def parse(file, spec)
-      class_object = @parser.parse_file(file.path)
+    visit SpecNode do |spec|
+      class_object = @yard.parse_file(spec.file.path)
 
       comments = strip_whitespace(class_object.docstring)
       if comments.present?
@@ -20,6 +20,7 @@ module Booklet
         .map(&method(:to_scenario))
 
       spec.push(*scenarios)
+      spec
     end
 
     protected def to_scenario(method_object)

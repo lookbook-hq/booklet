@@ -11,7 +11,7 @@ module Booklet
         @entities = @files.accept(EntityTransformer.new)
 
         @specs = @entities.find { _1.file.basename == "preview_class_spec_parser_preview.rb" }
-        @specs.accept(PreviewClassSpecParser.new)
+        @specs.accept(PreviewClassParser.new)
       end
 
       context "view spec" do
