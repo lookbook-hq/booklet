@@ -1,15 +1,15 @@
 require "support/test_helper"
 
 module Booklet
-  class ParserTest < Minitest::Test
-    context "default parser" do
-      context "#parse" do
+  class AnalyzerTest < Minitest::Test
+    context "default analyzer setup" do
+      context "#analyze" do
         setup do
-          @parser = Parser.new
+          @analyzer = Analyzer.new
         end
 
         should "raise an exception when called without a root path" do
-          assert_raises { parser.parse }
+          assert_raises { analyzer.analyze }
         end
       end
     end

@@ -4,12 +4,12 @@ module Booklet
   class AnalyzeCommand < Dry::CLI::Command
     include Colorful
 
-    desc "Parse a directory of files and print a summary of the results"
+    desc "Analyze a directory of files and display a summary of the results"
 
     argument :path, required: true, desc: "Root directory path"
 
     def call(path:, **)
-      result = Booklet.parse(path)
+      result = Booklet.analyze(path)
 
       files = result.files.count
       entities = result.entities.count

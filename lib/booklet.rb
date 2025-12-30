@@ -21,9 +21,9 @@ module Booklet
       VERSION
     end
 
-    def parse(dir_path, **props)
-      parser = Parser.new(**props)
-      parser.parse(dir_path)
+    def analyze(dir_path, **props)
+      analyzer = Analyzer.new(**props)
+      analyzer.analyze(dir_path)
     end
   end
 end

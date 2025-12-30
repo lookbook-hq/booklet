@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Booklet
-  class Parser < Booklet::Object
+  class Analyzer < Booklet::Object
     DEFAULT_FILE_VISITORS = []
     DEFAULT_ENTITY_VISITORS = [
       PreviewClassParser
@@ -13,7 +13,7 @@ module Booklet
     prop :transformer, Visitor, default: -> { EntityTransformer.new }
     prop :after_transform, _Array(Visitor), reader: :public, default: -> { DEFAULT_ENTITY_VISITORS.map(&:new) }
 
-    def parse(path)
+    def analyze(path)
       path = Pathname(path.to_s).expand_path unless path.nil?
       files = DirectoryNode.from(path).accept(@loader)
       @after_load.each { files.accept(_1) }
