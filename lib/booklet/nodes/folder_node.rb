@@ -8,6 +8,6 @@ module Booklet
       file.directory?
     end
 
-    permit_child_types Entities.locatable
+    permit_child_types [FolderNode, SpecNode, DocumentNode, AssetNode, AnonNode]
   end
 end

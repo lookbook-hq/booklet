@@ -1,5 +1,5 @@
 module Booklet
-  class ProseNode < ContentNode
+  class ProseNode < Node
     prop :snippet, TextSnippet, :positional, reader: :public, writer: :public do |value|
       TextSnippet.new(value)
     end
