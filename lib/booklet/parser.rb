@@ -15,7 +15,7 @@ module Booklet
 
     def parse(path)
       path = Pathname(path.to_s).expand_path unless path.nil?
-      files = DirectoryNode.new(path.basename, path:).accept(@loader)
+      files = DirectoryNode.from(path).accept(@loader)
       @after_load.each { files.accept(_1) }
 
       entities = files.accept(@transformer)

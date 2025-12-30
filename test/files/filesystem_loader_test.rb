@@ -7,7 +7,7 @@ module Booklet
     context "visiting a directory" do
       setup do
         @root_path = fixture_file("basic")
-        @root = DirectoryNode.new("root", path: @root_path)
+        @root = DirectoryNode.from(@root_path)
       end
 
       should "recursively create file nodes for all files" do

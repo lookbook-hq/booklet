@@ -7,7 +7,7 @@ module Booklet
     context "view specifications in the ViewComponent-style `Preview` class format" do
       setup do
         @root_path = fixture_file("specs")
-        @files = DirectoryNode.new("entities", path: @root_path).accept(FilesystemLoader.new)
+        @files = DirectoryNode.from(@root_path).accept(FilesystemLoader.new)
         @entities = @files.accept(EntityTransformer.new)
 
         @specs = @entities.find { _1.file.basename == "preview_class_spec_parser_preview.rb" }

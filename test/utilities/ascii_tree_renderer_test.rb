@@ -7,7 +7,7 @@ module Booklet
     context "ascii tree renderer" do
       setup do
         @root_path = fixture_file("entities")
-        @files = DirectoryNode.new("entities", path: @root_path).accept(FilesystemLoader.new)
+        @files = DirectoryNode.from(@root_path).accept(FilesystemLoader.new)
       end
 
       context "default" do

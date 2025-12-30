@@ -7,7 +7,8 @@ module Booklet
     context "the transformer" do
       setup do
         @root_path = fixture_file("entities")
-        @files = DirectoryNode.new("entities", path: @root_path).accept(FilesystemLoader.new)
+
+        @files = DirectoryNode.from(@root_path).accept(FilesystemLoader.new)
       end
 
       context "when visiting a tree of file nodes" do
@@ -23,7 +24,7 @@ module Booklet
         should "not mutate the original file tree" do
           @files.accept(EntityTransformer.new)
           @files.each_node do |node|
-            assert_kind_of FileNode, node
+            assert node.class.in?([DirectoryNode, FileNode])
           end
         end
       end
