@@ -25,9 +25,9 @@ module Booklet
       ActiveSupport::StringInquirer.new(name)
     end
 
-    def entity?
-      @type < EntityNode
-    end
+    # def entity?
+    #   @type < EntityNode
+    # end
 
     def file?
       @type < FileNode

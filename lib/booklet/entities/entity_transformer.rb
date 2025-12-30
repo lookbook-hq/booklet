@@ -9,7 +9,7 @@ module Booklet
     end
 
     visit FileNode do |node|
-      type = EntityNode.types.find { _1.matches?(node.file) }
+      type = Entities.locatable.find { _1.matches?(node.file) }
       type.from(node.file)
     end
   end

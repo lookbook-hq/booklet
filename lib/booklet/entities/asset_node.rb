@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module Booklet
-  class AssetNode < EntityNode
+  class AssetNode < Node
+    include Locatable
+
     MIME_TYPES = %w[text/css text/javascript]
 
     match do |file|

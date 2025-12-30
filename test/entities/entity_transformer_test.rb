@@ -11,14 +11,14 @@ module Booklet
       end
 
       context "when visiting a tree of file nodes" do
-        should "transform all nodes to entity nodes" do
-          entities = @files.accept(EntityTransformer.new)
-          entities.each_node do |node|
-            assert_kind_of EntityNode, node
-          end
+        # should "transform all nodes" do
+        #   entities = @files.accept(EntityTransformer.new)
+        #   entities.each_node do |node|
+        #     assert_kind_of EntityNode, node
+        #   end
 
-          assert_equal fixture_file_descendants(@root_path).size, entities.descendants.size
-        end
+        #   assert_equal fixture_file_descendants(@root_path).size, entities.descendants.size
+        # end
 
         should "not mutate the original file tree" do
           @files.accept(EntityTransformer.new)

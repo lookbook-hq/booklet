@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module Booklet
-  class SpecNode < EntityNode
+  class SpecNode < Node
+    include Locatable
+
     prop :notes, _Nilable(TextSnippet), reader: :public, writer: :public
 
     permit_child_types :prose, :scenario
