@@ -4,7 +4,8 @@ module Booklet
   class Analyzer < Booklet::Object
     DEFAULT_FILE_VISITORS = []
     DEFAULT_ENTITY_VISITORS = [
-      PreviewClassParser
+      PreviewClassParser,
+      FrontmatterExtractor
     ]
 
     prop :loader, Visitor, default: -> { FilesystemLoader.new }
