@@ -19,15 +19,23 @@ Additionally, Booklet is being developed as a standalone gem in part so that it 
 * Minimise any 'special-casing' of core functionality over that provided by third party extensions.
 * Do not have any dependency on Rails (outside of conveniences provided by the `ActiveSupport` gem).
 
+### Development status
+
+Booklet is a brand new project and is not yet ready for public use. 
+
+The [issues list](https://github.com/lookbook-hq/booklet/issues) contains an (incomplete) set of work that is planned before an initial beta release will be made available. 
+
+Issues specifically related to achieving compatability with Lookbook's current parser output are tagged with the `compatability` label and the [Lookbook compatability](https://github.com/orgs/lookbook-hq/projects/3) project board has been set up to track progress on this metric.
+
 ## Implementation details
 
 Booklet generates a **traversable tree of entity node objects** from an input directory of files, via a number of intermediate steps.
 
-The tree can contain a number of different node types. These include **folder nodes**, **file-based entity nodes** and entity **child nodes** that represent the contents of key resource types.
+Trees can contain a number of different node types. These include **folder nodes**, **file-based entity nodes** and entity **child nodes** that represent the contents of key resource types.
 
-The hierarchy of the nodes in the tree reflects the grouping of input files into folders and subfolders within the root directory as well as parent-child entity-content relationships where present.
+The hierarchy of the nodes in the tree broadly reflects the grouping of input files into folders and subfolders within the root directory as well as parent-child entity-content relationships where present.
 
-All tree mutations and transformations are performed by 'double dispatch'-style **node visitors**.
+All tree mutations and transformations are performed by ['double dispatch'-style](https://www.bigbinary.com/blog/visitor-pattern-and-double-dispatch) **node visitors**.
 
 ### File processing pipeline
 
@@ -46,7 +54,7 @@ In the first step a tree of generic file and directory nodes is constructed by r
 file_tree = DirectoryNode.from("test/fixtures/demo").accept(FilesystemLoader.new)
 ```
 
-<details open>
+<details>
 <summary>Resulting file tree</summary>
 
 > _ASCII tree visualisation generated using the [`AsciiTreeRenderer` visitor](./lib/booklet/visitors/ascii_tree_renderer.rb)_
@@ -93,7 +101,7 @@ For example, files with `.md` extensions are transformed into `DocumentNode` ins
 entity_tree = file_tree.accept(EntityTransformer.new)
 ```
 
-<details open>
+<details>
 <summary>Resulting entity tree</summary>
 
 ```
@@ -136,7 +144,7 @@ entity_tree
 
 Additional entity node vistors can be applied here as needed to make changes to the entity tree nodes before the finalised entity tree is returned for use by the calling code. 
 
-<details open>
+<details>
 <summary>Final entity tree</summary>
 
 _Note that the `docs` branch has been omitted for brevity._
@@ -164,11 +172,11 @@ _Note that the `docs` branch has been omitted for brevity._
 
 </details>
 
-
 ## Installation
 
 > [!IMPORTANT]
-> Booklet has not yet been published as a gem. These instructions are for illustrative purposes only at this point.
+> Booklet is not yet ready for public use - these instructions are for illustrative purposes only at this point.
+> See the [Development status](#development-status) section for more info.
 
 Booklet is both a **command line tool** and a **library**.
 
@@ -219,7 +227,8 @@ bin/test
 
 ## Acknowlegments
 
-Booklet's double-dispatch node visitor implementation is based on code adapted from the [base visitor class](https://github.com/yippee-fun/refract/blob/main/lib/refract/basic_visitor.rb) of the [Refract gem](https://github.com/yippee-fun/refract).
+[Marco Roth](https://marcoroth.dev/)'s fantastic work on [Herb](https://herb-tools.dev/) (and my subsequent deep-dive into the world of ASTs) was been instrumental in sparking the initial idea for Booklet and for shaping its approach.
 
-In addition much of the original implementation of Booklet's `Node` class was based on code adapted from the excellent [RubyTree](https://github.com/evolve75/RubyTree) gem.
+Booklet's double-dispatch style node visitor base class is based on the very nice [BasicVisitor](https://github.com/yippee-fun/refract/blob/main/lib/refract/basic_visitor.rb) class from the [Refract gem](https://github.com/yippee-fun/refract). 
 
+In addition much of the original incarnation of Booklet's `Node` class was based on code adapted from the excellent [RubyTree](https://github.com/evolve75/RubyTree) gem.
