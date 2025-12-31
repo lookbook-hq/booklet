@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.version = Booklet::VERSION
   spec.authors = ["Mark Perkins"]
   spec.homepage = "https://github.com/lookbook-hq/booklet"
-  spec.summary = "An experimental new parser engine for Lookbook"
+  spec.summary = "An experimental new parser-analyzer engine for Lookbook"
   spec.license = "MIT"
 
   spec.files = Dir["lib/**/*", "bin/booklet", "LICENSE.txt", "README.md"]
