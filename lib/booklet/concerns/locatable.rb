@@ -6,10 +6,6 @@ module Booklet
       prop :file, File, reader: :public, writer: false
 
       delegate :name, :path, to: :file
-
-      def label
-        name.titleize
-      end
     end
 
     class_methods do

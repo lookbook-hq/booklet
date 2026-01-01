@@ -12,6 +12,10 @@ module Booklet
       file.ext?(".rb") && file.name.end_with?("_preview")
     end
 
+    def label
+      name.titleize
+    end
+
     def scenarios
       filter(&:scenario?)
     end

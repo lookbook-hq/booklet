@@ -4,10 +4,14 @@ module Booklet
   class FolderNode < Node
     include Locatable
 
+    permit_child_types [FolderNode, SpecNode, DocumentNode, AssetNode, AnonNode]
+
     match do |file|
       file.directory?
     end
 
-    permit_child_types [FolderNode, SpecNode, DocumentNode, AssetNode, AnonNode]
+    def label
+      name.titleize
+    end
   end
 end
