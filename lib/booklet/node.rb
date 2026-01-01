@@ -159,6 +159,8 @@ module Booklet
 
     alias_method :<<, :add
 
+    # @!endgroup
+
     def validate_child!(node)
       raise ArgumentError, "Only Node instances can be added as children" unless node.is_a?(Node)
       raise ArgumentError, "`#{node.ref}` is already a child of node `#{ref}`" if has_child?(node)
@@ -287,8 +289,32 @@ module Booklet
         self.file_matcher = block
       end
 
-      def matches?(file)
+      def from?(file)
         file_matcher.call(file)
+      end
+
+      def locatable?
+        false
+      end
+
+      def node_types
+        Node.subclasses
+      end
+
+      def file_node_types
+        [FileNode, DirectoryNode]
+      end
+
+      def entity_node_types
+        node_types.difference(file_node_types)
+      end
+
+      def locatable_node_types
+        node_types.filter { _1.locatable? }
+      end
+
+      def locatable_entity_node_types
+        locatable_node_types.difference(file_node_types)
       end
     end
 

@@ -6,14 +6,18 @@ require "active_support"
 require "active_support/core_ext"
 require "booklet/version"
 
+root = "#{__dir__}/booklet"
+
 loader = Zeitwerk::Loader.new
-loader.push_dir("#{__dir__}/booklet", namespace: Booklet)
-loader.collapse("#{__dir__}/booklet/**/*")
-loader.ignore("#{__dir__}/booklet/version.rb")
+loader.push_dir(root, namespace: Booklet)
+loader.collapse("#{root}/**/*")
+loader.ignore("#{root}/version.rb")
 loader.inflector.inflect(
   "cli" => "CLI"
 )
+
 loader.setup
+loader.eager_load_dir("#{root}/nodes") # ensure `Node#subclasses` works as expected
 
 module Booklet
   class << self

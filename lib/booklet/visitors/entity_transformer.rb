@@ -2,7 +2,7 @@
 
 module Booklet
   class EntityTransformer < Visitor
-    LOCATABLE_ENTITIES = [FolderNode, SpecNode, DocumentNode, AssetNode, AnonNode]
+    # LOCATABLE_ENTITIES = [FolderNode, SpecNode, DocumentNode, AssetNode, AnonNode]
 
     visit DirectoryNode do |node|
       folder = FolderNode.new(node.file.basename, file: node.file)
@@ -11,7 +11,7 @@ module Booklet
     end
 
     visit FileNode do |node|
-      type = LOCATABLE_ENTITIES.find { _1.matches?(node.file) }
+      type = Node.locatable_entity_node_types.find { _1.from?(node.file) }
       type.from(node.file)
     end
   end
