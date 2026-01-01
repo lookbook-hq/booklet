@@ -4,11 +4,11 @@ module Booklet
   class NodeTest < Minitest::Test
     context "class methods" do
       context ".new" do
-        should "succeeds when instatiated with a <String> name" do
+        should "succeeds when instatiated with a <String> value for the :ref property" do
           assert_kind_of Node, Node.new("chunky-bacon")
         end
 
-        should "raise an argument error if an name is not provided" do
+        should "raise an argument error if a :ref is not provided" do
           assert_raises(ArgumentError) { Node.new }
         end
       end
