@@ -5,20 +5,20 @@ module Booklet
     included do
       context "locatable class methods" do
         setup do
-          @fixture_file = fixture_file("entity_file_types/example_document.md")
+          @file_path = Pathname("/full/path/to/example.md")
         end
 
         context ".from" do
           should "instantiate and return a new file node instance from a File instance" do
-            assert_kind_of subject, subject.from(File.new(@fixture_file))
+            assert_kind_of subject, subject.from(File.new(@file_path))
           end
 
           should "instantiate and return a new file node instance from a Pathname" do
-            assert_kind_of subject, subject.from(@fixture_file)
+            assert_kind_of subject, subject.from(@file_path)
           end
 
           should "instantiate and return a new file node instance from a path string" do
-            assert_kind_of subject, subject.from(@fixture_file.to_s)
+            assert_kind_of subject, subject.from(@file_path.to_s)
           end
 
           should "raise an argument error if an file is not provided" do
@@ -28,7 +28,7 @@ module Booklet
 
         context ".locatable" do
           should "return true" do
-            node = subject.from(@fixture_file)
+            node = subject.from(@file_path)
             assert node.locatable?
           end
         end
@@ -36,14 +36,14 @@ module Booklet
 
       context "locatable instance methods" do
         setup do
-          @fixture_file = fixture_file("entity_file_types/example_document.md")
-          @node = subject.from(@fixture_file)
+          @file_path = Pathname("/full/path/to/example.md")
+          @node = subject.from(@file_path)
         end
 
         context ".file" do
-          should "returns a Booklet::File object instance" do
-            assert_kind_of Booklet::File, @node.file
-            assert_equal @fixture_file, @node.file.path
+          should "returns a Booklet File object instance" do
+            assert_kind_of File, @node.file
+            assert_equal @file_path, @node.file.path
           end
         end
       end

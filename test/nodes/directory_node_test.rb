@@ -2,15 +2,15 @@ require "support/test_helper"
 require_relative "shared/locatable_assertions"
 
 module Booklet
-  class FileNodeTest < Minitest::Test
+  class DirectoryNodeTest < Minitest::Test
     include FixtureHelpers
     include LocatableAssertions
 
-    subject { FileNode }
+    subject { DirectoryNode }
 
     context "instance methods" do
       setup do
-        @fixture_file = fixture_file("file_types/example_preview.rb")
+        @fixture_file = fixture_file("file_types")
         @node = subject.from(@fixture_file)
       end
 
@@ -22,14 +22,14 @@ module Booklet
       end
 
       context ".file?" do
-        should "return true" do
-          assert @node.file?
+        should "return false" do
+          refute @node.file?
         end
       end
 
       context ".directory?" do
-        should "return false" do
-          refute @node.directory?
+        should "return true" do
+          assert @node.directory?
         end
       end
     end
