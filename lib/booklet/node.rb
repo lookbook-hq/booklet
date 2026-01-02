@@ -22,6 +22,20 @@ module Booklet
       @ref_path ||= [ancestors&.map(&:ref)&.reverse, ref].flatten.compact.join("/")
     end
 
+    def issues
+      @issues ||= Issues.new
+    end
+
+    def add_warning(*, **)
+      issues.add_warning(*, **, node: self)
+    end
+
+    def add_error(*, **)
+      issues.add_error(*, **, node: self)
+    end
+
+    delegate :warnings, :errors, to: :issues
+
     # @!group Ancestry
 
     def root
@@ -218,7 +232,11 @@ module Booklet
     def accept(visitor)
       class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
         def accept(visitor)
-        	visitor.visit_#{type}(self)
+          visitor.visit_#{type}(self)
+        rescue => err
+          add_error(err.message, original_error: err)
+        ensure
+          self
         end
       RUBY
 

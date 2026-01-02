@@ -154,6 +154,36 @@ module Booklet
           end
         end
       end
+
+      context "issue list" do
+        setup do
+          @node = Node.new("issues")
+        end
+
+        context "#add_warning" do
+          should "push a warning onto the node issues list" do
+            @node.add_warning("Unwise thing to do")
+            issue = @node.warnings.first
+
+            assert_equal 1, @node.warnings.size
+            assert_kind_of Issue, issue
+            assert_equal :warning, issue.severity
+            assert_equal "Unwise thing to do", issue.message
+          end
+        end
+
+        context "#add_error" do
+          should "push an error onto the node issues list" do
+            @node.add_error("Something went wrong")
+            issue = @node.errors.first
+
+            assert_equal 1, @node.errors.size
+            assert_kind_of Issue, issue
+            assert_equal :error, issue.severity
+            assert_equal "Something went wrong", issue.message
+          end
+        end
+      end
     end
   end
 end
