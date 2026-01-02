@@ -22,7 +22,7 @@ module Booklet
       entities = files.accept(@transformer)
       @after_transform.each { entities.accept(_1) }
 
-      ParserResult.new(path:, files:, entities:)
+      AnalyzerResult.new(path:, files:, entities:)
     end
   end
 end

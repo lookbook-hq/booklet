@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 module Booklet
-  class ParserResult < Value
+  class AnalyzerResult < Value
     prop :path, Pathname
     prop :files, DirectoryNode
     prop :entities, FolderNode
-    prop :warnings, Array, default: [].freeze
-    prop :errors, Array, default: [].freeze
+    prop :issues, IssueLog, default: IssueLog.new.freeze
   end
 end
