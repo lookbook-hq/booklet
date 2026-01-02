@@ -3,7 +3,7 @@
 module Booklet
   class IssueAggregator < Visitor
     after_initialize do
-      @issues = Issues.new
+      @issues = IssueLog.new
     end
 
     visit do |node|

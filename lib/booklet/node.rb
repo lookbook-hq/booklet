@@ -23,7 +23,7 @@ module Booklet
     end
 
     def issues
-      @issues ||= Issues.new
+      @issues ||= IssueLog.new
     end
 
     def add_warning(*, **)

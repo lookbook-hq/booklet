@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Booklet
-  class Issues < Booklet::Object
+  class IssueLog < Booklet::Object
     include Enumerable
 
     prop :issue_list, _Array(Issue), :positional, default: -> { [] }
@@ -12,7 +12,7 @@ module Booklet
     end
 
     def add_warning(...)
-      @issue_list << Issues.warning(...)
+      @issue_list << IssueLog.warning(...)
       self
     end
 
@@ -25,7 +25,7 @@ module Booklet
     end
 
     def add_error(...)
-      @issue_list << Issues.error(...)
+      @issue_list << IssueLog.error(...)
       self
     end
 
