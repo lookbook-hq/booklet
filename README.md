@@ -34,10 +34,10 @@ Lookbook progressed organically from that point into the much more general-purpo
 
 But the system was never really designed around the idea of it being a filesytem-based parser-analyzer pipeline. The consequences of this include:
 
-* The codebase is much too convoluted and hard to understand, and it is difficult to track down where many of the processing steps actually take place. It's a black box.
-* The system does not allow for any modification of the underlying data by plugins (or via middleware of any sort).
+* The codebase is much too convoluted and hard to understand, and it is difficult to track down where many of the processing steps actually take place. It's a black box which makes it hard for other people who want to contribute to the project to know where to start.
+* The system does not allow for any modification of the underlying data by plugins (or via middleware of any sort) which greatly limits the ability of users to be able to customise Lookbook to their needs.
 * It can be slow when dealing with a large number of files.
-* It does not have good test coverage and has many unintentional and undocumented quirks.
+* It does not have good test coverage and the file parsing process has many unintentional and undocumented quirks.
 
 Booklet has been created to address these issues (and many others) by implementing a 'proper' parser-analyzer pipeline that is designed from the ground-up to cater for Lookbook's current requirements and to act as a flexible foundation for building future functionality on top of.
 
