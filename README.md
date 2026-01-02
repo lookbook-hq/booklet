@@ -1,6 +1,6 @@
 # Booklet
 
-An experimental new standalone, extendable **parser-analyzer engine** for [Lookbook](https://lookbook.build).
+A WIP new standalone, extendable **parser-analyzer engine** for [Lookbook](https://lookbook.build).
 
 The aim is for Booklet to eventually replace the existing file parsing/analyzing code in Lookbook and thus provide a more robust foundation for future releases to build upon.
 
@@ -8,7 +8,6 @@ Additionally, Booklet is being developed as a standalone gem in part so that it 
 
 > [!WARNING]
 > Booklet is in a very early stage of development and is **not ready for public use.**<br>It is currently incomplete and will likely see many breaking changes before a stable release candidate is available.
-
 
 ### Aims and objectives
 
@@ -26,6 +25,21 @@ Booklet is a brand new project and is not yet ready for public use.
 The [issues list](https://github.com/lookbook-hq/booklet/issues) contains an (incomplete) set of work that is planned before an initial beta release will be made available. 
 
 Issues specifically related to achieving compatability with Lookbook's current parser output are tagged with the `compatability` label and the [Lookbook compatability](https://github.com/orgs/lookbook-hq/projects/3) project board has been set up to track progress on this metric.
+
+### Why is a new parser engine needed?
+
+The first incarnation of Lookbook was just a simple set of view templates that made it easier to navigate around ViewComponent previews within a Rails app. It effectively delegated handling of everything else to the native ViewComponent preview system, which itself is fairly bare-bones, so there was no need for analyzing files or anything like that.
+
+Lookbook progressed organically from that point into the much more general-purpose tool it is today, slowly adding features and functionality. Many of the new features _did_ require some file parsing and analysis so those steps were tacked on to the existing codebase, and now we are at a place where the parser-analyzer logic is really right at the core of how Lookbook works.
+
+But the system was never really designed around the idea of it being a filesytem-based parser-analyzer pipeline. The consequences of this include:
+
+* The codebase is much too convoluted and hard to understand, and it is difficult to track down where many of the processing steps actually take place. It's a black box.
+* The system does not allow for any modification of the underlying data by plugins (or via middleware of any sort).
+* It can be slow when dealing with a large number of files.
+* It does not have good test coverage and has many unintentional and undocumented quirks.
+
+Booklet has been created to address these issues (and many others) by implementing a 'proper' parser-analyzer pipeline that is designed from the ground-up to cater for Lookbook's current requirements and to act as a flexible foundation for building future functionality on top of.
 
 ## Implementation details
 
