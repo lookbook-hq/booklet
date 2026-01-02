@@ -9,7 +9,7 @@ Additionally, Booklet is being developed as a standalone gem in part so that it 
 > [!WARNING]
 > Booklet is in a very early stage of development and is **not ready for public use.**<br>It is currently incomplete and will likely see many breaking changes before a stable release candidate is available.
 
-### Aims and objectives
+## Aims and objectives
 
 * Use common, tried-and-tested parser/transformer implementation patterns over custom workflows where possible.
 * Implement the analyzing process as a series of small, incremental steps to aid comprehension and testabilty.
@@ -18,7 +18,7 @@ Additionally, Booklet is being developed as a standalone gem in part so that it 
 * Minimise any 'special-casing' of core functionality over that provided by third party extensions.
 * Do not have any dependency on Rails (outside of conveniences provided by the `ActiveSupport` gem).
 
-### Development status
+## Development status
 
 Booklet is a brand new project and is not yet ready for public use. 
 
@@ -26,7 +26,7 @@ The [issues list](https://github.com/lookbook-hq/booklet/issues) contains an (in
 
 Issues specifically related to achieving compatability with Lookbook's current parser output are tagged with the `compatability` label and the [Lookbook compatability](https://github.com/orgs/lookbook-hq/projects/3) project board has been set up to track progress on this metric.
 
-### Why is a new parser engine needed?
+## Why is a new parser engine needed?
 
 The first incarnation of Lookbook was just a simple set of view templates that made it easier to navigate around ViewComponent previews within a Rails app. It effectively delegated handling of everything else to the native ViewComponent preview system, which itself is fairly bare-bones, so there was no need for analyzing files or anything like that.
 
