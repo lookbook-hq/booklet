@@ -11,35 +11,51 @@ module Booklet
     def call(path:, **)
       result = Booklet.analyze(path)
 
-      files = result.files.count
-      entities = result.entities.count
-      warnings = result.warnings.count
-      errors = result.errors.count
+      files = result.files
+      entities = result.entities
+      warnings = result.warnings
+      errors = result.errors
 
       hr = "⎯" * 20
 
-      puts <<~RESULT
-
-        #{hr}
-
-        #{cyan("#{files} #{"file".pluralize(files)}...")}
-
-        #{result.files.accept(AsciiTreeRenderer.new(indent: 1))}
-
-        #{cyan("...converted into #{entities} #{"entity".pluralize(entities)}:")}
-
-        #{result.entities.accept(AsciiTreeRenderer.new(indent: 1))}
-
-        #{hr}
+      puts <<~SUMMARY
 
         #{green("Booklet analysis complete", :underline)}
 
         #{cyan("Root:".ljust(9))} #{path}
-        #{cyan(("File".pluralize(files) + ":").ljust(9))} #{files}
-        #{cyan(("Entity".pluralize(entities) + ":").ljust(9))} #{entities}
-        #{yellow(("Warning".pluralize(warnings) + ":").ljust(9))} #{warnings}
-        #{red(("Error".pluralize(errors) + ":").ljust(9))} #{errors}
-      RESULT
+        #{cyan("Files:".ljust(9))} #{files.count}
+        #{cyan("Entities:".ljust(9))} #{entities.count}
+      SUMMARY
+
+      if result.issues.any?
+        puts
+
+        if errors.any?
+          messages = errors.map do |issue|
+            file = issue.node.file
+            "* [#{file.relative_path(result.path)}] #{issue.message}"
+          end
+
+          puts <<~ERRORS
+            #{red("Errors (#{errors.count})")}
+            #{messages.join("\n")}
+          ERRORS
+
+          puts if warnings.any?
+        end
+
+        if warnings.any?
+          messages = warnings.map do |issue|
+            file = issue.node.file
+            "* [#{file.relative_path(result.path)}] #{issue.message}"
+          end
+
+          puts <<~WARNINGS
+            #{yellow("Warnings (#{warnings.count})")}
+            #{messages.join("\n")}
+          WARNINGS
+        end
+      end
     end
   end
 end

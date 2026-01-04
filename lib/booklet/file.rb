@@ -19,7 +19,7 @@ module Booklet
     end
 
     def relative_path(root = Dir.pwd, strip_extension: false)
-      path(strip_extension).relative_path_from(root)
+      path(strip_extension:).relative_path_from(root)
     end
 
     def relative_path_segments

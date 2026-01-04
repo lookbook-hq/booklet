@@ -19,6 +19,10 @@ module Booklet
         .filter { _1.visibility == :public }
         .map(&method(:to_scenario))
 
+      if scenarios.none?
+        spec.add_warning("No scenarios defined")
+      end
+
       spec.push(*scenarios)
       spec
     end

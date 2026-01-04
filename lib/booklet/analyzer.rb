@@ -22,7 +22,18 @@ module Booklet
       entities = files.accept(@transformer)
       @after_transform.each { entities.accept(_1) }
 
-      AnalyzerResult.new(path:, files:, entities:)
+      issues = entities.accept(IssueAggregator.new)
+
+      AnalyzerResult.new(path:, files:, entities:, issues:)
     end
+  end
+
+  class AnalyzerResult < Value
+    prop :path, Pathname
+    prop :files, DirectoryNode
+    prop :entities, FolderNode
+    prop :issues, IssueLog, default: IssueLog.new.freeze
+
+    delegate :warnings, :errors, :warnings?, :errors?, to: :issues
   end
 end
