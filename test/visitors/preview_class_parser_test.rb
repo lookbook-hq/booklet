@@ -16,7 +16,7 @@ module Booklet
 
       context "scenarios" do
         should "be created for each public instance method" do
-          assert_equal ["default", "with_notes", "no_notes"], @spec.scenarios.map { _1.ref }
+          assert_equal ["default", "with_notes", "no_notes"], @spec.scenarios.map { _1.ref.raw }
 
           @spec.scenarios.each do |node|
             assert_kind_of ScenarioNode, node

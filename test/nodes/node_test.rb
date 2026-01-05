@@ -105,7 +105,7 @@ module Booklet
         should "return a _depth-first_, _left-to-right_ iterator for [node, *descendants]" do
           assert_equal 7, @root.each_node.count
 
-          assert_equal @node_refs, @root.each_node.map(&:ref)
+          assert_equal @node_refs, @root.each_node.map(&:ref).map(&:raw)
         end
 
         should "yield each node from [node, *descendants] when a block is provided" do
@@ -113,7 +113,7 @@ module Booklet
 
           @root.each_node do |node|
             assert_kind_of Node, node
-            refs << node.ref
+            refs << node.ref.raw
           end
 
           assert_equal @node_refs, refs

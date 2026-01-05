@@ -6,7 +6,7 @@ module Booklet
     include Comparable
     include Values
 
-    prop :ref, String, :positional, reader: :public do |value|
+    prop :ref, String, :positional, reader: false do |value|
       value.to_s unless value.nil?
     end
 
@@ -18,8 +18,12 @@ module Booklet
       @children = []
     end
 
-    def ref_path
-      @ref_path ||= [ancestors&.map(&:ref)&.reverse, ref].flatten.compact.join("/")
+    def ref
+      @node_ref ||= NodeRef(@ref)
+    end
+
+    def ref_path(separator: "/")
+      @ref_path ||= [ancestors&.map(&:ref)&.reverse, ref].flatten.compact.join(separator)
     end
 
     def issues
