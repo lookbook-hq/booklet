@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "activesupport", ">= 7.2"
   spec.add_dependency "dry-cli", "~> 1.1"
+  spec.add_dependency "fast_ignore", "~> 0.17"
   spec.add_dependency "literal", "~> 1.8"
   spec.add_dependency "marcel", ">= 1.0"
   spec.add_dependency "paint", "~> 2.3"
