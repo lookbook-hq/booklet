@@ -6,6 +6,7 @@ require "pretty_please"
 require "pd"
 
 require_relative "fixture_helpers"
+require_relative "test_utils"
 
 PutsDebuggerer.header = "-" * 80
 PutsDebuggerer.print_engine = lambda do |object|
