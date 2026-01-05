@@ -7,7 +7,7 @@ module Booklet
     include Values
 
     prop :ref, String, :positional, reader: false do |value|
-      value.to_s unless value.nil?
+      value.to_s
     end
 
     attr_reader :parent
@@ -24,6 +24,10 @@ module Booklet
 
     def ref_path(separator: "/")
       @ref_path ||= [ancestors&.map(&:ref)&.reverse, ref].flatten.compact.join(separator)
+    end
+
+    def id
+      Helpers.hexdigest(ref_path)
     end
 
     def issues

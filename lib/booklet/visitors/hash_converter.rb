@@ -20,10 +20,7 @@ module Booklet
     end
 
     protected def node_to_hash(node)
-      props = @options.props || []
-      props = props.is_a?(Array) ? props.map { [_1, true] }.to_h : props
-
-      hash = props.map do |p, resolver|
+      hash = included_props.map do |p, resolver|
         if resolver.is_a?(Proc)
           [p, resolver.call(node)]
         elsif resolver != false && node.respond_to?(p)
@@ -31,13 +28,22 @@ module Booklet
         end
       end.compact.to_h
 
-      hash.tap do |h|
-        h[:ref] = node.ref.value
-        h[:type] = node.type.name
-      end
-
-      hash[:children] = [] if node.branch?
+      hash[:children] = []
       hash
+    end
+
+    protected def included_props
+      @included_props ||= begin
+        props = @options.props.presence || {}
+        if props.is_a?(Array)
+          props = props.map { [_1, true] }.to_h
+        end
+
+        props.with_defaults(
+          ref: ->(node) { node.ref.value },
+          type: ->(node) { node.type.name }
+        )
+      end
     end
   end
 end
