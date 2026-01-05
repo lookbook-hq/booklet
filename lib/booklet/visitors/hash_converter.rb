@@ -2,6 +2,8 @@
 
 module Booklet
   class HashConverter < Visitor
+    prop :props, _Union(_Array(Symbol), _Hash(Symbol, _Union(Proc, _Boolean))), default: {}.freeze
+
     visit do |node|
       if node.root?
         memo = @hash = @current = node_to_hash(node)
@@ -34,7 +36,8 @@ module Booklet
 
     protected def included_props
       @included_props ||= begin
-        props = @options.props.presence || {}
+        props = @props.presence || {}
+
         if props.is_a?(Array)
           props = props.map { [_1, true] }.to_h
         end
