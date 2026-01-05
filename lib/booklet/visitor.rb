@@ -5,8 +5,8 @@ module Booklet
   #
   # @see https://github.com/yippee-fun/refract/blob/main/lib/refract/basic_visitor.rb
   class Visitor < Booklet::Object
-    prop :options, _Nilable(Booklet::Options), :** do |value|
-      Booklet::Options.new(value) if value.is_a?(Hash)
+    prop :options, Booklet::Options, :** do |value|
+      Booklet::Options.new(value)
     end
 
     after_initialize do
