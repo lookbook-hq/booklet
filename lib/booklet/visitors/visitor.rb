@@ -5,12 +5,14 @@ module Booklet
   #
   # @see https://github.com/yippee-fun/refract/blob/main/lib/refract/basic_visitor.rb
   class Visitor < Booklet::Object
-    prop :options, Booklet::Options, :** do |value|
-      Booklet::Options.new(value)
-    end
+    prop :options, _Hash(Symbol, _Any), :**
 
     after_initialize do
       @stack = []
+    end
+
+    def options
+      Options.new(@options)
     end
 
     def visit(node)
