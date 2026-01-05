@@ -2,8 +2,6 @@
 
 module Booklet
   class EntityTransformer < Visitor
-    # LOCATABLE_ENTITIES = [FolderNode, SpecNode, DocumentNode, AssetNode, AnonNode]
-
     visit DirectoryNode do |node|
       folder = FolderNode.new(node.file.basename, file: node.file)
       node.children.each { folder << visit(_1) }
