@@ -5,7 +5,7 @@ module Booklet
     prop :message, String, :positional, reader: :public
     prop :severity, _Nilable(Symbol)
     prop :node, Node, reader: :public
-    prop :original_error, _Nilable(StandardError), reader: :public
+    prop :original_error, _Nilable(_Union(StandardError, Prism::ParseError)), reader: :public
 
     attr_reader :created_at
 

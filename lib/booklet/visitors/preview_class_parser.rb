@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "prism"
+
 module Booklet
   class PreviewClassParser < Visitor
     after_initialize do
@@ -7,6 +9,8 @@ module Booklet
     end
 
     visit SpecNode do |spec|
+      return spec if spec.errors?
+
       class_object = @yard.parse_file(spec.file.path)
 
       comments = strip_whitespace(class_object.docstring)
@@ -24,7 +28,8 @@ module Booklet
       end
 
       spec.push(*scenarios)
-      spec
+    rescue => error
+      spec.add_error(error.message, original_error: error)
     end
 
     protected def to_scenario(method_object)

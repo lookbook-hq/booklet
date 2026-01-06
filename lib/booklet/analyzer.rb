@@ -4,6 +4,7 @@ module Booklet
   class Analyzer < Booklet::Object
     DEFAULT_FILE_VISITORS = []
     DEFAULT_ENTITY_VISITORS = [
+      RubyValidator,
       PreviewClassParser,
       FrontmatterExtractor
     ]

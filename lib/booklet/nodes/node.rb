@@ -42,7 +42,7 @@ module Booklet
       issues.add_error(*, **, node: self)
     end
 
-    delegate :warnings, :errors, to: :issues
+    delegate :warnings, :errors, :warnings?, :errors?, to: :issues
 
     # @!group Ancestry
 
