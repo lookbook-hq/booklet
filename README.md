@@ -192,8 +192,6 @@ _Note that the `docs` branch has been omitted for brevity._
 > Booklet is not yet ready for public use - these instructions are for illustrative purposes only at this point.
 > See the [Development status](#development-status) section for more info.
 
-Booklet is both a **command line tool** and a **library**.
-
 ### Using as a dependency
 
 Add Booklet to your Gemfile:
@@ -208,20 +206,6 @@ After running `bundle install` you can then make use of the Booklet API in your 
 require "lookbooklet"
 
 result = Booklet.analyze("path/to/root/directory")
-```
-
-### CLI interface
-
-To use the booklet CLI you can install the gem globally:
-
-```sh
-gem install lookbooklet
-```
-
-You can then view the available booklet CLI commands using:
-
-```sh
-booklet -h
 ```
 
 ## API

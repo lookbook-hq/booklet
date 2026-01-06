@@ -10,18 +10,15 @@ Gem::Specification.new do |spec|
   spec.summary = "Parser-analyzer engine for Lookbook and Lookbook-adjacent tooling"
   spec.license = "MIT"
 
-  spec.files = Dir["lib/**/*", "bin/booklet", "LICENSE.txt", "README.md"]
+  spec.files = Dir["lib/**/*", "LICENSE.txt", "README.md"]
   spec.require_paths = ["lib"]
-  spec.executables << "booklet"
 
   spec.required_ruby_version = ">= 3.2"
 
   spec.add_dependency "activesupport", ">= 7.2"
-  spec.add_dependency "dry-cli", "~> 1.1"
   spec.add_dependency "fast_ignore", "~> 0.17"
   spec.add_dependency "literal", "~> 1.8"
   spec.add_dependency "marcel", ">= 1.0"
-  spec.add_dependency "paint", "~> 2.3"
   spec.add_dependency "yard", "~> 0.9"
   spec.add_dependency "zeitwerk", "~> 2.7"
 end
