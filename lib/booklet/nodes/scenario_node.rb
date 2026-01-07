@@ -4,7 +4,9 @@ module Booklet
     prop :source, CodeSnippet, reader: :public, writer: :public
     prop :parameters, Array, reader: :public, writer: :public, default: [].freeze
 
-    alias_method :name, :ref
+    def name
+      ref.raw
+    end
 
     def label
       name.titleize
