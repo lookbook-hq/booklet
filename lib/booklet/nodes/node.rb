@@ -56,6 +56,10 @@ module Booklet
       parent.nil?
     end
 
+    def detatch
+      self.parent = nil
+    end
+
     def ancestors
       return nil if root?
 
@@ -72,6 +76,10 @@ module Booklet
 
     # @!group Descendants
 
+    def descendants
+      filter { _1 != self }
+    end
+
     def children(&block)
       if block_given?
         @children.each(&block)
@@ -79,6 +87,24 @@ module Booklet
       else
         @children.clone
       end
+    end
+
+    def remove_child(node)
+      return nil unless node
+
+      @children.delete(node)
+      node.detatch
+      node
+    end
+
+    def remove_from_parent
+      parent.remove_child(self) unless root?
+    end
+
+    def children=(nodes)
+      @children.each(&:detatch)
+      @children.clear
+      push(*nodes)
     end
 
     delegate :[], to: :children
@@ -89,10 +115,6 @@ module Booklet
 
     def depth
       ancestors&.size || 0
-    end
-
-    def descendants
-      filter { _1 != self }
     end
 
     def first_child
