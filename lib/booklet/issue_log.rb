@@ -4,33 +4,23 @@ module Booklet
   class IssueLog < Booklet::Object
     include Enumerable
 
-    prop :issue_list, _Array(Issue), :positional, default: -> { [] }
+    prop :issues, _Array(Issue), :positional, default: -> { [] }
 
     def add(*issues)
-      @issue_list.push(*issues.flatten.map(&:to_a).flatten)
-      self
-    end
-
-    def add_warning(...)
-      @issue_list << IssueLog.warning(...)
+      @issues.push(*issues.flatten)
       self
     end
 
     def warnings
-      all.select { _1.severity == :warning }
+      all.select { _1.is_a?(Warning) }
     end
 
     def warnings?
       warnings.any?
     end
 
-    def add_error(...)
-      @issue_list << IssueLog.error(...)
-      self
-    end
-
     def errors
-      all.select { _1.severity == :error }
+      all.select { _1.is_a?(Error) }
     end
 
     def errors?
@@ -38,28 +28,14 @@ module Booklet
     end
 
     def all
-      @issue_list.sort { _1.created_at }
+      @issues
     end
 
     def clear
-      @errors.clear
-      @warnings.clear
+      @issues.clear
+      self
     end
 
-    def to_a
-      @issue_list
-    end
-
-    delegate :each, to: :@issue_list
-
-    class << self
-      def warning(*, **)
-        Issue.new(*, **, severity: :warning)
-      end
-
-      def error(*, **)
-        Issue.new(*, **, severity: :error)
-      end
-    end
+    delegate :each, :to_a, to: :@issues
   end
 end

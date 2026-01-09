@@ -29,7 +29,7 @@ module Booklet
 
       spec.push(*scenarios)
     rescue => error
-      spec.add_error(error.message, original_error: error)
+      spec.add_error(error)
     end
 
     protected def to_scenario(method_object)

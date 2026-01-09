@@ -16,7 +16,7 @@ module Booklet
       should "collect issues from all nodes into a single issue list" do
         @root.add_warning("root warning")
         @child_2.add_error("child_2 error")
-        @grandchild.add_error("grandchild error")
+        @grandchild.add_error(ArgumentError.new("grandchild error"))
         @grandchild.add_warning("grandchild warning")
         @child_2.add_warning("child_2 warning 2")
 
