@@ -41,11 +41,52 @@ But the system was never really designed around the idea of it being a filesytem
 
 Booklet has been created to address these issues (and many others) by implementing a 'proper' parser-analyzer pipeline that is designed from the ground-up to cater for Lookbook's current requirements and to act as a flexible foundation for building future functionality on top of.
 
+## Usage
+
+> [!IMPORTANT]
+> Booklet is not yet ready for public use - these instructions are for illustrative purposes only at this point.
+> See the [Development status](#development-status) section for more info.
+
+### Installation
+
+Add Booklet to your Gemfile:
+
+```ruby
+gem "lookbooklet"
+```
+
+After running `bundle install` Booklet will be ready to use in your codebase.
+
+### API
+
+```ruby
+tree = Booklet.analyze("path/to/files")
+
+tree.issues.each do |issue|
+  puts "#{issue.severity}: #{issue.message} (#{issue.node.path})"
+end
+
+previews = tree.grep(SpecNode)
+previews.each do |preview|
+  puts "#{preview.label}: #{preview.scenarios.count} scenarios"
+end
+```
+
 ## Implementation details
 
 Booklet generates a **traversable tree of entity node objects** from an input directory of files, via a number of intermediate steps.
 
-Trees can contain a number of different node types. These include **folder nodes**, **file-based entity nodes** and entity **child nodes** that represent the contents of key resource types.
+Each file in the directory is converted into a corresponding node type. Node types include:
+
+* Folders
+* Specs (i.e. [previews](https://lookbook.build/guide/previews))
+* Documents (i.e. [pages](https://lookbook.build/guide/pages))
+* Assets
+
+Content nodes (i.e. specs & documents) typically have child nodes that represent their parsed content. Content node types include:
+
+* Scenarios
+* Prose
 
 The hierarchy of the nodes in the tree broadly reflects the grouping of input files into folders and subfolders within the root directory as well as parent-child entity-content relationships where present.
 
@@ -53,12 +94,14 @@ All tree mutations and transformations are performed by ['double dispatch'-style
 
 ### File processing pipeline
 
-Booklet breaks up the processing of files into four steps:
+> [!NOTE]
+> Most of the time you'll probably want to use higher-level API methods than those presented below. See the [API docs](#api) section for more info.
+
+Booklet breaks up the processing of files into three main steps:
 
 1. File tree creation
-2. File tree mutation
-3. File tree &rarr; entity tree transformation
-4. Entity tree mutation
+2. Files &rarr; entity tree transformation
+3. Entity tree mutation
   
 #### 1. File tree creation
 
@@ -84,30 +127,20 @@ file_tree = DirectoryNode.from("test/fixtures/demo").accept(FilesystemLoader.new
  │       ├── [FileNode] getting_started.md
  │       ├── [FileNode] installation.md
  │       └── [FileNode] screenshot.svg
- └── [DirectoryNode] view_specs
+ └── [DirectoryNode] view_previews
      ├── [DirectoryNode] elements
-     │   ├── [FileNode] button_component_spec.rb
-     │   └── [FileNode] card_component_spec.rb
-     ├── [FileNode] helpers_spec.rb
+     │   ├── [FileNode] button_component_preview.rb
+     │   └── [FileNode] card_component_preview.rb
+     ├── [FileNode] helpers_preview.rb
      └── [DirectoryNode] layouts
-         ├── [FileNode] article_spec.rb
-         └── [FileNode] landing_page_spec.rb
+         ├── [FileNode] article_preview.rb
+         └── [FileNode] landing_page_preview.rb
 ```
 </details>
 
-#### 2. File tree mutation
+#### 2. Files &rarr; entity tree transformation
 
-This is an optional step where additional node visitors can be provided to mutate the file tree before it is handed off to the entity transformer.
-
-For example you might want to create a custom Visitor class that removes all files with names beginning with an underscore (such as `_tmp_notes.txt` in the example above) to clean up the tree before the entity transformer is run.
-
-```ruby
-file_tree.accept(SomeCustomFileTreeProcessor.new)
-```
-
-#### 3. File tree &rarr; Entity tree transformation
-
-In this step the [`EntityTransformer`](./lib/booklet/visitors/entity_transformer.rb) visitor is applied to the raw file tree. The transformer visits each of the generic file/directory nodes in the file tree and converts all 'recognized' file types to their corresponding Lookbook entity node type.
+In this step the [`EntityTransformer`](./lib/booklet/visitors/entity_transformer.rb) visitor is applied to the raw file tree. The transformer visits each of the generic file/directory nodes in the file tree and converts all 'recognized' file types to their corresponding entity node type.
 
 For example, files with `.md` extensions are transformed into `DocumentNode` instances, whilst component preview class files (names ending in `_preview.rb`) are transformed into `SpecNode` instances.
 
@@ -141,11 +174,11 @@ entity_tree = file_tree.accept(EntityTransformer.new)
 </details>
 
 
-#### 4. Entity tree mutation
+#### 3. Entity tree mutation
 
 This final step is where enity node visitors can be applied to perform tasks such as parsing file contents and generally 'building out' the skeleton entity node objects created in the previous step. 
 
-By default Booklet will apply the [`PreviewClassParser`](./lib/booklet/visitors/preview_class_parser.rb) and [`FrontmatterExtractor`](./lib/booklet/visitors/frontmatter_extractor.rb) visitors at this stage.
+<!--By default Booklet will apply the [`PreviewClassParser`](./lib/booklet/visitors/preview_class_parser.rb) and [`FrontmatterExtractor`](./lib/booklet/visitors/frontmatter_extractor.rb) visitors at this stage.-->
 
 ```ruby
 entity_tree
@@ -185,33 +218,6 @@ _Note that the `docs` branch has been omitted for brevity._
 ```
 
 </details>
-
-## Installation
-
-> [!IMPORTANT]
-> Booklet is not yet ready for public use - these instructions are for illustrative purposes only at this point.
-> See the [Development status](#development-status) section for more info.
-
-### Using as a dependency
-
-Add Booklet to your Gemfile:
-
-```ruby
-gem "lookbooklet"
-```
-
-After running `bundle install` you can then make use of the Booklet API in your codebase:
-
-```ruby
-require "lookbooklet"
-
-result = Booklet.analyze("path/to/root/directory")
-```
-
-## API
-
-> _Details coming soon._
-
 
 ## Testing
 
