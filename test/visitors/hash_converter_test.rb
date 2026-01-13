@@ -2,26 +2,24 @@ require "support/test_helper"
 
 module Booklet
   class HashConverterTest < Minitest::Test
-    include FixtureHelpers
-
     context "hash converter" do
       setup do
-        @root_path = fixture_file("entities")
-        @files = DirectoryNode.from(@root_path).accept(FilesystemLoader.new)
-        @hash = @files.accept(HashConverter.new)
+        @root = Fixtures.dir("mixed")
+        @result = Booklet.analyze(@root)
+        @hash = @result.accept(HashConverter.new)
       end
 
       should "not mutate the visited tree" do
-        assert_kind_of DirectoryNode, @files
+        assert_kind_of FolderNode, @result.root
       end
 
       should "return a hash with the expected number of (nested) items" do
         assert_kind_of Hash, @hash
-        assert_equal @files.count, TestUtils.flatten_tree_hash(@hash).size
+        assert_equal @result.count, TestUtils.flatten_tree_hash(@hash).size
       end
 
       should "be nested to match the heirarchy of nodes in the tree" do
-        @files.each_node do |node|
+        @result.each_node do |node|
           ancestor_refs = (node.ancestors || []).reverse.map(&:ref)
           ancestor_refs.shift # ignore root node
           current = @hash
@@ -37,33 +35,38 @@ module Booklet
       context "with props option as an array of prop names" do
         setup do
           @props = [:path, :depth]
-          @hash = @files.accept(HashConverter.new(props: @props))
+          @hash = @result.accept(HashConverter.new(props: @props))
         end
 
         should "be present in each hash" do
           hash_entries = TestUtils.flatten_tree_hash(@hash)
 
           hash_entries.each do |entry|
-            file = @files.find { _1.ref == entry[:ref] }
+            node = @result.find { _1.ref == entry[:ref] }
 
-            @props.each { assert entry[_1] == file.public_send(_1) }
+            @props.each { assert entry[_1] == node.public_send(_1) }
           end
         end
 
         context "with props option as a props hash" do
           setup do
-            @props = {path: true, derived: lambda { |file| file.basename }}
-            @hash = @files.accept(HashConverter.new(props: @props))
+            @props = {path: true, derived: lambda { |node| node.file&.basename }}
+            @hash = @result.accept(HashConverter.new(props: @props))
           end
 
           should "be present in each hash" do
             hash_entries = TestUtils.flatten_tree_hash(@hash)
 
             hash_entries.each do |entry|
-              file = @files.find { _1.ref == entry[:ref] }
+              node = @result.find { _1.ref == entry[:ref] }
 
-              assert entry[:path] = file.path
-              assert entry[:derived] = file.basename
+              if node.locatable?
+                assert_equal entry[:path], node.path
+                assert_equal entry[:derived], node.file&.basename
+              else
+                assert_nil entry[:path]
+                assert_nil entry[:derived]
+              end
             end
           end
         end

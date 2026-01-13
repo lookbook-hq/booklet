@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 module Booklet
-  class Object < Literal::Object
+  class Data < Literal::Data
     include ActiveSupport::Callbacks
+    include Comparable
     include Helpers
 
     define_callbacks :initialize
@@ -10,6 +11,13 @@ module Booklet
     def after_initialize
       run_callbacks :initialize
     end
+
+    def ==(other)
+      return nil if !other.is_a?(self.class)
+      value == other.value
+    end
+
+    alias_method :eql?, :==
 
     class << self
       def after_initialize(&)

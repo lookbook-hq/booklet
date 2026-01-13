@@ -2,16 +2,11 @@ require "support/test_helper"
 
 module Booklet
   class PreviewClassParserTest < Minitest::Test
-    include FixtureHelpers
-
     context "Preview classes" do
       setup do
-        @spec_path = fixture_file("specs/example_preview.rb")
+        @spec_path = Fixtures.file("specs/example_preview.rb")
         @spec = SpecNode.from(@spec_path)
         @spec.accept(PreviewClassParser.new)
-      end
-
-      context "view specification" do
       end
 
       context "scenarios" do

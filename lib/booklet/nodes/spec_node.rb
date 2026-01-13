@@ -17,7 +17,7 @@ module Booklet
     end
 
     def scenarios
-      filter(&:scenario?)
+      grep(ScenarioNode)
     end
   end
 end

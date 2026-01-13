@@ -1,1 +1,0 @@
-In English sentences, punctuation (such as periods, exclamations, parentheses) are silent. Punctuation adds meaning to words, helps give cues as to what the author intended by a sentence. So let’s read the above as: Five times print “Odelay!”.

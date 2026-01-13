@@ -33,7 +33,7 @@ module Booklet
     end
 
     protected def to_scenario(method_object)
-      parameters = method_object.parameters # TODO: 'parameters' Value object
+      parameters = method_object.parameters # TODO: 'parameters' Data object
 
       source = MethodSnippet.new(
         method_object.source,

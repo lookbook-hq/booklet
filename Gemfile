@@ -2,6 +2,7 @@ source "https://gem.coop"
 
 gemspec
 
+gem "lookbook"
 gem "rake"
 gem "standard"
 gem "rubocop"
@@ -10,7 +11,6 @@ gem "puts_debuggerer"
 gem "pretty_please"
 
 group :test do
-  gem "view_component"
   gem "minitest"
   gem "minitest-reporters"
   gem "shoulda-context"

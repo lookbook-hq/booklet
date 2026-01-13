@@ -3,7 +3,7 @@ require "support/test_helper"
 module Booklet
   class NodeTest < Minitest::Test
     context "class methods" do
-      context ".new" do
+      context "NodeTest::new" do
         should "succeeds when instatiated with a <String> value for the :ref property" do
           assert_kind_of Node, Node.new("chunky-bacon")
         end
@@ -17,7 +17,6 @@ module Booklet
     context "instance methods" do
       setup do
         @root = Node.new("book")
-
         @child = Node.new("section-1")
         @child_2 = Node.new("section-2")
         @child_3 = Node.new("section-3")
@@ -26,7 +25,7 @@ module Booklet
         @greatgrandchild_2 = Node.new("paragraph-2")
       end
 
-      context "#add" do
+      context "Node#add" do
         should "allow child nodes to be added" do
           @root << @child
           @root << @child_2
@@ -65,7 +64,7 @@ module Booklet
         end
       end
 
-      context "#children" do
+      context "Node#children" do
         setup do
           @root << @child
           @root << @child_2
@@ -91,7 +90,7 @@ module Booklet
         end
       end
 
-      context "#each_node" do
+      context "Node#each_node" do
         setup do
           @root << @child
           @root << @child_2
@@ -120,7 +119,7 @@ module Booklet
         end
       end
 
-      context "#root" do
+      context "Node#root" do
         should "return the root node" do
           @root << @child << @grandchild
 
@@ -155,32 +154,32 @@ module Booklet
         end
       end
 
-      context "issue list" do
+      context "issues" do
         setup do
           @node = Node.new("issues")
         end
 
-        context "#add_warning" do
+        context "Node#add_warning" do
           should "push a warning onto the node issues list" do
             @node.add_warning("Unwise thing to do")
-            issue = @node.warnings.first
+            warning = @node.warnings.first
 
-            assert_equal 1, @node.warnings.size
-            assert_kind_of Issue, issue
-            assert_equal :warning, issue.severity
-            assert_equal "Unwise thing to do", issue.message
+            assert @node.warnings?
+            assert_equal 1, @node.warnings.count
+            assert_kind_of Warning, warning
+            assert_equal "Unwise thing to do", warning.message
           end
         end
 
-        context "#add_error" do
+        context "Node#add_error" do
           should "push an error onto the node issues list" do
             @node.add_error("Something went wrong")
-            issue = @node.errors.first
+            error = @node.errors.first
 
+            assert @node.errors?
             assert_equal 1, @node.errors.size
-            assert_kind_of Issue, issue
-            assert_equal :error, issue.severity
-            assert_equal "Something went wrong", issue.message
+            assert_kind_of Error, error
+            assert_equal "Something went wrong", error.message
           end
         end
       end

@@ -3,31 +3,30 @@ require_relative "shared/locatable_assertions"
 
 module Booklet
   class FileNodeTest < Minitest::Test
-    include FixtureHelpers
     include LocatableAssertions
 
     subject { FileNode }
 
     context "instance methods" do
       setup do
-        @fixture_file = fixture_file("file_types/example_preview.rb")
+        @fixture_file = Fixtures.file("mixed/overview.md")
         @node = subject.from(@fixture_file)
       end
 
-      context ".path" do
+      context "FileNode#path" do
         should "return the path as a pathname" do
           assert_equal @fixture_file, @node.path
           assert_kind_of Pathname, @node.path
         end
       end
 
-      context ".file?" do
+      context "FileNode#file?" do
         should "return true" do
           assert @node.file?
         end
       end
 
-      context ".directory?" do
+      context "FileNode#directory?" do
         should "return false" do
           refute @node.directory?
         end

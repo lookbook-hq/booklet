@@ -3,18 +3,38 @@
 require "literal"
 require "active_support"
 require "active_support/core_ext"
-require "booklet/version"
-require "booklet/loader"
+
+loader = Zeitwerk::Loader.new
+
+loader.push_dir("#{__dir__}/booklet", namespace: Booklet)
+loader.collapse("#{__dir__}/booklet/**/*")
+loader.ignore("#{__dir__}/booklet/version.rb")
+loader.inflector.inflect("abt" => "ABT")
+
+loader.setup
+loader.eager_load_dir("#{__dir__}/booklet/nodes") # ensure `Booklet::Node#subclasses` works as expected
 
 module Booklet
   class << self
-    def version
-      VERSION
+    delegate :analyze, to: Analyzer
+
+    def loader
+      @loader ||= FilesystemLoader
     end
 
-    def analyze(dir_path, **props)
-      analyzer = Analyzer.new(**props)
-      analyzer.analyze(dir_path)
+    def transformer
+      @transformer ||= EntityTransformer
     end
+
+    def visitors
+      @visitors ||= [
+        RubyValidator,
+        HerbValidator,
+        PreviewClassParser,
+        FrontmatterExtractor
+      ]
+    end
+
+    attr_writer :loader, :transformer, :visitors
   end
 end

@@ -4,7 +4,6 @@ module Booklet
   class Node < Booklet::Object
     include Enumerable
     include Comparable
-    include Values
 
     prop :ref, String, :positional, reader: false do |value|
       value.to_s
@@ -19,7 +18,7 @@ module Booklet
     end
 
     def ref
-      @node_ref ||= NodeRef(@ref)
+      @node_ref ||= NodeRef.new(@ref)
     end
 
     def ref_path(separator: "/")
@@ -31,15 +30,15 @@ module Booklet
     end
 
     def issues
-      @issues ||= IssueLog.new
+      @issues ||= Issues.new
     end
 
-    def add_warning(*, **)
-      issues.add_warning(*, **, node: self)
+    def add_warning(warning)
+      issues << Warning.new(warning, node: self)
     end
 
-    def add_error(*, **)
-      issues.add_error(*, **, node: self)
+    def add_error(error)
+      issues << Error.new(error, node: self)
     end
 
     delegate :warnings, :errors, :warnings?, :errors?, to: :issues
@@ -242,6 +241,10 @@ module Booklet
 
     protected alias_method :each, :each_node
 
+    def walk(&block)
+      each_node(&block)
+    end
+
     # @!endgroup
 
     # @!group Comparison
@@ -262,7 +265,12 @@ module Booklet
     def accept(visitor)
       class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
         def accept(visitor)
+          visitor = visitor.is_a?(Class) ? visitor.new : visitor
           visitor.visit_#{type}(self)
+        rescue Booklet::Warning => warning
+          add_warning(warning)
+        rescue Booklet::Error => error
+          add_error(error)
         end
       RUBY
 
@@ -274,7 +282,7 @@ module Booklet
     # @!group Type & type checking
 
     def type
-      @type ||= NodeType(self.class)
+      @type ||= NodeType.new(self.class)
     end
 
     def method_missing(name, ...)
@@ -316,13 +324,25 @@ module Booklet
 
     def permit_child_types(*args)
       args.flatten!
-      self.valid_child_types = args.map { NodeType(_1) } unless args.first.nil?
+      self.valid_child_types = args.map { NodeType.new(_1) } unless args.first.nil?
+    end
+
+    # @!endgroup
+
+    # @!group Fallback methods for non-locatable nodes
+
+    def file
+      nil
+    end
+
+    def path
+      nil
     end
 
     class << self
       def permit_child_types(*args)
         args.flatten!
-        self.valid_child_types = args.map { NodeType(_1) } unless args.first.nil?
+        self.valid_child_types = args.map { NodeType.new(_1) } unless args.first.nil?
       end
 
       def type

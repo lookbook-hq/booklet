@@ -2,8 +2,11 @@
 
 module Booklet
   class IssueAggregator < Visitor
+    after_initialize do
+      @issues = Issues.new
+    end
+
     visit do |node|
-      @issues ||= IssueLog.new
       @issues.add(*node.issues)
 
       visit_each(node.children)

@@ -4,26 +4,14 @@ require "marcel"
 
 module Booklet
   class File < Booklet::Object
-    prop :path, Pathname, :positional do |value|
+    prop :path, Pathname, :positional, reader: :public do |value|
       Pathname(value.to_s) unless value.nil?
     end
 
     prop :contents, _Nilable(String), :positional
 
     after_initialize do
-      raise ArgumentError, "File paths must be absolute" unless @path.absolute?
-    end
-
-    def path(strip_extension: false)
-      strip_extension ? Pathname(@path.to_s.delete_suffix(ext)) : @path
-    end
-
-    def relative_path(root = Dir.pwd, strip_extension: false)
-      path(strip_extension:).relative_path_from(root)
-    end
-
-    def relative_path_segments
-      relative_path.to_s.split("/")
+      @path = @path.expand_path unless @path.absolute?
     end
 
     def ext
@@ -76,7 +64,6 @@ module Booklet
       path.to_s
     end
 
-    alias_method :value, :path
     alias_method :to_pathname, :path
 
     delegate_missing_to :path
