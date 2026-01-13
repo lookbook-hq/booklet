@@ -25,9 +25,9 @@ module Fixtures
     end
   end
 
-  def preview_class_files_within(dir)
+  def spec_files_within(dir)
     files_within(dir)
-      .select { _1.basename.to_s.end_with?("_preview.rb") }
+      .select { _1.basename.to_s.end_with?("_preview.rb", "_booklet.rb") }
   end
 
   def folder_files_within(dir)
@@ -37,7 +37,7 @@ module Fixtures
   def entity_files_within(dir)
     asset_files_within(dir) +
       markdown_files_within(dir) +
-      preview_class_files_within(dir) +
+      spec_files_within(dir) +
       folder_files_within(dir)
   end
 

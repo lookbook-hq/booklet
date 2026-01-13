@@ -9,7 +9,9 @@ module Booklet
     end
 
     visit SpecNode do |spec|
-      return spec if spec.errors?
+      if spec.format != :preview_class || spec.errors?
+        return spec
+      end
 
       class_object = @yard.parse_file(spec.file.path)
 

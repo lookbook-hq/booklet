@@ -22,6 +22,8 @@ module Booklet
       @root.accept(IssueAggregator)
     end
 
+    delegate :errors, :warnings, :errors?, :warnings?, to: :issues
+
     def to_h
       @root.accept(HashConverter)
     end

@@ -9,7 +9,15 @@ module Booklet
     permit_child_types :prose, :scenario
 
     match do |file|
-      file.ext?(".rb") && file.name.end_with?("_preview")
+      file.basename.end_with?("_preview.rb", "_booklet.rb")
+    end
+
+    def format
+      if file.basename.end_with?("_preview.rb")
+        :preview_class
+      elsif file.basename.end_with?("_booklet.rb")
+        :booklet_spec
+      end
     end
 
     def label

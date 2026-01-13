@@ -32,7 +32,7 @@ module Booklet
           should "include issues collected from all nodes in the tree" do
             ruby_files_with_errors = Fixtures.files_within(@root, grep: /syntax_error/)
 
-            assert_equal @result.issues.group_by { _1.node }.count, ruby_files_with_errors.size
+            assert_equal ruby_files_with_errors.size, @result.errors.group_by { _1.node }.count
           end
         end
 
@@ -48,7 +48,7 @@ module Booklet
 
         context "entity conversion" do
           context "FolderNode" do
-            should "be instantiated for each directory node" do
+            should "be created for each directory node" do
               dirs = Fixtures.files_within(@root).filter(&:directory?)
               folders = @result.grep(FolderNode).reject(&:root?)
 
@@ -58,17 +58,31 @@ module Booklet
           end
 
           context "SpecNode" do
-            should "be instantiated for each valid preview class file" do
-              preview_classes = Fixtures.files_within(@root).filter { _1.to_s.end_with?("_preview.rb") }
+            should "be created for each preview class or booklet spec file" do
+              spec_files = Fixtures.spec_files_within(@root)
               specs = @result.grep(SpecNode)
 
-              assert_equal preview_classes.count, specs.count
-              assert_equal 0, specs.map(&:path).difference(preview_classes).count
+              assert_equal spec_files.count, specs.count
+              assert_equal 0, specs.map(&:path).difference(spec_files).count
+            end
+
+            should "correctly identify spec formats" do
+              specs = @result.grep(SpecNode)
+
+              specs.each do |spec|
+                format = if spec.file.basename.end_with?("_preview.rb")
+                  :preview_class
+                elsif spec.file.basename.end_with?("_booklet.rb")
+                  :booklet_spec
+                end
+
+                assert_equal spec.format, format
+              end
             end
           end
 
           context "DocumentNode" do
-            should "be instantiated for each matching markdown file" do
+            should "be created for each matching markdown file" do
               doc_files = Fixtures.markdown_files_within(@root)
               docs = @result.grep(DocumentNode)
 
@@ -78,7 +92,7 @@ module Booklet
           end
 
           context "AssetNode" do
-            should "be instantiated from each css, js and image file" do
+            should "be created from each asset file" do
               asset_files = Fixtures.asset_files_within(@root)
               assets = @result.grep(AssetNode)
 
