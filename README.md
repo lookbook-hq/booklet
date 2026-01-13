@@ -1,6 +1,6 @@
 # Booklet
 
-A WIP new standalone, extendable **parser-analyzer engine** for [Lookbook](https://lookbook.build).
+A new standalone, extendable **parser-analyzer engine** for [Lookbook](https://lookbook.build). **Work in progress.**
 
 The aim is for Booklet to eventually replace the existing file parsing/analyzing code in Lookbook and thus provide a more robust foundation for future releases to build upon.
 
