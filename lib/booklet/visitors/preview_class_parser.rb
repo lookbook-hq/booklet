@@ -8,10 +8,8 @@ module Booklet
       @yard = YardParser.new
     end
 
-    visit SpecNode do |spec|
-      if spec.format != :preview_class || spec.errors?
-        return spec
-      end
+    visit PreviewClassNode do |spec|
+      return spec if spec.errors?
 
       class_object = @yard.parse_file(spec.file.path)
 

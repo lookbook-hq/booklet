@@ -57,27 +57,31 @@ module Booklet
             end
           end
 
-          context "SpecNode" do
-            should "be created for each preview class or booklet spec file" do
+          context "PreviewClassNode" do
+            should "be created for each preview class" do
+              spec_files = Fixtures.spec_files_within(@root).filter { _1.basename.to_s.end_with?("_preview.rb") }
+              specs = @result.grep(PreviewClassNode)
+
+              assert_equal spec_files.count, specs.count
+              assert_equal 0, specs.map(&:path).difference(spec_files).count
+            end
+
+            should "match SpecNodes" do
               spec_files = Fixtures.spec_files_within(@root)
               specs = @result.grep(SpecNode)
 
               assert_equal spec_files.count, specs.count
               assert_equal 0, specs.map(&:path).difference(spec_files).count
             end
+          end
 
-            should "correctly identify spec formats" do
-              specs = @result.grep(SpecNode)
+          context "BookletSpecNode" do
+            should "be created for each booklet spec file" do
+              spec_files = Fixtures.spec_files_within(@root).filter { _1.basename.to_s.end_with?("_booklet.rb") }
+              specs = @result.grep(BookletSpecNode)
 
-              specs.each do |spec|
-                format = if spec.file.basename.end_with?("_preview.rb")
-                  :preview_class
-                elsif spec.file.basename.end_with?("_booklet.rb")
-                  :booklet_spec
-                end
-
-                assert_equal spec.format, format
-              end
+              assert_equal spec_files.count, specs.count
+              assert_equal 0, specs.map(&:path).difference(spec_files).count
             end
           end
 

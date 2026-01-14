@@ -5,7 +5,7 @@ module Booklet
     context "Preview classes" do
       setup do
         @spec_path = Fixtures.file("specs/example_preview.rb")
-        @spec = SpecNode.from(@spec_path)
+        @spec = PreviewClassNode.from(@spec_path)
         @spec.accept(PreviewClassParser.new)
       end
 

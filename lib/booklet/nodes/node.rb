@@ -320,7 +320,7 @@ module Booklet
       instance_reader: false,
       instance_writer: false,
       instance_predicate: false,
-      default: lambda { false }
+      default: proc { false }
 
     def permit_child_types(*args)
       args.flatten!
@@ -362,7 +362,7 @@ module Booklet
       end
 
       def node_types
-        Node.subclasses
+        Node.descendants
       end
 
       def file_node_types
