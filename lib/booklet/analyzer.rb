@@ -5,9 +5,9 @@ module Booklet
     class << self
       def analyze(path, loader: Booklet.loader, transformer: Booklet.transformer, visitors: Booklet.visitors)
         root = Pathname(path).expand_path
-        files = DirectoryNode.from(root).accept(loader)
+        file_tree = FileTree.new(root, loader:)
 
-        Tree.from(files, transformer, visitors:)
+        EntityTree.new(file_tree, transformer:, visitors:)
       end
     end
   end

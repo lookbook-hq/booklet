@@ -2,20 +2,24 @@ require "support/test_helper"
 
 module Booklet
   class AnalyzeTest < Minitest::Test
-    context "Booklet.analyze" do
+    context "Booklet::analyze" do
       context "with default visitors" do
         setup do
           @root = Fixtures.dir("mixed")
           @result = Booklet.analyze(@root)
+          # tree = @result.to_ascii do |node|
+          #   node.type.to_s + node.ref.to_s
+          # end
+          # pd tree
         end
 
-        should "return an abstract booklet tree" do
-          assert_kind_of Tree, @result
+        should "return an abstract booklet entity tree" do
+          assert_kind_of EntityTree, @result
         end
 
         context "Tree#files" do
           should "return a file tree containing all expected files and folders" do
-            assert_kind_of DirectoryNode, @result.files
+            assert_kind_of FileTree, @result.files
 
             assert_equal(
               Fixtures.files_within(@root).count,
