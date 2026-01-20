@@ -23,6 +23,26 @@ module Booklet
           @root.descendants.size
         )
       end
+
+      context "branches containing only directories" do
+        setup do
+          @root_path = Fixtures.dir("empty_dirs")
+          @root = DirectoryNode.from(@root_path)
+        end
+
+        should "not be included in the tree" do
+          @root.accept(FilesystemLoader)
+          nodes = @root.descendants
+
+          assert nodes.find { _1.basename == "a" }
+          assert nodes.find { _1.basename == "aa" }
+          assert nodes.find { _1.basename == "aaa.txt" }
+
+          refute nodes.find { _1.basename == "b" }
+          refute nodes.find { _1.basename == "bb" }
+          refute nodes.find { _1.basename == "c" }
+        end
+      end
     end
   end
 end

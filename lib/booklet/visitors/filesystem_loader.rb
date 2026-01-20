@@ -4,10 +4,10 @@ require "fast_ignore"
 
 module Booklet
   class FilesystemLoader < Visitor
-    prop :ignore_rules, _Array(String), default: [].freeze
+    prop :ignore_rules, _Array(String), default: [].freeze, reader: :protected
 
     after_initialize do
-      @path_matcher = FastIgnore.new(ignore_rules: @ignore_rules)
+      @path_matcher = FastIgnore.new(ignore_rules:)
     end
 
     visit DirectoryNode do |node|
@@ -16,7 +16,11 @@ module Booklet
 
       files.each do |file|
         node_type = file.directory? ? DirectoryNode : FileNode
-        visit(node << node_type.from(file))
+        child = node_type.from(file)
+        visit(child)
+
+        # Don't include empty directories in the tree
+        node << child unless child.directory? && !child.children?
       end
       node
     end
