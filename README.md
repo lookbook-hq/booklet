@@ -1,6 +1,6 @@
 # Booklet
 
-A new standalone, extendable **parser-analyzer engine** for [Lookbook](https://lookbook.build). **Work in progress.**
+A new standalone, extendable **parser-analyzer engine** for [Lookbook](https://lookbook.build). _Work in progress._
 
 The aim is for Booklet to eventually replace the existing file parsing/analyzing code in Lookbook and thus provide a more robust foundation for future releases to build upon.
 
@@ -90,7 +90,7 @@ Content nodes (i.e. specs & documents) typically have child nodes that represent
 
 The hierarchy of the nodes in the tree broadly reflects the grouping of input files into folders and subfolders within the root directory as well as parent-child entity-content relationships where present.
 
-All tree mutations and transformations are performed by ['double dispatch'-style](https://www.bigbinary.com/blog/visitor-pattern-and-double-dispatch) **node visitors**.
+All tree mutations and transformations are performed by ['double dispatch'-style](https://www.bigbinary.com/blog/visitor-pattern-and-double-dispatch) node visitors.
 
 ### File processing pipeline
 
@@ -187,7 +187,7 @@ entity_tree
 ```
 
 * The `PreviewClassParser` visitor uses the [YARD parser](https://yardoc.org/) to extract annotations data from preview class files and creates and appends corresponding `ScenarioNode` and `ProseNode` children to the appropriate `SpecNode` instance.
-* The `FrontmatterExtractor` visitor _(not yet implemented!)_ extracts YAML-formatted 'frontmatter' from the contents of markdown files and updates the related `DocumentNode` instances with the parsed data.
+* The `FrontmatterExtractor` visitor _(not yet implemented)_ extracts YAML-formatted 'frontmatter' from the contents of markdown files and updates the related `DocumentNode` instances with the parsed data.
 
 Additional entity node vistors can be applied here as needed to make changes to the entity tree nodes before the finalised entity tree is returned for use by the calling code. 
 

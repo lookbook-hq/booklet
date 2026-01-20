@@ -13,7 +13,13 @@ module Booklet
       return unless node
 
       @stack.push(node)
-      node.accept(self).tap { @stack.pop }
+      result = node.accept(self).tap { @stack.pop }
+      node.visited_by |= [self.class]
+      result
+    end
+
+    def visited?(node)
+      node.visited_by?(self.class)
     end
 
     def visit_each(nodes)

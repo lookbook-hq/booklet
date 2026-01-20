@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "active_support/ordered_options"
+
 module Booklet
   class Node < Booklet::Object
     include Enumerable
@@ -10,11 +12,14 @@ module Booklet
     end
 
     attr_reader :parent
+    attr_accessor :dirty, :visited_by
     protected attr_writer :parent
 
     after_initialize do
       @parent = nil
       @children = []
+      @dirty = false
+      @visited_by = []
     end
 
     def ref
@@ -43,6 +48,10 @@ module Booklet
 
     delegate :warnings, :errors, :warnings?, :errors?, to: :issues
 
+    def data
+      @data ||= {}
+    end
+
     # @!group Ancestry
 
     def root
@@ -55,8 +64,9 @@ module Booklet
       parent.nil?
     end
 
-    def detatch
+    def detatch!
       self.parent = nil
+      self
     end
 
     def ancestors
@@ -92,8 +102,7 @@ module Booklet
       return nil unless node
 
       @children.delete(node)
-      node.detatch
-      node
+      node.detatch!
     end
 
     def remove_from_parent
@@ -101,7 +110,7 @@ module Booklet
     end
 
     def children=(nodes)
-      @children.each(&:detatch)
+      @children.each(&:detatch!)
       @children.clear
       push(*nodes)
     end
@@ -277,6 +286,10 @@ module Booklet
       accept(visitor)
     end
 
+    def visited_by?(visitor)
+      @visited_by.include?(visitor.is_a?(Class) ? visitor : visitor.class)
+    end
+
     # @!endgroup
 
     # @!group Type & type checking
@@ -347,14 +360,6 @@ module Booklet
 
       def type
         NodeType.new(self)
-      end
-
-      def match(&block)
-        self.file_matcher = block
-      end
-
-      def from?(file)
-        file_matcher.call(file)
       end
 
       def locatable?

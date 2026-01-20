@@ -9,9 +9,15 @@ module Booklet
     end
 
     visit PreviewClassNode do |spec|
-      return spec if spec.errors?
+      return spec if spec.errors? || visited?(spec)
 
-      class_object = @yard.parse_file(spec.file.path)
+      begin
+        class_object = @yard.parse_file(spec.file.path)
+      rescue => error
+        spec.add_error(error)
+      end
+
+      return spec unless class_object
 
       comments = strip_whitespace(class_object.docstring)
       if comments.present?
@@ -28,8 +34,6 @@ module Booklet
       end
 
       spec.push(*scenarios)
-    rescue => error
-      spec.add_error(error)
     end
 
     protected def to_scenario(method_object)

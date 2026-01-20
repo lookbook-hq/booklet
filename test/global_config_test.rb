@@ -3,7 +3,7 @@ require "support/test_helper"
 module Booklet
   class GlobalConfigTest < Minitest::Test
     context "Booklet global config options" do
-      context ".loader" do
+      context "Booklet::loader" do
         should "returns the file loader" do
           assert Booklet.loader == FilesystemLoader
         end
@@ -18,7 +18,7 @@ module Booklet
         end
       end
 
-      context ".transformer" do
+      context "Booklet::transformer" do
         should "returns the entity transformer" do
           assert Booklet.transformer == EntityTransformer
         end
@@ -33,7 +33,7 @@ module Booklet
         end
       end
 
-      context ".visitors" do
+      context "Booklet::visitors" do
         should "returns a array of entity visitors" do
           assert_kind_of Array, Booklet.visitors
           assert Booklet.visitors.count > 0

@@ -10,12 +10,13 @@ module Booklet
     end
 
     visit do |node|
-      if node.file&.ext?(".rb")
-        parse_result = Prism.parse_file(node.file.path.to_s)
-        parse_result.errors.each do |error|
-          node.add_error(error)
-        end
+      return node if !node.file.ext?(".rb") || visited?(node)
+
+      parse_result = Prism.parse_file(node.file.path.to_s)
+      parse_result.errors.each do |error|
+        node.add_error(error)
       end
+
       node
     end
   end

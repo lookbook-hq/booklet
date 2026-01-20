@@ -16,7 +16,7 @@ loader.eager_load_dir("#{__dir__}/booklet/nodes") # ensure `Booklet::Node#subcla
 
 module Booklet
   class << self
-    delegate :analyze, to: Analyzer
+    delegate :analyze, :update, to: Analyzer
 
     def loader
       @loader ||= FilesystemLoader

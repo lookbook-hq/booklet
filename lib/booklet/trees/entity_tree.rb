@@ -13,21 +13,13 @@ module Booklet
     end
 
     delegate :loader, to: :files
-    delegate :path, to: :@root
+    delegate :path, :to_a, to: :root
 
-    after_initialize do
+    def load!
       @root = files.root.accept(transformer)
       visitors.each { accept(_1) }
       touch!
-    end
-
-    def update
-      file_tree = files.update
-
-      transformer = @transformer.dup
-      transformer.registry = @root.to_a
-
-      self.class.new(file_tree, transformer:, visitors:)
+      self
     end
   end
 end

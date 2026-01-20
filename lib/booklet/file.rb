@@ -34,10 +34,6 @@ module Booklet
       Marcel::MimeType.for(path, name: basename) unless directory?
     end
 
-    def mtime
-      ::File.mtime(path)
-    end
-
     def contents
       raise "Cannot read contents of a directory" if directory?
 

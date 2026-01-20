@@ -3,9 +3,27 @@ module Booklet
     extend ActiveSupport::Concern
 
     included do
+      class_attribute :file_matcher,
+        instance_reader: false,
+        instance_writer: false,
+        instance_predicate: false,
+        default: proc { false }
+
       prop :file, File, reader: :public
 
+      attr_reader :ctime
+
+      after_initialize do |node|
+        @ctime = node.file.ctime
+      rescue Errno::ENOENT
+        # Do nothing
+      end
+
       delegate :name, :path, to: :file
+
+      def dirty?
+        @ctime.before?(file.ctime)
+      end
 
       def locatable?
         true
@@ -24,6 +42,14 @@ module Booklet
         end
 
         new(file.path, file:)
+      end
+
+      def match(&block)
+        self.file_matcher = block
+      end
+
+      def from?(file)
+        file_matcher.call(file)
       end
 
       def locatable?
