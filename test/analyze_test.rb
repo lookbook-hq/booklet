@@ -7,10 +7,6 @@ module Booklet
         setup do
           @root = Fixtures.dir("mixed")
           @result = Booklet.analyze(@root)
-          # tree = @result.to_ascii do |node|
-          #   node.type.to_s + node.ref.to_s
-          # end
-          # pd tree
         end
 
         should "return an abstract booklet entity tree" do
@@ -18,12 +14,12 @@ module Booklet
         end
 
         context "Tree#files" do
-          should "return a file tree containing all expected files and folders" do
-            assert_kind_of FileTree, @result.files
+          should "return an array of file objects representing all expected files and folders" do
+            assert_kind_of Array, @result.files
 
             assert_equal(
               Fixtures.files_within(@root).count,
-              @result.files.reject(&:root?).count # @result.files includes the root directory, files_within doesn't.
+              @result.files.count { _1.path != @root } # @result.files includes the root directory, files_within doesn't.
             )
           end
         end
@@ -51,10 +47,10 @@ module Booklet
         end
 
         context "entity conversion" do
-          context "FolderNode" do
+          context "DirectoryNode" do
             should "be created for each directory node" do
               dirs = Fixtures.files_within(@root).filter(&:directory?)
-              folders = @result.grep(FolderNode).reject(&:root?)
+              folders = @result.grep(DirectoryNode).reject(&:root?)
 
               assert_equal dirs.count, folders.count
               assert_equal 0, folders.map(&:path).difference(dirs).count
@@ -109,10 +105,10 @@ module Booklet
             end
           end
 
-          context "AnonNode" do
+          context "FileNode" do
             should "be created from all other files" do
               unrecognised_files = Fixtures.anon_files_within(@root)
-              anon = @result.grep(AnonNode)
+              anon = @result.grep(FileNode)
 
               assert_equal unrecognised_files.count, anon.count
               assert_equal 0, anon.map(&:path).difference(unrecognised_files).count

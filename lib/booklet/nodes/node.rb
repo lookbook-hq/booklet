@@ -363,27 +363,15 @@ module Booklet
       end
 
       def locatable?
-        false
+        self < Locatable
       end
 
-      def node_types
+      def types
         Node.descendants
       end
 
-      def file_node_types
-        [FileNode, DirectoryNode]
-      end
-
-      def entity_node_types
-        node_types.difference(file_node_types)
-      end
-
-      def locatable_node_types
-        node_types.filter { _1.locatable? }
-      end
-
-      def locatable_entity_node_types
-        locatable_node_types.difference(file_node_types)
+      def locatable_types
+        types.filter { _1 < Locatable }
       end
     end
 

@@ -4,32 +4,17 @@ module Booklet
   class GlobalConfigTest < Minitest::Test
     context "Booklet global config options" do
       context "Booklet::loader" do
-        should "returns the file loader" do
-          assert Booklet.loader == FilesystemLoader
+        should "returns the entity loader" do
+          assert Booklet.loader == EntityLoader
         end
 
         should "be able to be replaced" do
           default_loader = Booklet.loader
-          Booklet.loader = FilesystemLoader.new
+          Booklet.loader = EntityLoader.new
 
-          assert_kind_of FilesystemLoader, Booklet.loader
+          assert_kind_of EntityLoader, Booklet.loader
 
           Booklet.loader = default_loader
-        end
-      end
-
-      context "Booklet::transformer" do
-        should "returns the entity transformer" do
-          assert Booklet.transformer == EntityTransformer
-        end
-
-        should "be able to be replaced" do
-          default_transformer = Booklet.transformer
-          Booklet.transformer = EntityTransformer.new
-
-          assert_kind_of EntityTransformer, Booklet.transformer
-
-          Booklet.transformer = default_transformer
         end
       end
 

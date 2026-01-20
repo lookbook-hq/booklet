@@ -19,11 +19,7 @@ module Booklet
     delegate :analyze, :update, to: Analyzer
 
     def loader
-      @loader ||= FilesystemLoader
-    end
-
-    def transformer
-      @transformer ||= EntityTransformer
+      @loader ||= EntityLoader
     end
 
     def visitors
@@ -35,6 +31,6 @@ module Booklet
       ]
     end
 
-    attr_writer :loader, :transformer, :visitors
+    attr_writer :loader, :visitors
   end
 end

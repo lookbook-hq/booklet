@@ -1,14 +1,32 @@
 # frozen_string_literal: true
 
 module Booklet
-  class Tree < Booklet::Object
+  class EntityTree < Booklet::Object
     include Enumerable
+
+    prop :path, Pathname, :positional, reader: :public
+
+    prop :loader, Visitor, reader: :public do |value|
+      value.is_a?(Class) ? value.new : value
+    end
+
+    prop :visitors, _Array(Visitor), reader: :public do |value|
+      value.to_a.map { _1.is_a?(Class) ? _1.new : _1 }
+    end
 
     prop :updated_at, Time, default: Time.current.freeze, writer: :protected, reader: :public
 
     def root
       load! unless @root
       @root
+    end
+
+    delegate :to_a, to: :root
+
+    def load!
+      @root = DirectoryNode.from(path).accept(loader)
+      visitors.each { accept(_1) }
+      touch! and return self
     end
 
     def each(...)
@@ -22,6 +40,10 @@ module Booklet
       result.is_a?(Node) ? self : result
     end
 
+    def files
+      root.grep(Locatable).map(&:file)
+    end
+
     def issues
       root.accept(IssueAggregator)
     end
@@ -33,7 +55,7 @@ module Booklet
     end
 
     def to_ascii(...)
-      @root.accept(AsciiTreeRenderer.new(...))
+      root.accept(AsciiTreeRenderer.new(...))
     end
 
     protected def touch!

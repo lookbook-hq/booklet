@@ -19,7 +19,7 @@ module Booklet
         # Do nothing
       end
 
-      delegate :name, :path, to: :file
+      delegate :name, :path, :directory?, :file?, to: :file
 
       def dirty?
         @ctime.before?(file.ctime)

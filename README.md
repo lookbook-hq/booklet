@@ -97,55 +97,21 @@ All tree mutations and transformations are performed by ['double dispatch'-style
 > [!NOTE]
 > Most of the time you'll probably want to use higher-level API methods than those presented below. See the [API docs](#api) section for more info.
 
-Booklet breaks up the processing of files into three main steps:
+Booklet breaks up the processing of files into two main steps:
 
-1. File tree creation
-2. Files &rarr; entity tree transformation
-3. Entity tree mutation
+1. Entity tree _creation_
+2. Entity tree _mutation_
   
-#### 1. File tree creation
+#### 1. Entity tree creation
 
-In the first step a tree of generic file and directory nodes is constructed by recursively scanning the root directory and adding a node for every file and folder found. This is handled by the [`FilesystemLoader` visitor](./lib/booklet/visitors/filesystem_loader.rb).
+Booklet recursively scans the contents of the root directory and adds a corresponding entity node to the tree for each file and directory found.
 
-```ruby
-file_tree = DirectoryNode.from("test/fixtures/demo").accept(FilesystemLoader.new)
-```
+For example `SpecNode` instances are added for all component preview class files (names ending in `_preview.rb`), `DocumentNode`s for all markdown files and `DirectoryNode` instances for all directories & subdirectories (see above for details on all available node types).
 
-<details>
-<summary>Resulting file tree</summary>
-
-> _ASCII tree visualisation generated using the [`AsciiTreeRenderer` visitor](./lib/booklet/visitors/ascii_tree_renderer.rb)_
-
-```
- [DirectoryNode] demo
- ├── [DirectoryNode] docs
- │   ├── [FileNode] _tmp_notes.txt
- │   ├── [FileNode] banner.png
- │   ├── [FileNode] overview.md
- │   ├── [FileNode] resources.md
- │   └── [DirectoryNode] usage
- │       ├── [FileNode] getting_started.md
- │       ├── [FileNode] installation.md
- │       └── [FileNode] screenshot.svg
- └── [DirectoryNode] view_previews
-     ├── [DirectoryNode] elements
-     │   ├── [FileNode] button_component_preview.rb
-     │   └── [FileNode] card_component_preview.rb
-     ├── [FileNode] helpers_preview.rb
-     └── [DirectoryNode] layouts
-         ├── [FileNode] article_preview.rb
-         └── [FileNode] landing_page_preview.rb
-```
-</details>
-
-#### 2. Files &rarr; entity tree transformation
-
-In this step the [`EntityTransformer`](./lib/booklet/visitors/entity_transformer.rb) visitor is applied to the raw file tree. The transformer visits each of the generic file/directory nodes in the file tree and converts all 'recognized' file types to their corresponding entity node type.
-
-For example, files with `.md` extensions are transformed into `DocumentNode` instances, whilst component preview class files (names ending in `_preview.rb`) are transformed into `SpecNode` instances.
+ By default this initial tree loading is handled byt the `Booklet::EntityLoader` class.
 
 ```ruby
-entity_tree = file_tree.accept(EntityTransformer.new)
+entity_tree =  DirectoryNode.from("example/demo").accept(EntityLoader.new)
 ```
 
 <details>
@@ -174,11 +140,9 @@ entity_tree = file_tree.accept(EntityTransformer.new)
 </details>
 
 
-#### 3. Entity tree mutation
+#### 2. Entity tree mutation
 
-This final step is where enity node visitors can be applied to perform tasks such as parsing file contents and generally 'building out' the skeleton entity node objects created in the previous step. 
-
-<!--By default Booklet will apply the [`PreviewClassParser`](./lib/booklet/visitors/preview_class_parser.rb) and [`FrontmatterExtractor`](./lib/booklet/visitors/frontmatter_extractor.rb) visitors at this stage.-->
+Once the basic tree of entity nodes has been created, node _visitors_ are then applied to perform tasks such as parsing file contents and generally 'building out' the skeleton entity node objects created in the first step. 
 
 ```ruby
 entity_tree

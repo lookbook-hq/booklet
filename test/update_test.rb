@@ -27,7 +27,7 @@ module Booklet
         setup do
           @timestamp = Time.current.to_i.to_s
 
-          @updatable_paths = @original_tree.files.grep(FileNode) { _1.path.to_s }.grep(/updated/)
+          @updatable_paths = @original_tree.map { _1.path.to_s }.grep(/updated/)
           @updatable_paths.each { TestUtils.replace_string_in_file(_1, "TIMESTAMP", @timestamp) }
 
           @updated_tree = Booklet.update(@original_tree)
@@ -38,12 +38,12 @@ module Booklet
         end
 
         should "be included in the file tree" do
-          updated_files, other_files = @updated_tree.files.partition { _1.path.to_s.in?(@updatable_paths) }
+          updated_files, other_files = @updated_tree.partition { _1.path.to_s.in?(@updatable_paths) }
           updated_files.each do |node|
             assert node.file.contents.include?(@timestamp)
           end
 
-          other_files.grep(FileNode).each do |node|
+          other_files.grep(Locatable).reject(&:directory?).each do |node|
             refute node.file.contents.include?(@timestamp)
           end
         end
@@ -78,20 +78,20 @@ module Booklet
         end
 
         should "not be included in the original tree" do
-          refute @original_tree.files.find { _1.path == @tmp_preview }
+          refute @original_tree.find { _1.path == @tmp_preview }
         end
 
         should "be included in the file tree" do
-          assert @updated_tree.files.find { _1.path == @tmp_preview }
+          assert @updated_tree.find { _1.path == @tmp_preview }
         end
 
         context "entity tree" do
           should "include entities corresponding to the changed files" do
-            assert @updated_tree.grep(SpecNode).find { _1.file.path == @tmp_preview }
+            assert @updated_tree.find { _1.path == @tmp_preview }
           end
 
           should "have applied the visitors to the new entity nodes" do
-            spec = @updated_tree.grep(SpecNode).find { _1.file.path == @tmp_preview }
+            spec = @updated_tree.find { _1.path == @tmp_preview }
 
             assert 1, spec.scenarios.count
 
@@ -119,16 +119,16 @@ module Booklet
         end
 
         should "be included in the original tree" do
-          assert @original_tree.files.find { _1.path == @deleted_preview }
+          assert @original_tree.find { _1.path == @deleted_preview }
         end
 
         should "not be included in the file tree" do
-          refute @updated_tree.files.find { _1.path == @deleted_preview }
+          refute @updated_tree.find { _1.path == @deleted_preview }
         end
 
         context "entity tree" do
           should "not have entities corresponding to the deleted files" do
-            refute @updated_tree.grep(SpecNode).find { _1.file.path == @deleted_preview }
+            refute @updated_tree.find { _1.path == @deleted_preview }
           end
         end
       end
