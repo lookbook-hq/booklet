@@ -47,10 +47,10 @@ module Booklet
         end
 
         context "entity conversion" do
-          context "DirectoryNode" do
+          context "FolderNode" do
             should "be created for each directory node" do
               dirs = Fixtures.files_within(@root).filter(&:directory?)
-              folders = @result.grep(DirectoryNode).reject(&:root?)
+              folders = @result.grep(FolderNode).reject(&:root?)
 
               assert_equal dirs.count, folders.count
               assert_equal 0, folders.map(&:path).difference(dirs).count

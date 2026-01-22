@@ -2,10 +2,10 @@ require "support/test_helper"
 require_relative "shared/locatable_assertions"
 
 module Booklet
-  class DirectoryNodeTest < Minitest::Test
+  class FolderNodeTest < Minitest::Test
     # include LocatableAssertions
 
-    subject { DirectoryNode }
+    subject { FolderNode }
 
     context "instance methods" do
       setup do
@@ -13,20 +13,20 @@ module Booklet
         @node = subject.from(@fixture_file)
       end
 
-      context "DirectoryNode#path" do
+      context "FolderNode#path" do
         should "return the path as a pathname" do
           assert_equal @fixture_file, @node.path
           assert_kind_of Pathname, @node.path
         end
       end
 
-      context "DirectoryNode#file?" do
+      context "FolderNode#file?" do
         should "return false" do
           refute @node.file?
         end
       end
 
-      context "DirectoryNode#directory?" do
+      context "FolderNode#directory?" do
         should "return true" do
           assert @node.directory?
         end

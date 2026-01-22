@@ -4,7 +4,7 @@ require "prism"
 
 module Booklet
   class RubyValidator < Visitor
-    visit DirectoryNode do |node|
+    visit FolderNode do |node|
       visit_each(node.children)
       node
     end

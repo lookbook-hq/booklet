@@ -24,7 +24,7 @@ module Booklet
     delegate :to_a, to: :root
 
     def load!
-      @root = DirectoryNode.from(path).accept(loader)
+      @root = FolderNode.from(path).accept(loader)
       visitors.each { accept(_1) }
       touch! and return self
     end

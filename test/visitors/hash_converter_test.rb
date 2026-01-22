@@ -10,7 +10,7 @@ module Booklet
       end
 
       should "not mutate the visited tree" do
-        assert_kind_of DirectoryNode, @result.root
+        assert_kind_of FolderNode, @result.root
       end
 
       should "return a hash with the expected number of (nested) items" do

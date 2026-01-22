@@ -106,12 +106,12 @@ Booklet breaks up the processing of files into two main steps:
 
 Booklet recursively scans the contents of the root directory and adds a corresponding entity node to the tree for each file and directory found.
 
-For example `SpecNode` instances are added for all component preview class files (names ending in `_preview.rb`), `DocumentNode`s for all markdown files and `DirectoryNode` instances for all directories & subdirectories (see above for details on all available node types).
+For example `SpecNode` instances are added for all component preview class files (names ending in `_preview.rb`), `DocumentNode`s for all markdown files and `FolderNode` instances for all directories & subdirectories (see above for details on all available node types).
 
  By default this initial tree loading is handled byt the `Booklet::EntityLoader` class.
 
 ```ruby
-entity_tree =  DirectoryNode.from("example/demo").accept(EntityLoader.new)
+entity_tree =  FolderNode.from("example/demo").accept(EntityLoader.new)
 ```
 
 <details>

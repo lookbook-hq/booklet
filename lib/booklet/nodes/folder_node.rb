@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Booklet
-  class DirectoryNode < Node
+  class FolderNode < Node
     include Nameable
     include Locatable
 
-    permit_child_types [DirectoryNode, AssetNode, BookletSpecNode, DocumentNode, PreviewClassNode, SpecNode, FileNode]
+    permit_child_types [FolderNode, AssetNode, BookletSpecNode, DocumentNode, PreviewClassNode, SpecNode, FileNode]
 
     def directory?
       true

@@ -5,7 +5,7 @@ module Booklet
     context "filesystem loader" do
       setup do
         @root_path = Fixtures.dir("mixed")
-        @root = DirectoryNode.from(@root_path)
+        @root = FolderNode.from(@root_path)
       end
 
       should "recursively create entity nodes for all files" do
@@ -27,7 +27,7 @@ module Booklet
       context "branches containing only directories" do
         setup do
           @root_path = Fixtures.dir("empty_dirs")
-          @root = DirectoryNode.from(@root_path)
+          @root = FolderNode.from(@root_path)
         end
 
         should "not be included in the tree" do

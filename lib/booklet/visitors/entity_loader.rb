@@ -11,7 +11,7 @@ module Booklet
       @path_matcher = FastIgnore.new(ignore_rules:)
     end
 
-    visit DirectoryNode do |node|
+    visit FolderNode do |node|
       paths = Dir[%(#{node.path}/*)].filter { allowed?(_1) }
       paths = paths.sort.map { Pathname(_1) }
 
@@ -21,7 +21,7 @@ module Booklet
         visit(child)
 
         # Don't include empty directories in the tree
-        node << child unless child.is_a?(DirectoryNode) && !child.children?
+        node << child unless child.is_a?(FolderNode) && !child.children?
       end
       node
     end
@@ -48,7 +48,7 @@ module Booklet
     protected def entity_from_registry(path)
       node = @registry.find { _1.path == path }
       if node && !node.dirty?
-        if node.is_a?(DirectoryNode)
+        if node.is_a?(FolderNode)
           node.children = []
         end
         node
