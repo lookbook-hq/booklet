@@ -3,9 +3,14 @@
 module Booklet
   class PreviewClassNode < SpecNode
     include Locatable
+    include Nameable
 
-    match do |file|
-      file.basename.end_with?("_preview.rb")
+    class << self
+      def from(path, **props)
+        return unless path.to_s.end_with?("_preview.rb")
+
+        new(path, path:, name: FileHelpers.file_name(path), **props)
+      end
     end
   end
 end

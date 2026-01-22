@@ -14,12 +14,12 @@ module Booklet
         end
 
         context "Tree#files" do
-          should "return an array of file objects representing all expected files and folders" do
+          should "return an array of Pathnames representing all expected files and folders" do
             assert_kind_of Array, @result.files
 
             assert_equal(
               Fixtures.files_within(@root).count,
-              @result.files.count { _1.path != @root } # @result.files includes the root directory, files_within doesn't.
+              @result.files.count { _1 != @root } # @result.files includes the root directory, files_within doesn't.
             )
           end
         end

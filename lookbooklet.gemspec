@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.license = "MIT"
 
   spec.files = Dir["lib/**/*", "LICENSE.txt", "README.md"]
-  spec.require_paths = ["lib/booklet"]
+  spec.require_paths = ["lib"]
 
   spec.required_ruby_version = ">= 3.2"
 

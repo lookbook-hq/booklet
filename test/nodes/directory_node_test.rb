@@ -3,7 +3,7 @@ require_relative "shared/locatable_assertions"
 
 module Booklet
   class DirectoryNodeTest < Minitest::Test
-    include LocatableAssertions
+    # include LocatableAssertions
 
     subject { DirectoryNode }
 

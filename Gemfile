@@ -2,7 +2,7 @@ source "https://gem.coop"
 
 gemspec
 
-gem "lookbook"
+# gem "lookbook"
 gem "rake"
 gem "standard"
 gem "rubocop"

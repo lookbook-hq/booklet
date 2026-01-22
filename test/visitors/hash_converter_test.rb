@@ -50,7 +50,7 @@ module Booklet
 
         context "with props option as a props hash" do
           setup do
-            @props = {path: true, derived: lambda { |node| node.file&.basename }}
+            @props = {path: true, derived: lambda { |node| node.path&.basename }}
             @hash = @result.accept(HashConverter.new(props: @props))
           end
 
@@ -62,7 +62,7 @@ module Booklet
 
               if node.locatable?
                 assert_equal entry[:path], node.path
-                assert_equal entry[:derived], node.file&.basename
+                assert_equal entry[:derived], node.path&.basename
               else
                 assert_nil entry[:path]
                 assert_nil entry[:derived]

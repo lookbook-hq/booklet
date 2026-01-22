@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "active_support/ordered_options"
-
 module Booklet
   class Node < Booklet::Object
     include Enumerable
@@ -17,7 +15,7 @@ module Booklet
 
     after_initialize do
       @parent = nil
-      @children = []
+      @children ||= []
       @dirty = false
       @visited_by = []
     end
@@ -220,7 +218,7 @@ module Booklet
 
       raise ArgumentError, "Parent node does not accept children" if valid_child_types.nil?
 
-      unless valid_child_types.include?(node.type)
+      unless valid_child_types.any? { node.is_a?(_1) }
         raise TypeError, "Invalid node type '#{node.type}' - must be one of [#{valid_child_types.join(", ")}]"
       end
     end
@@ -248,7 +246,7 @@ module Booklet
       self if block_given?
     end
 
-    protected alias_method :each, :each_node
+    alias_method :each, :each_node
 
     def walk(&block)
       each_node(&block)
@@ -300,17 +298,14 @@ module Booklet
 
     def method_missing(name, ...)
       if name.end_with?("?")
-        type.public_send(name)
-      elsif name.start_with?("each_")
-        filter_type = name.to_s.delete_prefix("each_")
-        filter { _1.type == filter_type }
+        false
       else
         super
       end
     end
 
     def respond_to_missing?(name, ...)
-      name.end_with?("?") || name.start_with?("each_") || super
+      name.end_with?("?") || super
     end
 
     # @!endgroup
@@ -329,49 +324,24 @@ module Booklet
       instance_predicate: false,
       default: []
 
-    class_attribute :file_matcher,
-      instance_reader: false,
-      instance_writer: false,
-      instance_predicate: false,
-      default: proc { false }
-
     def permit_child_types(*args)
       args.flatten!
-      self.valid_child_types = args.map { NodeType.new(_1) } unless args.first.nil?
+      self.valid_child_types = args unless args.first.nil?
     end
 
     # @!endgroup
 
-    # @!group Fallback methods for non-locatable nodes
-
-    def file
-      nil
-    end
-
     def path
-      nil
     end
 
     class << self
       def permit_child_types(*args)
         args.flatten!
-        self.valid_child_types = args.map { NodeType.new(_1) } unless args.first.nil?
+        self.valid_child_types = args unless args.first.nil?
       end
 
       def type
         NodeType.new(self)
-      end
-
-      def locatable?
-        self < Locatable
-      end
-
-      def types
-        Node.descendants
-      end
-
-      def locatable_types
-        types.filter { _1 < Locatable }
       end
     end
 

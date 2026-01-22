@@ -34,13 +34,13 @@ module Booklet
           @root.accept(EntityLoader)
           nodes = @root.descendants
 
-          assert nodes.find { _1.file.basename == "a" }
-          assert nodes.find { _1.file.basename == "aa" }
-          assert nodes.find { _1.file.basename == "aaa.txt" }
+          assert nodes.find { _1.path.basename.to_s == "a" }
+          assert nodes.find { _1.path.basename.to_s == "aa" }
+          assert nodes.find { _1.path.basename.to_s == "aaa.txt" }
 
-          refute nodes.find { _1.file.basename == "b" }
-          refute nodes.find { _1.file.basename == "bb" }
-          refute nodes.find { _1.file.basename == "c" }
+          refute nodes.find { _1.path.basename.to_s == "b" }
+          refute nodes.find { _1.path.basename.to_s == "bb" }
+          refute nodes.find { _1.path.basename.to_s == "c" }
         end
       end
     end

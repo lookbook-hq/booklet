@@ -12,7 +12,7 @@ module Booklet
       return spec if spec.errors? || visited?(spec)
 
       begin
-        class_object = @yard.parse_file(spec.file.path)
+        class_object = @yard.parse_file(spec.path)
       rescue => error
         spec.add_error(error)
       end

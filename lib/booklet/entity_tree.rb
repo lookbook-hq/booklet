@@ -37,11 +37,16 @@ module Booklet
 
     def accept(visitor)
       result = root.accept(visitor)
-      result.is_a?(Node) ? self : result
+      if root == result
+        @root = result
+        self
+      else
+        result
+      end
     end
 
     def files
-      root.grep(Locatable).map(&:file)
+      root.grep(Locatable).map(&:path)
     end
 
     def issues

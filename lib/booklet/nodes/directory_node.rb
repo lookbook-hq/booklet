@@ -2,20 +2,23 @@
 
 module Booklet
   class DirectoryNode < Node
+    include Nameable
     include Locatable
 
     permit_child_types [DirectoryNode, AssetNode, BookletSpecNode, DocumentNode, PreviewClassNode, SpecNode, FileNode]
 
-    match do |file|
-      file.directory?
+    def directory?
+      true
     end
 
-    def label
-      name.titleize
-    end
+    class << self
+      def from(path, **props)
+        path = Pathname(path)
 
-    def name
-      file.basename
+        return unless FileHelpers.directory?(path)
+
+        new(path, path:, name: FileHelpers.file_name(path), **props)
+      end
     end
   end
 end

@@ -9,7 +9,6 @@ loader = Zeitwerk::Loader.new
 loader.push_dir("#{__dir__}/booklet", namespace: Booklet)
 loader.collapse("#{__dir__}/booklet/**/*")
 loader.ignore("#{__dir__}/booklet/version.rb")
-loader.inflector.inflect("abt" => "ABT")
 
 loader.setup
 loader.eager_load_dir("#{__dir__}/booklet/nodes") # ensure `Booklet::Node#subclasses` works as expected
@@ -17,6 +16,10 @@ loader.eager_load_dir("#{__dir__}/booklet/nodes") # ensure `Booklet::Node#subcla
 module Booklet
   class << self
     delegate :analyze, :update, to: Analyzer
+
+    def version
+      Booklet::VERSION
+    end
 
     def loader
       @loader ||= EntityLoader

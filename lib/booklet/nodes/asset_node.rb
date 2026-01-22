@@ -6,10 +6,16 @@ module Booklet
 
     MIME_TYPES = %w[text/css text/javascript]
 
-    match do |file|
-      return if file.directory?
+    class << self
+      def from(path, **props)
+        path = Pathname(path)
+        mime_type = FileHelpers.mime_type(path)
 
-      file.mime_type.in?(MIME_TYPES) || file.mime_type.start_with?("image/")
+        return if FileHelpers.directory?(path)
+        return unless mime_type.in?(MIME_TYPES) || mime_type.start_with?("image/")
+
+        new(path, path:, **props)
+      end
     end
   end
 end

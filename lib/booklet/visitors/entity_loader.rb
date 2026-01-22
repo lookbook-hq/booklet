@@ -13,14 +13,11 @@ module Booklet
 
     visit DirectoryNode do |node|
       paths = Dir[%(#{node.path}/*)].filter { allowed?(_1) }
-      files = paths.sort.map { File.new(_1) }
+      paths = paths.sort.map { Pathname(_1) }
 
-      files.each do |file|
-        child = entity_from_registry(file) || begin
-          type = Node.locatable_types.find { _1.from?(file) } || FileNode
-          type.from(file)
-        end
-
+      paths.each do |path|
+        child = entity_from_registry(path) || entity_from_path(path)
+        next unless child
         visit(child)
 
         # Don't include empty directories in the tree
@@ -39,10 +36,18 @@ module Booklet
       @path_matcher.allowed?(path, include_directories: true)
     end
 
-    protected def entity_from_registry(file)
-      node = @registry.find { _1.path == file.path }
-      if node && !node.dirty?
+    protected def entity_from_path(path)
+      stack = Node.descendants.filter { _1 < Locatable }
 
+      until stack.none?
+        entity = stack.pop.from(path)
+        return entity if entity
+      end
+    end
+
+    protected def entity_from_registry(path)
+      node = @registry.find { _1.path == path }
+      if node && !node.dirty?
         if node.is_a?(DirectoryNode)
           node.children = []
         end

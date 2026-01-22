@@ -13,7 +13,9 @@ module Booklet
         YARD.parse(paths)
       end
 
-      YARD::Registry.all(:class).filter { paths.include?(_1.file) }
+      YARD::Registry.all(:class).filter do |code_object|
+        paths.include?(code_object.file)
+      end
     end
 
     def parse_file(path)

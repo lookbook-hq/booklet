@@ -4,21 +4,13 @@ module Booklet
 
     included do
       context "locatable class methods" do
-        setup do
-          @file_path = Pathname("/full/path/to/example.md")
-        end
-
         context ".from" do
-          should "instantiate and return a new file node instance from a File instance" do
-            assert_kind_of subject, subject.from(File.new(@file_path))
-          end
-
           should "instantiate and return a new file node instance from a Pathname" do
-            assert_kind_of subject, subject.from(@file_path)
+            assert_kind_of subject, subject.from(@subject_file_path)
           end
 
           should "instantiate and return a new file node instance from a path string" do
-            assert_kind_of subject, subject.from(@file_path.to_s)
+            assert_kind_of subject, subject.from(@subject_file_path.to_s)
           end
 
           should "raise an argument error if an file is not provided" do
@@ -28,7 +20,7 @@ module Booklet
 
         context ".locatable" do
           should "return true" do
-            node = subject.from(@file_path)
+            node = subject.from(@subject_file_path)
             assert node.locatable?
           end
         end
@@ -36,14 +28,14 @@ module Booklet
 
       context "locatable instance methods" do
         setup do
-          @file_path = Pathname("/full/path/to/example.md")
-          @node = subject.from(@file_path)
+          @subject_file_path = Pathname("/full/path/to/example.md")
+          @node = subject.from(@subject_file_path)
         end
 
-        context ".file" do
-          should "returns a Booklet File object instance" do
-            assert_kind_of File, @node.file
-            assert_equal @file_path, @node.file.path
+        context ".path" do
+          should "returns a Pathname instance" do
+            assert_kind_of Pathname, @node.path
+            assert_equal @subject_file_path, @node.path
           end
         end
       end
