@@ -9,11 +9,14 @@ module Booklet
 
     class << self
       def from(path, **props)
+        unless FileHelpers.extension(path).in?(EXTENSIONS)
+          raise ArgumentError, "#{path} is not a DocumentNode"
+        end
+
         path = Pathname(path)
+        name = FileHelpers.file_name(path)
 
-        return unless FileHelpers.extension(path).in?(EXTENSIONS)
-
-        new(path, path:, name: FileHelpers.file_name(path), **props)
+        new(path, name:, **props)
       end
     end
   end

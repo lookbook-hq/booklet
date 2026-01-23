@@ -5,7 +5,7 @@ module Booklet
     include Nameable
     include Locatable
 
-    permit_child_types [FolderNode, AssetNode, BookletSpecNode, DocumentNode, PreviewClassNode, SpecNode, FileNode]
+    permit_child_nodes Locatable.entities
 
     def directory?
       true
@@ -13,11 +13,13 @@ module Booklet
 
     class << self
       def from(path, **props)
-        path = Pathname(path)
+        unless FileHelpers.directory?(path)
+          raise ArgumentError, "Cannot create FolderNode from file #{path}"
+        end
 
-        return unless FileHelpers.directory?(path)
+        name = FileHelpers.file_name(path)
 
-        new(path, path:, name: FileHelpers.file_name(path), **props)
+        new(path, name:, **props)
       end
     end
   end

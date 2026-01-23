@@ -17,7 +17,7 @@ module Booklet
           assert_kind_of EntityTree, @updated_tree
         end
 
-        should "no be the same instance as the original tree" do
+        should "not be the same instance as the original tree" do
           @updated_tree = Booklet.update(@original_tree)
           refute @updated_tree.equal?(@original_tree)
         end
@@ -37,18 +37,7 @@ module Booklet
           @updatable_paths.each { TestUtils.replace_string_in_file(_1, @timestamp, "TIMESTAMP") }
         end
 
-        # should "be included in the file tree" do
-        #   updated_files, other_files = @updated_tree.partition { _1.path.to_s.in?(@updatable_paths) }
-        #   updated_files.each do |node|
-        #     assert node.file.contents.include?(@timestamp)
-        #   end
-
-        #   other_files.grep(Locatable).reject(&:directory?).each do |node|
-        #     refute File.read(node.path).include?(@timestamp)
-        #   end
-        # end
-
-        should "cause their corresponding entites to be updated" do
+        should "cause their corresponding entities to be updated" do
           changed_spec = @updated_tree.grep(SpecNode).find { _1.name == "updated_preview" }
 
           assert changed_spec.notes.to_s.include?(@timestamp)
@@ -59,7 +48,7 @@ module Booklet
         setup do
           @tmp_preview = @root.join("specs/tmp_preview.rb")
 
-          ::File.write(@tmp_preview, <<~CONTENT)
+          File.write(@tmp_preview, <<~CONTENT)
             module Specs
               class TmpPreview < Lookbook::Preview
                 def default
@@ -72,7 +61,7 @@ module Booklet
         end
 
         teardown do
-          ::File.delete(@tmp_preview)
+          File.delete(@tmp_preview)
         rescue Errno::ENOENT
           # ignore
         end
@@ -82,7 +71,7 @@ module Booklet
         end
 
         should "be included in the file tree" do
-          assert @updated_tree.find { _1.path == @tmp_preview }
+          assert @updated_tree.files.find { _1 == @tmp_preview }
         end
 
         context "entity tree" do
@@ -106,16 +95,16 @@ module Booklet
         setup do
           @deleted_preview = @root.join("specs/deleted_preview.rb")
 
-          file = ::File.open(@deleted_preview)
+          file = File.open(@deleted_preview)
           @deleted_preview_content = file.read
 
-          ::File.delete(@deleted_preview)
+          File.delete(@deleted_preview)
 
           @updated_tree = Booklet.update(@original_tree)
         end
 
         teardown do
-          ::File.write(@deleted_preview, @deleted_preview_content)
+          File.write(@deleted_preview, @deleted_preview_content)
         end
 
         should "be included in the original tree" do
@@ -123,7 +112,7 @@ module Booklet
         end
 
         should "not be included in the file tree" do
-          refute @updated_tree.find { _1.path == @deleted_preview }
+          refute @updated_tree.files.find { _1 == @deleted_preview }
         end
 
         context "entity tree" do

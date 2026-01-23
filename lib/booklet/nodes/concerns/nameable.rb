@@ -3,7 +3,10 @@ module Booklet
     extend ActiveSupport::Concern
 
     included do
-      prop :name, String, reader: :public, writer: :public
+      prop :name, String, reader: :public, writer: :public do |value|
+        value.to_s
+      end
+
       prop :label, _Nilable(String), writer: :public
       prop :title, _Nilable(String), writer: :public
 

@@ -1,11 +1,28 @@
 require "support/test_helper"
-require_relative "shared/locatable_assertions"
 
 module Booklet
   class FolderNodeTest < Minitest::Test
-    # include LocatableAssertions
-
     subject { FolderNode }
+
+    context "class methods" do
+      context "FolderNode::from" do
+        context "called with a path that is not a directory" do
+          should "raise an exception " do
+            file_path = Fixtures.file("mixed/overview.md")
+
+            assert_raises(ArgumentError) { subject.from(file_path) }
+          end
+        end
+
+        context "called with a directory path" do
+          should "return a FolderNode instance " do
+            file_path = Fixtures.dir("mixed/docs")
+
+            assert_kind_of subject, subject.from(file_path)
+          end
+        end
+      end
+    end
 
     context "instance methods" do
       setup do

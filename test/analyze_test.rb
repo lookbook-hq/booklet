@@ -57,28 +57,10 @@ module Booklet
             end
           end
 
-          context "PreviewClassNode" do
+          context "SpecNode" do
             should "be created for each preview class" do
-              spec_files = Fixtures.spec_files_within(@root).filter { _1.basename.to_s.end_with?("_preview.rb") }
-              specs = @result.grep(PreviewClassNode)
-
-              assert_equal spec_files.count, specs.count
-              assert_equal 0, specs.map(&:path).difference(spec_files).count
-            end
-
-            should "match SpecNodes" do
               spec_files = Fixtures.spec_files_within(@root)
               specs = @result.grep(SpecNode)
-
-              assert_equal spec_files.count, specs.count
-              assert_equal 0, specs.map(&:path).difference(spec_files).count
-            end
-          end
-
-          context "BookletSpecNode" do
-            should "be created for each booklet spec file" do
-              spec_files = Fixtures.spec_files_within(@root).filter { _1.basename.to_s.end_with?("_booklet.rb") }
-              specs = @result.grep(BookletSpecNode)
 
               assert_equal spec_files.count, specs.count
               assert_equal 0, specs.map(&:path).difference(spec_files).count
@@ -115,47 +97,6 @@ module Booklet
             end
           end
         end
-
-        # context "Tree#to_ascii" do
-        #   setup do
-        #     @ascii_tree = @result.to_ascii
-        #   end
-
-        #   should "convert the tree to an ascii representation" do
-        #     assert_kind_of String, @ascii_tree
-
-        #     expected = <<~TREE
-        #       Mixed
-        #       ├── _config
-        #       ├── _tmp
-        #       ├── Components
-        #       │   ├── README
-        #       │   ├── Elements
-        #       │   │   ├── button_booklet
-        #       │   │   ├── Link Preview
-        #       │   │   │   └── default
-        #       │   │   └── Link Preview
-        #       │   │       └── Default
-        #       │   └── Notifications
-        #       │       └── Toast Preview
-        #       │           └── Default
-        #       ├── Docs
-        #       │   ├── 01_index
-        #       │   ├── 02_installation
-        #       │   ├── 03 Usage
-        #       │   │   ├── 01_get_started
-        #       │   │   ├── 02 Basic Preview
-        #       │   │   │   ├── View Component
-        #       │   │   │   └── Phlex
-        #       │   │   ├── 04_next_steps
-        #       │   │   └── _config
-        #       │   └── further_reading
-        #       └── overview
-        #     TREE
-
-        #     assert_equal expected.strip_heredoc.strip, @ascii_tree
-        #   end
-        # end
       end
     end
   end

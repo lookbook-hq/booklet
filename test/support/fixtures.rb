@@ -2,7 +2,7 @@ module Fixtures
   ASSET_EXTENSIONS = [".js", ".css", ".png", ".svg", ".gif", ".jpg", ".webp", ".jpeg"]
 
   def file(path)
-    file_path = Pathname(::File.dirname(__FILE__)).join("../fixtures").join(path).expand_path
+    file_path = Pathname(File.dirname(__FILE__)).join("../fixtures").join(path).expand_path
     raise "Missing fixture file: #{file_path}" unless file_path.exist?
     file_path
   end

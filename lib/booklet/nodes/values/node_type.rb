@@ -25,14 +25,6 @@ module Booklet
       ActiveSupport::StringInquirer.new(name)
     end
 
-    # def entity?
-    #   @type < EntityNode
-    # end
-
-    def file?
-      @type < FileNode
-    end
-
     def method_missing(name, ...)
       name.end_with?("?") ? enquirer.public_send(name) : super
     end

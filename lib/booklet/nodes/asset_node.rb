@@ -8,13 +8,17 @@ module Booklet
 
     class << self
       def from(path, **props)
-        path = Pathname(path)
         mime_type = FileHelpers.mime_type(path)
 
-        return if FileHelpers.directory?(path)
-        return unless mime_type.in?(MIME_TYPES) || mime_type.start_with?("image/")
+        if FileHelpers.directory?(path)
+          raise ArgumentError, "Cannot create AssetNode from directory #{path}"
+        end
 
-        new(path, path:, **props)
+        unless mime_type.in?(MIME_TYPES) || mime_type.start_with?("image/")
+          raise ArgumentError, "Cannot create AssetNode from file of mime type #{mime_type}"
+        end
+
+        new(path, **props)
       end
     end
   end

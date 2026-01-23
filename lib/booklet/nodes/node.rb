@@ -5,7 +5,7 @@ module Booklet
     include Enumerable
     include Comparable
 
-    prop :ref, String, :positional, reader: false do |value|
+    prop :ref, String, :positional do |value|
       value.to_s
     end
 
@@ -24,7 +24,7 @@ module Booklet
       @node_ref ||= NodeRef.new(@ref)
     end
 
-    def ref_path(separator: "/")
+    def tree_path(prop = :ref, separator: "/")
       @ref_path ||= [ancestors&.map(&:ref)&.reverse, ref].flatten.compact.join(separator)
     end
 
@@ -216,10 +216,10 @@ module Booklet
       raise ArgumentError, "`#{node.ref}` is already a child of node `#{ref}`" if has_child?(node)
       raise ArgumentError, "`#{node.ref}` is already attached to another node" unless node.root?
 
-      raise ArgumentError, "Parent node does not accept children" if valid_child_types.nil?
+      raise ArgumentError, "Parent node does not accept children" if valid_child_node_types.nil?
 
-      unless valid_child_types.any? { node.is_a?(_1) }
-        raise TypeError, "Invalid node type '#{node.type}' - must be one of [#{valid_child_types.join(", ")}]"
+      unless valid_child_node_types.any? { node.is_a?(_1.value) }
+        raise TypeError, "Invalid node type '#{node.type}' - must be one of [#{valid_child_node_types.join(", ")}]"
       end
     end
 
@@ -296,6 +296,10 @@ module Booklet
       @type ||= NodeType.new(self.class)
     end
 
+    # @!endgroup
+
+    # @!group Missing method handling
+
     def method_missing(name, ...)
       if name.end_with?("?")
         false
@@ -318,16 +322,11 @@ module Booklet
 
     # @!endgroup
 
-    # @!group Child type constraints
+    # @!group Child node type constraints
 
-    class_attribute :valid_child_types,
+    class_attribute :valid_child_node_types,
       instance_predicate: false,
       default: []
-
-    def permit_child_types(*args)
-      args.flatten!
-      self.valid_child_types = args unless args.first.nil?
-    end
 
     # @!endgroup
 
@@ -335,9 +334,9 @@ module Booklet
     end
 
     class << self
-      def permit_child_types(*args)
+      def permit_child_nodes(*args)
         args.flatten!
-        self.valid_child_types = args unless args.first.nil?
+        self.valid_child_node_types = args.map { NodeType.new(_1) } unless args.first.nil?
       end
 
       def type
@@ -345,6 +344,6 @@ module Booklet
       end
     end
 
-    permit_child_types Node
+    permit_child_nodes Node
   end
 end

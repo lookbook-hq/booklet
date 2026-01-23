@@ -1,10 +1,7 @@
 require "support/test_helper"
-require_relative "shared/locatable_assertions"
 
 module Booklet
   class FileNodeTest < Minitest::Test
-    # include LocatableAssertions
-
     subject { FileNode }
 
     context "instance methods" do

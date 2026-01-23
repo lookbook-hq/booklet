@@ -5,11 +5,12 @@ module Booklet
     included do
       attr_reader :ctime
 
-      prop :path, Pathname, reader: :public do |value|
+      prop :path, _Nilable(Pathname), reader: :public, writer: :protected do |value|
         Pathname(value.to_s) unless value.nil?
       end
 
       after_initialize do |node|
+        self.path ||= Pathname(@ref)
         @ctime = path.ctime
       rescue Errno::ENOENT
         # Do nothing
@@ -24,9 +25,24 @@ module Booklet
       end
     end
 
-    class_methods do
-      def from(path)
-        new(path, path:)
+    class << self
+      def entities
+        [FolderNode, AssetNode, DocumentNode, SpecNode, FileNode]
+      end
+
+      def entity_from_path(path)
+        stack = entities.reject { _1 == FileNode }
+
+        entity = until stack.empty?
+          begin
+            entity = stack.shift.from(path)
+            break entity if entity
+          rescue ArgumentError
+            # Do nothing
+          end
+        end
+
+        entity || FileNode.from(path)
       end
     end
   end

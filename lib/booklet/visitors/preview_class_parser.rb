@@ -8,8 +8,10 @@ module Booklet
       @yard = YardParser.new
     end
 
-    visit PreviewClassNode do |spec|
-      return spec if spec.errors? || visited?(spec)
+    visit SpecNode do |spec|
+      if (spec.format != :preview_class) || spec.errors? || visited?(spec)
+        return spec
+      end
 
       begin
         class_object = @yard.parse_file(spec.path)
@@ -49,7 +51,7 @@ module Booklet
       comments = strip_whitespace(method_object.docstring)
       notes = TextSnippet.new(comments) if comments.present?
 
-      ScenarioNode.new(method_object.name, source:, parameters:, notes:)
+      ScenarioNode.new(method_object.name, name: method_object.name, source:, parameters:, notes:)
     end
   end
 end

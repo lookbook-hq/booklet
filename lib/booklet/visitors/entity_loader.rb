@@ -13,10 +13,10 @@ module Booklet
 
     visit FolderNode do |node|
       paths = Dir[%(#{node.path}/*)].filter { allowed?(_1) }
-      paths = paths.sort.map { Pathname(_1) }
+      paths = paths.sort
 
       paths.each do |path|
-        child = entity_from_registry(path) || entity_from_path(path)
+        child = entity_from_registry(path) || Locatable.entity_from_path(path)
         next unless child
         visit(child)
 
@@ -34,15 +34,6 @@ module Booklet
 
     protected def allowed?(path)
       @path_matcher.allowed?(path, include_directories: true)
-    end
-
-    protected def entity_from_path(path)
-      stack = Node.descendants.filter { _1 < Locatable }
-
-      until stack.none?
-        entity = stack.pop.from(path)
-        return entity if entity
-      end
     end
 
     protected def entity_from_registry(path)
