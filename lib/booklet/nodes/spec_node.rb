@@ -11,6 +11,10 @@ module Booklet
       children.grep(ScenarioNode)
     end
 
+    def lookup_value
+      @lookup_value ||= name
+    end
+
     def format
       case path.to_s
       when /.*(_preview\.rb)$/
@@ -27,6 +31,9 @@ module Booklet
         end
 
         name = FileHelpers.file_name(path)
+          .gsub("_preview", "")
+          .gsub("_booklet", "")
+          .gsub("_component", "")
         new(path, name:, **props)
       end
     end

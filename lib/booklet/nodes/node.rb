@@ -24,12 +24,8 @@ module Booklet
       @node_ref ||= NodeRef.new(@ref)
     end
 
-    def tree_path(prop = :ref, separator: "/")
-      @ref_path ||= [ancestors&.map(&:ref)&.reverse, ref].flatten.compact.join(separator)
-    end
-
     def id
-      Helpers.hexdigest(ref_path)
+      Helpers.hexdigest(lookup_path { _1.lookup_value })
     end
 
     def issues
@@ -294,6 +290,20 @@ module Booklet
 
     def type
       @type ||= NodeType.new(self.class)
+    end
+
+    # @!endgroup
+
+    # @!group Tree node lookup
+
+    def lookup_path(separator: "/", &block)
+      nodes = [ancestors&.reverse, self].flatten.compact
+      values = block ? nodes.map { block.call(_1) } : nodes.map { _1.lookup_value }
+      values.compact.join(separator)
+    end
+
+    def lookup_value
+      ref
     end
 
     # @!endgroup

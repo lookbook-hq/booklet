@@ -7,6 +7,10 @@ module Booklet
 
     permit_child_nodes Locatable.entities
 
+    def lookup_value
+      @lookup_value ||= FileHelpers.file_name(path)
+    end
+
     def directory?
       true
     end

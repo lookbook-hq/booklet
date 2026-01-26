@@ -20,6 +20,10 @@ module Booklet
         @ctime.before?(path.ctime)
       end
 
+      def lookup_value
+        @lookup_value ||= FileHelpers.file_name(path)
+      end
+
       def locatable?
         true
       end
