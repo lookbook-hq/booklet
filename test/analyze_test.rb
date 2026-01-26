@@ -67,10 +67,10 @@ module Booklet
             end
           end
 
-          context "DocumentNode" do
+          context "PageNode" do
             should "be created for each matching markdown file" do
               doc_files = Fixtures.markdown_files_within(@root)
-              docs = @result.grep(DocumentNode)
+              docs = @result.grep(PageNode)
 
               assert_equal doc_files.count, docs.count
               assert_equal 0, docs.map(&:path).difference(doc_files).count

@@ -2,7 +2,7 @@
 
 module Booklet
   class FrontmatterExtractor < Visitor
-    visit DocumentNode do |node|
+    visit PageNode do |node|
       # Not yet implemented
       node
     end

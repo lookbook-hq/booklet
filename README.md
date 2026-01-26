@@ -80,10 +80,10 @@ Each file in the directory is converted into a corresponding node type. Node typ
 
 * Folders
 * Specs (i.e. [previews](https://lookbook.build/guide/previews))
-* Documents (i.e. [pages](https://lookbook.build/guide/pages))
+* [Pages](https://lookbook.build/guide/pages)
 * Assets
 
-Content nodes (i.e. specs & documents) typically have child nodes that represent their parsed content. Content node types include:
+Content nodes (i.e. specs & pages) typically have child nodes that represent their parsed content. Content node types include:
 
 * Scenarios
 * Prose
@@ -106,7 +106,7 @@ Booklet breaks up the processing of files into two main steps:
 
 Booklet recursively scans the contents of the root directory and adds a corresponding entity node to the tree for each file and directory found.
 
-For example `SpecNode` instances are added for all component preview class files (names ending in `_preview.rb`), `DocumentNode`s for all markdown files and `FolderNode` instances for all directories & subdirectories (see above for details on all available node types).
+For example `SpecNode` instances are added for all component preview class files (names ending in `_preview.rb`), `PageNode`s for all markdown files and `FolderNode` instances for all directories & subdirectories (see above for details on all available node types).
 
  By default this initial tree loading is handled byt the `Booklet::EntityLoader` class.
 
@@ -122,11 +122,11 @@ entity_tree =  FolderNode.from("example/demo").accept(EntityLoader.new)
  ├── [FolderNode] Docs
  │   ├── [AnonNode] _tmp_notes.txt
  │   ├── [AssetNode] banner.png
- │   ├── [DocumentNode] Overview
- │   ├── [DocumentNode] Resources
+ │   ├── [PageNode] Overview
+ │   ├── [PageNode] Resources
  │   └── [FolderNode] Usage
- │       ├── [DocumentNode] Getting Started
- │       ├── [DocumentNode] Installation
+ │       ├── [PageNode] Getting Started
+ │       ├── [PageNode] Installation
  │       └── [AssetNode] screenshot.svg
  └── [FolderNode] Previews
      ├── [FolderNode] Elements
@@ -151,7 +151,7 @@ entity_tree
 ```
 
 * The `PreviewClassParser` visitor uses the [YARD parser](https://yardoc.org/) to extract annotations data from preview class files and creates and appends corresponding `ScenarioNode` and `ProseNode` children to the appropriate `SpecNode` instance.
-* The `FrontmatterExtractor` visitor _(not yet implemented)_ extracts YAML-formatted 'frontmatter' from the contents of markdown files and updates the related `DocumentNode` instances with the parsed data.
+* The `FrontmatterExtractor` visitor _(not yet implemented)_ extracts YAML-formatted 'frontmatter' from the contents of markdown files and updates the related `PageNode` instances with the parsed data.
 
 Additional entity node vistors can be applied here as needed to make changes to the entity tree nodes before the finalised entity tree is returned for use by the calling code. 
 

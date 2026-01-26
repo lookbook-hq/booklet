@@ -38,7 +38,7 @@ module Booklet
         end
 
         should "cause their corresponding entities to be updated" do
-          changed_spec = @updated_tree.grep(SpecNode).find { _1.name == "updated_preview" }
+          changed_spec = @updated_tree.grep(SpecNode).find { _1.name == "updated" }
 
           assert changed_spec.notes.to_s.include?(@timestamp)
         end

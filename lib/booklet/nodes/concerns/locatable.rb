@@ -31,7 +31,7 @@ module Booklet
 
     class << self
       def entities
-        [FolderNode, AssetNode, DocumentNode, SpecNode, FileNode]
+        [FolderNode, AssetNode, PageNode, SpecNode, FileNode]
       end
 
       def entity_from_path(path)

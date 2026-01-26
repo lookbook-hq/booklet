@@ -1,11 +1,11 @@
 require "support/test_helper"
 
 module Booklet
-  class DocumentNodeTest < Minitest::Test
-    subject { DocumentNode }
+  class PageNodeTest < Minitest::Test
+    subject { PageNode }
 
     context "class methods" do
-      context "DocumentNode::from" do
+      context "PageNode::from" do
         context "called with a path that is not a markdown document" do
           should "raise an exception" do
             file_path = Fixtures.file("mixed/_tmp.txt")
@@ -15,7 +15,7 @@ module Booklet
         end
 
         context "called with a markdown file path" do
-          should "return a DocumentNode instance" do
+          should "return a PageNode instance" do
             file_path = Fixtures.file("mixed/overview.md")
 
             assert_kind_of subject, subject.from(file_path)
@@ -23,7 +23,7 @@ module Booklet
         end
 
         context "called with an markdown ERB file path" do
-          should "return a DocumentNode instance" do
+          should "return a PageNode instance" do
             file_path = Fixtures.file("mixed/docs/further_reading.md.erb")
 
             assert_kind_of subject, subject.from(file_path)

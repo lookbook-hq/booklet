@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Booklet
-  class DocumentNode < Node
+  class PageNode < Node
     include Locatable
     include Nameable
 
@@ -10,7 +10,7 @@ module Booklet
     class << self
       def from(path, **props)
         unless FileHelpers.extension(path).in?(EXTENSIONS)
-          raise ArgumentError, "#{path} is not a DocumentNode"
+          raise ArgumentError, "#{path} is not a PageNode"
         end
 
         path = Pathname(path)
