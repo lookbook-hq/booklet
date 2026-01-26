@@ -10,10 +10,14 @@ module Booklet
     end
 
     def file_name(path)
-      File.basename(path, extension(path))
+      File.basename(path, extension(path) || "")
     end
 
+    alias_method :dir_name, :file_name
+
     def extension(path)
+      return nil if directory?(path)
+
       File.basename(path).to_s.gsub(/^([^.]+)/, "")
     end
 
