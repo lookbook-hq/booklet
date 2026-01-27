@@ -30,9 +30,9 @@ module Booklet
           end
 
           should "include issues collected from all nodes in the tree" do
-            ruby_files_with_errors = Fixtures.files_within(@root, grep: /syntax_error/)
+            files_with_errors = Fixtures.files_within(@root, grep: /_error/)
 
-            assert_equal ruby_files_with_errors.size, @result.errors.group_by { _1.node }.count
+            assert_equal files_with_errors.size, @result.errors.group_by { _1.node }.count
           end
         end
 
