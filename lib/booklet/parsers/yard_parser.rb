@@ -1,10 +1,10 @@
+# frozen_string_literal: true
+
 require "yard"
 
 module Booklet
   class YardParser < Booklet::Object
-    def initialize(log_level: YARD::Logger::ERROR)
-      @log_level = log_level
-    end
+    prop :log_level, Integer, default: YARD::Logger::ERROR.freeze
 
     def parse(*path_sets)
       paths = Array.wrap(path_sets).flatten.map(&:to_s)

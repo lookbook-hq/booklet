@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-require "prism"
-
 module Booklet
   class PreviewClassParser < Visitor
     after_initialize do
-      @yard = YardParser.new
+      @parser = YardParser.new
     end
 
     visit SpecNode do |spec|
@@ -14,7 +12,7 @@ module Booklet
       end
 
       begin
-        class_object = @yard.parse_file(spec.path)
+        class_object = @parser.parse_file(spec.path)
       rescue => error
         spec.add_error(error)
       end

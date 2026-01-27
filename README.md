@@ -147,11 +147,11 @@ Once the basic tree of entity nodes has been created, node _visitors_ are then a
 ```ruby
 entity_tree
   .accept(PreviewClassParser.new)
-  .accept(FrontMatterExtractor.new)
+  .accept(FrontmatterExtractor.new)
 ```
 
 * The `PreviewClassParser` visitor uses the [YARD parser](https://yardoc.org/) to extract annotations data from preview class files and creates and appends corresponding `ScenarioNode` and `ProseNode` children to the appropriate `SpecNode` instance.
-* The `FrontmatterExtractor` visitor _(not yet implemented)_ extracts YAML-formatted 'frontmatter' from the contents of markdown files and updates the related `PageNode` instances with the parsed data.
+* The `FrontmatterExtractor` visitor extracts YAML-formatted 'frontmatter' from the contents of markdown files and updates the related `PageNode` instances with the parsed data.
 
 Additional entity node vistors can be applied here as needed to make changes to the entity tree nodes before the finalised entity tree is returned for use by the calling code. 
 
