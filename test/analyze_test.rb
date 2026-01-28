@@ -9,7 +9,7 @@ module Booklet
           @result = Booklet.analyze(@root)
         end
 
-        should "return an abstract booklet entity tree" do
+        should "return an booklet entity tree" do
           assert_kind_of EntityTree, @result
         end
 
@@ -31,7 +31,6 @@ module Booklet
 
           should "include issues collected from all nodes in the tree" do
             files_with_errors = Fixtures.files_within(@root, grep: /_error/)
-
             assert_equal files_with_errors.size, @result.errors.group_by { _1.node }.count
           end
         end

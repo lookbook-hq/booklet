@@ -11,13 +11,16 @@ module Booklet
 
       begin
         frontmatter, contents = @parser.parse_file(page.path)
+        frontmatter.each do |k, v|
+          page.public_send("#{k}=", v)
+        end
+      rescue NoMethodError => error
+        page.add_warning("Invalid frontmatter property `#{error.name}`")
       rescue => error
         page.add_error(error)
       end
 
-      page.frontmatter = frontmatter
       page.contents = contents
-
       page
     end
   end

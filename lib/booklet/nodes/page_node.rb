@@ -6,21 +6,41 @@ module Booklet
   class PageNode < Node
     include Locatable
     include Nameable
+    include Hideable
 
     EXTENSIONS = [".md", ".md.erb"]
 
-    prop :frontmatter, _Nilable(Hash), writer: :public
+    prop :contents, _String?, writer: :public
+    prop :data, _Nilable(Options), reader: :public do
+      Options.new(_1)
+    end
 
-    prop :contents, _Nilable(String), writer: :public
+    prop :footer, _Boolean?, writer: :public, default: false
+    prop :header, _Boolean?, writer: :public, default: false
+    prop :landing, _Boolean?, writer: :public, default: false
 
-    def frontmatter
-      return @frontmatter if @frontmatter.is_a?(ActiveSupport::InheritableOptions)
-
-      @frontmatter = ActiveSupport::InheritableOptions.new(@frontmatter.to_h)
+    def data=(value)
+      @data = Options.new(value)
     end
 
     def contents
       @contents ||= File.read(path)
+    end
+
+    def hidden?
+      @hidden
+    end
+
+    def footer?
+      @footer
+    end
+
+    def header?
+      @header
+    end
+
+    def landing?
+      @landing
     end
 
     class << self
