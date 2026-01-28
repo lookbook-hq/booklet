@@ -20,17 +20,11 @@ module Booklet
       @visited_by = []
     end
 
-    def ref
-      @node_ref ||= NodeRef.new(@ref)
-    end
+    def ref = @node_ref ||= NodeRef.new(@ref)
 
-    def id
-      Helpers.hexdigest(lookup_path { _1.lookup_value })
-    end
+    def id = Helpers.hexdigest(lookup_path { _1.lookup_value })
 
-    def issues
-      @issues ||= Issues.new
-    end
+    def issues = @issues ||= Issues.new
 
     def add_warning(warning)
       issues << Warning.new(warning, node: self)
@@ -42,9 +36,7 @@ module Booklet
 
     delegate :warnings, :errors, :warnings?, :errors?, to: :issues
 
-    def data
-      @data ||= {}
-    end
+    def data = @data ||= {}
 
     # @!group Ancestry
 
@@ -54,9 +46,7 @@ module Booklet
       root
     end
 
-    def root?
-      parent.nil?
-    end
+    def root? = parent.nil?
 
     def detatch!
       self.parent = nil
@@ -79,9 +69,7 @@ module Booklet
 
     # @!group Descendants
 
-    def descendants
-      filter { _1 != self }
-    end
+    def descendants = filter { _1 != self }
 
     def children(&block)
       if block_given?
@@ -111,41 +99,25 @@ module Booklet
 
     delegate :[], to: :children
 
-    def children?
-      children.any?
-    end
+    def children? = children.any?
 
-    def depth
-      ancestors&.size || 0
-    end
+    def depth = ancestors&.size || 0
 
-    def first_child
-      @children.first
-    end
+    def first_child = @children.first
 
-    def last_child
-      @children.last
-    end
+    def last_child = @children.last
 
-    def first_child?
-      self == first_child
-    end
+    def first_child? = self == first_child
 
-    def last_child?
-      self == last_child
-    end
+    def last_child? = self == last_child
 
     def has_child?(node)
       children.find { _1.ref == node.ref && _1.type == node.type }
     end
 
-    def leaf?
-      !children?
-    end
+    def leaf? = !children?
 
-    def branch?
-      !leaf?
-    end
+    def branch? = !leaf?
 
     # @!endgroup
 
@@ -165,17 +137,13 @@ module Booklet
       root? ? self : parent.children.first
     end
 
-    def first_sibling?
-      self == first_sibling
-    end
+    def first_sibling? = self == first_sibling
 
     def last_sibling
       root? ? self : parent.children.last
     end
 
-    def last_sibling?
-      self == last_sibling
-    end
+    def last_sibling? = self == last_sibling
 
     def next_sibling
       return nil if root?
@@ -243,10 +211,7 @@ module Booklet
     end
 
     alias_method :each, :each_node
-
-    def walk(&block)
-      each_node(&block)
-    end
+    alias_method :walk, :each_node
 
     # @!endgroup
 
@@ -302,9 +267,7 @@ module Booklet
       values.compact.join(separator)
     end
 
-    def lookup_value
-      ref
-    end
+    def lookup_value = ref
 
     # @!endgroup
 
@@ -326,9 +289,7 @@ module Booklet
 
     # @!group Utilities
 
-    def inspect
-      "#<#{self.class.name} @ref=#{ref}>"
-    end
+    def inspect = "#<#{self.class.name} @ref=#{ref}>"
 
     # @!endgroup
 
@@ -340,8 +301,7 @@ module Booklet
 
     # @!endgroup
 
-    def path
-    end
+    def path = nil
 
     class << self
       def permit_child_nodes(*args)

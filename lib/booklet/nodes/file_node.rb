@@ -4,9 +4,7 @@ module Booklet
   class FileNode < Node
     include Locatable
 
-    def lookup_value
-      @lookup_value ||= path.basename
-    end
+    def lookup_value = @lookup_value ||= path.basename
 
     class << self
       def from(path, **props)

@@ -63,8 +63,6 @@ module Booklet
       root.accept(AsciiTreeRenderer.new(...))
     end
 
-    protected def touch!
-      self.updated_at = Time.current
-    end
+    protected def touch! = self.updated_at = Time.current
   end
 end

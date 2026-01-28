@@ -16,23 +16,15 @@ module Booklet
         # Do nothing
       end
 
-      def dirty?
-        @ctime.before?(path.ctime)
-      end
+      def dirty? = @ctime.before?(path.ctime)
 
-      def lookup_value
-        @lookup_value ||= FileHelpers.file_name(path)
-      end
+      def lookup_value = @lookup_value ||= FileHelpers.file_name(path)
 
-      def locatable?
-        true
-      end
+      def locatable? = true
     end
 
     class << self
-      def entities
-        [FolderNode, AssetNode, PageNode, SpecNode, FileNode]
-      end
+      def entities = [FolderNode, AssetNode, PageNode, SpecNode, FileNode]
 
       def entity_from_path(path)
         stack = entities.reject { _1 == FileNode }

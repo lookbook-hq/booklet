@@ -11,9 +11,7 @@ module Booklet
       @lookup_value ||= FileHelpers.file_name(path)
     end
 
-    def directory?
-      true
-    end
+    def directory? = true
 
     class << self
       def from(path, **props)
