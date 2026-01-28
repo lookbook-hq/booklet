@@ -6,7 +6,7 @@ module Booklet
       Pathname(value.to_s) unless value.nil?
     end
 
-    prop :line, _Nilable(Integer), :positional, reader: :public
+    prop :line, _Integer?, :positional, reader: :public
 
     def value
       [path.to_s, line].join(":")

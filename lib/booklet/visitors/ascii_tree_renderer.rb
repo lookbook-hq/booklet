@@ -10,7 +10,7 @@ module Booklet
     LABEL_PROC = proc { _1.respond_to?(:label) ? _1.label : _1.ref.raw }
 
     prop :indent, Integer, default: 0
-    prop :to_label, _Nilable(Proc), :&, reader: :protected, default: -> { LABEL_PROC }
+    prop :to_label, _Proc?, :&, reader: :protected, default: -> { LABEL_PROC }
 
     after_initialize do
       @lines = []

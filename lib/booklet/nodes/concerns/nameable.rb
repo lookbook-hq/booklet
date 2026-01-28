@@ -7,8 +7,8 @@ module Booklet
         value.to_s
       end
 
-      prop :label, _Nilable(String), writer: :public
-      prop :title, _Nilable(String), writer: :public
+      prop :label, _String?, writer: :public
+      prop :title, _String?, writer: :public
 
       def label
         @label ||= name.titleize
