@@ -27,21 +27,13 @@ module Booklet
       @contents ||= File.read(path)
     end
 
-    def hidden?
-      @hidden
-    end
+    def hidden? = @hidden
 
-    def footer?
-      @footer
-    end
+    def footer? = @footer
 
-    def header?
-      @header
-    end
+    def header? = @header
 
-    def landing?
-      @landing
-    end
+    def landing? = @landing
 
     class << self
       def from(path, **props)
