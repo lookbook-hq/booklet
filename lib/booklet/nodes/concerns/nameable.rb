@@ -10,13 +10,9 @@ module Booklet
       prop :label, _String?, writer: :public
       prop :title, _String?, writer: :public
 
-      def label
-        @label ||= name.titleize
-      end
+      def label = @label ||= name.titleize
 
-      def title
-        @title ||= label
-      end
+      def title = @title ||= label
     end
   end
 end

@@ -5,9 +5,7 @@ module Booklet
     included do
       prop :hidden, _Boolean?, writer: :public, reader: :public, default: false
 
-      def hidden?
-        @hidden
-      end
+      def hidden? = @hidden
     end
   end
 end
