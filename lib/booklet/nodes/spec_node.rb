@@ -7,13 +7,9 @@ module Booklet
 
     permit_child_nodes :scenario, :prose
 
-    def scenarios
-      children.grep(ScenarioNode)
-    end
+    def scenarios = children.grep(ScenarioNode)
 
-    def lookup_value
-      @lookup_value ||= name
-    end
+    def lookup_value = @lookup_value ||= name
 
     def format
       case path.to_s

@@ -4,6 +4,8 @@
 # General notes about the spec _subject_.
 class ExamplePreview < ViewComponent::Preview
   # Notes specific to the _default_ scenario.
+  #
+  # @label Basic Example
   def default
     render ExampleComponent.new
   end

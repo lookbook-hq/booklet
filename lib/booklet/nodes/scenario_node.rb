@@ -9,8 +9,10 @@ module Booklet
       YARD::TagSet.new(tags.to_a.grep(YARD::Tag))
     end
 
-    def lookup_value
-      name
+    def label
+      @label || @tags.label&.to_s || default_label
     end
+
+    def lookup_value = name
   end
 end
