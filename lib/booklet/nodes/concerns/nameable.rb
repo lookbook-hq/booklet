@@ -10,7 +10,15 @@ module Booklet
       prop :label, _String?, writer: :public
       prop :title, _String?, writer: :public
 
+      def label=(value)
+        @label = value&.to_s
+      end
+
       def label = @label ||= default_label
+
+      def title=(value)
+        @title = value&.to_s
+      end
 
       def title = @title ||= default_title
 

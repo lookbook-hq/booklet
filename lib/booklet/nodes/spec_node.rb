@@ -2,6 +2,7 @@ module Booklet
   class SpecNode < Node
     include Locatable
     include Nameable
+    include Hideable
 
     prop :notes, _Nilable(TextSnippet), reader: :public, writer: :public
 

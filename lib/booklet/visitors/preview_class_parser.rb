@@ -19,6 +19,10 @@ module Booklet
 
       return spec unless class_object
 
+      tags = YARD::TagSet.new(class_object.tags)
+      spec.label = tags.label if tags.label
+      spec.hidden = tags.hidden? if tags.hidden?
+
       comments = strip_whitespace(class_object.docstring)
       if comments.present?
         spec.notes = TextSnippet.new(comments)
@@ -40,12 +44,15 @@ module Booklet
       scenario = ScenarioNode.new(
         method_object.name,
         name: method_object.name,
-        tags: method_object.tags,
         source: MethodSnippet.from_method_object(method_object)
       )
 
       comments = strip_whitespace(method_object.docstring)
       scenario.notes = TextSnippet.new(comments) if comments.present?
+
+      tags = YARD::TagSet.new(method_object.tags)
+      scenario.label = tags.label if tags.label
+      scenario.hidden = tags.hidden? if tags.hidden?
 
       # scenario.parameters = method_object.parameters # TODO: 'parameters' Data object
 

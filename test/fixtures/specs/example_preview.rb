@@ -2,6 +2,8 @@
 # -----------------
 #
 # General notes about the spec _subject_.
+#
+# @hidden true
 class ExamplePreview < ViewComponent::Preview
   # Notes specific to the _default_ scenario.
   #
@@ -18,6 +20,11 @@ class ExamplePreview < ViewComponent::Preview
   def no_notes
     # No notes for this scenario
     render ExampleComponent.new(size: :large)
+  end
+
+  # @hidden true
+  def hidden_example
+    render ExampleComponent.new
   end
 
   private

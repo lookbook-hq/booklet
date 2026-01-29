@@ -9,9 +9,15 @@ module Booklet
         @spec.accept(PreviewClassParser.new)
       end
 
+      context "hidden status value" do
+        should "be determined by the `@hidden` YARD tag " do
+          assert_equal true, @spec.hidden?
+        end
+      end
+
       context "scenarios" do
         should "be created for each public instance method" do
-          assert_equal ["default", "with_notes", "no_notes"], @spec.scenarios.map { _1.ref.raw }
+          assert_equal ["default", "with_notes", "no_notes", "hidden_example"], @spec.scenarios.map { _1.ref.raw }
 
           @spec.scenarios.each do |node|
             assert_kind_of ScenarioNode, node
@@ -56,6 +62,16 @@ module Booklet
 
         should "not have notes" do
           assert_nil @scenario.notes
+        end
+      end
+
+      context "`hidden_example` scenario" do
+        setup do
+          @scenario = @spec.scenarios.find { _1.ref == "hidden_example" }
+        end
+
+        should "be hidden" do
+          assert_equal true, @scenario.hidden?
         end
       end
     end
