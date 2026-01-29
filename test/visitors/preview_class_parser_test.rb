@@ -28,6 +28,10 @@ module Booklet
           @scenario = @spec.scenarios.find { _1.ref == "default" }
         end
 
+        should "have a custom label" do
+          assert_equal "Basic Example", @scenario.label
+        end
+
         should "have a source snippet" do
           assert_kind_of MethodSnippet, @scenario.source
           assert_equal "render ExampleComponent.new", @scenario.source.to_s

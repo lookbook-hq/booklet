@@ -16,5 +16,16 @@ module Booklet
       output = source.sub(/^def \w+\s?(\([^)]+\))?/m, "").split("\n")[0..-2].join("\n")
       strip_whitespace(output)
     end
+
+    class << self
+      def from_method_object(obj)
+        MethodSnippet.new(
+          obj.source,
+          name: obj.path,
+          lang: obj.source_type,
+          location: [obj.file, obj.line]
+        )
+      end
+    end
   end
 end
