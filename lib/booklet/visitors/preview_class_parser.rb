@@ -37,19 +37,21 @@ module Booklet
     end
 
     protected def to_scenario(method_object)
-      parameters = method_object.parameters # TODO: 'parameters' Data object
-
-      source = MethodSnippet.new(
-        method_object.source,
-        name: method_object.path,
-        lang: method_object.source_type,
-        location: [method_object.file, method_object.line]
+      scenario = ScenarioNode.new(
+        method_object.name,
+        name: method_object.name,
+        tags: method_object.tags,
+        source: MethodSnippet.from_method_object(method_object)
       )
 
       comments = strip_whitespace(method_object.docstring)
-      notes = TextSnippet.new(comments) if comments.present?
+      scenario.notes = TextSnippet.new(comments) if comments.present?
 
-      ScenarioNode.new(method_object.name, name: method_object.name, source:, parameters:, notes:)
+      # scenario.parameters = method_object.parameters # TODO: 'parameters' Data object
+
+      scenario
     end
   end
+
+  YardParser.define_tags(YARD::Tag.subclasses)
 end
