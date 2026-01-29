@@ -5,13 +5,9 @@ require "yard/tags/tag"
 module Booklet
   module YARD
     class Tag < ::YARD::Tags::Tag
-      def value = @text
-
       def options_str
         @options || ""
       end
-
-      def to_s = value
 
       class << self
         def identifier

@@ -9,6 +9,7 @@ loader = Zeitwerk::Loader.new
 loader.push_dir("#{__dir__}/booklet", namespace: Booklet)
 loader.collapse("#{__dir__}/booklet/*")
 loader.collapse("#{__dir__}/booklet/{content,issues,nodes,visitors}/*")
+loader.collapse("#{__dir__}/booklet/parsers/yard/concerns")
 loader.ignore("#{__dir__}/booklet/version.rb")
 loader.inflector.inflect("yard" => "YARD")
 

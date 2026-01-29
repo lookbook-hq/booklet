@@ -2,8 +2,8 @@
 
 module Booklet
   module YARD
-    class LabelTag < Tag
-      include StringValueTag
+    class HiddenTag < Tag
+      include BooleanValueTag
     end
   end
 end
