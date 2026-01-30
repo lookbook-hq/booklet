@@ -5,8 +5,15 @@ module Booklet
     include Hideable
 
     prop :notes, _Nilable(TextSnippet), reader: :public, writer: :public
+    prop :display_options, _Nilable(Options), reader: :public, default: -> { {} } do |value|
+      Options.from(value)
+    end
 
     permit_child_nodes :scenario, :prose
+
+    def display_options=(options)
+      @display_options = Options.from(options.to_h)
+    end
 
     def scenarios = children.grep(ScenarioNode)
 
