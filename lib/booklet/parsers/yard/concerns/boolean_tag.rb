@@ -2,13 +2,11 @@
 
 module Booklet
   module YARD
-    module StringValueTag
+    module BooleanTag
       extend ActiveSupport::Concern
 
       included do
-        def value = @text
-
-        def to_s = value
+        def value = @text != "false"
       end
     end
   end

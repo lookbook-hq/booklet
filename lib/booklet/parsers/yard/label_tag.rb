@@ -3,7 +3,7 @@
 module Booklet
   module YARD
     class LabelTag < Tag
-      include StringValueTag
+      include StringTag
     end
   end
 end

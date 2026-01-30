@@ -8,7 +8,7 @@ module Booklet
       end
 
       def label
-        @tags.grep(LabelTag)&.first
+        label_tag&.value
       end
 
       def hidden?
