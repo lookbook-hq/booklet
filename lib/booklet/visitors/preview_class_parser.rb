@@ -19,9 +19,7 @@ module Booklet
 
       return spec unless class_object
 
-      tags = YARD::TagSet.new(class_object.tags)
-      spec.label = tags.label if tags.label
-      spec.hidden = tags.hidden? if tags.hidden?
+      spec = apply_tags(spec, class_object)
 
       comments = strip_whitespace(class_object.docstring)
       if comments.present?
@@ -50,14 +48,31 @@ module Booklet
       comments = strip_whitespace(method_object.docstring)
       scenario.notes = TextSnippet.new(comments) if comments.present?
 
-      tags = YARD::TagSet.new(method_object.tags)
-      scenario.label = tags.label if tags.label
-      scenario.hidden = tags.hidden? if tags.hidden?
-      scenario.display_options = tags.display_options if tags.display_options.present?
+      apply_tags(scenario, method_object)
 
       # scenario.parameters = method_object.parameters # TODO: 'parameters' Data object
+    end
 
-      scenario
+    private def apply_tags(target, yard_obj)
+      tags = target.data.tags = YARD::TagSet.new(yard_obj.tags)
+
+      tags.names.each do |key|
+        case key
+        when :label
+          target.label = tags.label_tag&.value
+        when :hidden
+          target.hidden = tags.hidden_tag&.value || false
+        when :display
+          display_options = tags.display_tags.map { [_1.key, _1.value] }
+          target.display_options = display_options.to_h.deep_symbolize_keys!
+        else
+          if target.respond_to?(key)
+            target.public_send("#{key}=", tags.find { _1.identifier == key }.value)
+          end
+        end
+      end
+
+      target
     end
   end
 

@@ -9,9 +9,13 @@ module Booklet
         @options || ""
       end
 
+      def identifier
+        self.class.identifier
+      end
+
       class << self
         def identifier
-          @name ||= name.demodulize.delete_suffix("Tag").underscore.downcase.presence || "tag"
+          @name ||= (name.demodulize.delete_suffix("Tag").underscore.downcase.presence || "tag").to_sym
         end
 
         def label = name.titleize
