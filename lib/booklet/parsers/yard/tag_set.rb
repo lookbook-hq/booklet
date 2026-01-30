@@ -12,7 +12,24 @@ module Booklet
       end
 
       def hidden?
-        @tags.grep(HiddenTag)&.first&.value || false
+        hidden_tag&.value || false
+      end
+
+      def display_options
+        pairs = display_option_tags.map { [_1.key, _1.value] }
+        pairs.to_h.deep_symbolize_keys!
+      end
+
+      def label_tag
+        @tags.grep(LabelTag)&.first
+      end
+
+      def hidden_tag
+        @tags.grep(HiddenTag)&.first
+      end
+
+      def display_option_tags
+        Options.from(@tags.grep(DisplayTag))
       end
     end
   end

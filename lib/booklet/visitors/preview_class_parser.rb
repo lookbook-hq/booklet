@@ -53,6 +53,7 @@ module Booklet
       tags = YARD::TagSet.new(method_object.tags)
       scenario.label = tags.label if tags.label
       scenario.hidden = tags.hidden? if tags.hidden?
+      scenario.display_options = tags.display_options if tags.display_options.present?
 
       # scenario.parameters = method_object.parameters # TODO: 'parameters' Data object
 
