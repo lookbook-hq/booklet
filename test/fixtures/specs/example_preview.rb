@@ -6,8 +6,6 @@
 # @hidden true
 class ExamplePreview < ViewComponent::Preview
   # Notes specific to the _default_ scenario.
-  #
-  # @label Basic Example
   def default
     render ExampleComponent.new
   end
@@ -23,7 +21,10 @@ class ExamplePreview < ViewComponent::Preview
   end
 
   # @hidden true
-  def hidden_example
+  # @display text white
+  # @display attrs {class_name: "bg-pink", id: "root"}
+  # @label Tags Example
+  def with_tags
     render ExampleComponent.new
   end
 

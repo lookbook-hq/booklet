@@ -17,7 +17,7 @@ module Booklet
 
       context "scenarios" do
         should "be created for each public instance method" do
-          assert_equal ["default", "with_notes", "no_notes", "hidden_example"], @spec.scenarios.map { _1.ref.raw }
+          assert_equal ["default", "with_notes", "no_notes", "with_tags"], @spec.scenarios.map { _1.ref.raw }
 
           @spec.scenarios.each do |node|
             assert_kind_of ScenarioNode, node
@@ -32,10 +32,6 @@ module Booklet
       context "`default` scenario" do
         setup do
           @scenario = @spec.scenarios.find { _1.ref == "default" }
-        end
-
-        should "have a custom label" do
-          assert_equal "Basic Example", @scenario.label
         end
 
         should "have a source snippet" do
@@ -65,13 +61,24 @@ module Booklet
         end
       end
 
-      context "`hidden_example` scenario" do
+      context "scenario with tags" do
         setup do
-          @scenario = @spec.scenarios.find { _1.ref == "hidden_example" }
+          @scenario = @spec.scenarios.find { _1.ref == "with_tags" }
         end
 
         should "be hidden" do
           assert_equal true, @scenario.hidden?
+        end
+
+        should "be labelled" do
+          assert_equal "Tags Example", @scenario.label
+        end
+
+        should "have display options" do
+          assert_kind_of Options, @scenario.display_options
+
+          assert_equal "white", @scenario.display_options.text
+          assert_equal "bg-pink", @scenario.display_options.attrs.class_name
         end
       end
     end
