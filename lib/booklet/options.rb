@@ -10,11 +10,13 @@ module Booklet
       super.transform_values { Options.hashify(_1) }
     end
 
+    delegate :keys, :values, to: :to_h
+
     class << self
       def from(value)
         case value
         when Hash
-          Options.new(value.symbolize_keys.transform_values { from(_1) })
+          Options.new(value)
         when Array
           value.map { from(_1) }
         else
