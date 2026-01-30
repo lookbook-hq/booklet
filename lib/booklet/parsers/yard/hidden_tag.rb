@@ -3,7 +3,7 @@
 module Booklet
   module YARD
     class HiddenTag < Tag
-      include BooleanValueTag
+      include BooleanTag
     end
   end
 end
