@@ -10,7 +10,8 @@ module Booklet
       super.transform_values { Options.hashify(_1) }
     end
 
-    delegate :keys, :values, to: :to_h
+    delegate :keys, :values, :compact, :merge, :deep_merge, :reject, :select,
+      :slice, :transform_keys, :transform_values, to: :to_h
 
     class << self
       def from(value)

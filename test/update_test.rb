@@ -84,7 +84,7 @@ module Booklet
 
             assert 1, spec.scenarios.count
 
-            Booklet.visitors.each do |visitor|
+            Booklet.visitors.flatten.each do |visitor|
               assert spec.visited_by.include?(visitor.is_a?(Class) ? visitor : visitor.class)
             end
           end

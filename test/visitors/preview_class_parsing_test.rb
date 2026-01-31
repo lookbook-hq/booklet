@@ -6,12 +6,18 @@ module Booklet
       setup do
         @spec_path = Fixtures.file("specs/example_preview.rb")
         @spec = SpecNode.from(@spec_path)
-        @spec.accept(PreviewClassParser.new)
+        @spec.accept(PreviewClassParser.new).accept(YardTagsHandler.new)
       end
 
-      context "hidden status value" do
-        should "be determined by the `@hidden` YARD tag " do
+      context "tags" do
+        should "be hidden" do
           assert_equal true, @spec.hidden?
+        end
+
+        should "have display options" do
+          assert_kind_of Options, @spec.display_options
+
+          assert_equal "green", @spec.display_options.text
         end
       end
 
@@ -37,6 +43,12 @@ module Booklet
         should "have a source snippet" do
           assert_kind_of MethodSnippet, @scenario.source
           assert_equal "render ExampleComponent.new", @scenario.source.to_s
+        end
+
+        should "have display options inherited from spec" do
+          assert_kind_of Options, @scenario.display_options
+
+          assert_equal "green", @scenario.display_options.text
         end
       end
 

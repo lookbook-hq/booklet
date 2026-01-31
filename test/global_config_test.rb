@@ -23,8 +23,8 @@ module Booklet
           assert_kind_of Array, Booklet.visitors
           assert Booklet.visitors.count > 0
 
-          Booklet.visitors.each do |visitor|
-            assert_kind_of Class, visitor
+          Booklet.visitors.flatten.each do |visitor|
+            assert Class, visitor
             assert visitor < Visitor
           end
         end

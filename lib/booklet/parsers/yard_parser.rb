@@ -26,7 +26,7 @@ module Booklet
       def define_tags(tags)
         tags = tags.map { _1.is_a?(String) ? _1.constantize : _1 }
         tags.each do |tag|
-          ::YARD::Tags::Library.define_tag(tag.label, tag.identifier, tag)
+          ::YARD::Tags::Library.define_tag(tag.label, tag.tag_name, tag)
         end
       end
     end
