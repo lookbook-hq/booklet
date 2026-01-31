@@ -10,9 +10,11 @@ module Booklet
       KEY_VALUE_TAG_REGEX = /^([^\s]+)\s+(.+)$/
 
       included do
-        def key = parts.first
+        def value
+          Hash[*parts]
+        end
 
-        def value = parts.second
+        alias_method :to_h, :value
 
         protected def parts
           @parts ||= begin
@@ -20,10 +22,10 @@ module Booklet
               key = matches[1]
               value = begin
                 YAML.safe_load(matches[2] || "~")
-              rescue Psych::SyntaxError => error
+              rescue Psych::SyntaxError
                 raise ArgumentError, "Invalid YAML in tag text '#{@text}'"
               end
-              return [key, value]
+              return [key.to_sym, value]
             end
             raise ArgumentError, "Could not parse key:value pair from '#{@text}'"
           end

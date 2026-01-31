@@ -30,14 +30,21 @@ module Booklet
     end
 
     def visitors
-      @visitors ||= [
-        RubyValidator,
-        HerbValidator,
-        PreviewClassParser,
-        FrontmatterExtractor
-      ]
+      @visitors ||= validator_visitors + spec_visitors + page_visitors
     end
 
-    attr_writer :loader, :visitors
+    def validator_visitors
+      [RubyValidator, HerbValidator]
+    end
+
+    def spec_visitors
+      [PreviewClassParser, YardTagsHandler]
+    end
+
+    def page_visitors
+      [FrontmatterExtractor]
+    end
+
+    attr_writer :loader, :visitors, :validator_visitors, :spec_visitors, :page_visitors
   end
 end

@@ -11,7 +11,7 @@ module Booklet
     end
 
     prop :visitors, _Array(Visitor), reader: :public do |value|
-      value.to_a.map { _1.is_a?(Class) ? _1.new : _1 }
+      value.to_a.flatten.map { _1.is_a?(Class) ? _1.new : _1 }
     end
 
     prop :updated_at, Time, default: Time.current.freeze, writer: :protected, reader: :public

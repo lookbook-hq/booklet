@@ -4,6 +4,7 @@
 # General notes about the spec _subject_.
 #
 # @hidden true
+# @display text green
 class ExamplePreview < ViewComponent::Preview
   # Notes specific to the _default_ scenario.
   def default
