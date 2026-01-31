@@ -23,24 +23,19 @@ module Booklet
       tags = node.data.yard_object&.tags || []
       label_tags = tags.grep(YARD::LabelTag)
       hidden_tags = tags.grep(YARD::HiddenTag)
-      display_option_tags = tags.grep(YARD::DisplayOptionsTag)
+      display_tags = tags.grep(YARD::DisplayOptionsTag)
       other_tags = tags.difference(label_tags + hidden_tags + display_option_tags)
 
       node.tap do |n|
+        options_stack = [defaults[:display_options].to_h, display_tags.map(&:to_h), n.display_options]
+
         n.label = label_tags.last&.value
         n.hidden = hidden_tags.last&.value
-
-        option_sets = [
-          defaults[:display_options].to_h,
-          display_option_tags.map(&:to_h),
-          n.display_options
-        ]
-
-        n.display_options = option_sets.flatten.inject(&:merge)
+        n.display_options = options_stack.flatten.inject(&:merge)
 
         other_tags.each do |tag|
-          if n.respond_to?(tag.identifier)
-            n.public_send("#{tag.identifier}=", tag.value)
+          if n.respond_to?(tag.tag_name)
+            n.public_send("#{tag.tag_name}=", tag.value)
           end
         end
       end
