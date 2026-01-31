@@ -11,7 +11,7 @@ module Booklet
     prop :options, Hash, :**, reader: :protected
 
     def value
-      strip_whitespace(raw)
+      raw.strip_heredoc
     end
 
     alias_method :to_s, :value
