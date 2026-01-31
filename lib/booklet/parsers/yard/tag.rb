@@ -5,32 +5,22 @@ require "yard/tags/tag"
 module Booklet
   module YARD
     class Tag < ::YARD::Tags::Tag
-      def options_str
-        @options || ""
-      end
-
-      def identifier
-        self.class.identifier
-      end
-
       class << self
-        def tag_name(name = nil)
-          self.yard_tag_name = name if name
-
-          yard_tag_name
+        def tag_name(tagname = nil)
+          tagname.nil? ? yard_tag_name : self.yard_tag_name = tagname
         end
 
-        def identifier
-          @identifier = (name.demodulize.delete_suffix("Tag").underscore.downcase.presence || "tag").to_sym
-        end
+        def label = tag_name.to_s.titleize
 
-        def label = identifier.to_s.titleize
+        private def fallback_tag_name
+          (name.demodulize.delete_suffix("Tag").underscore.downcase.presence || "tag").to_sym
+        end
       end
 
       class_attribute :yard_tag_name,
         instance_accessor: false,
         instance_predicate: false,
-        default: identifier
+        default: fallback_tag_name
     end
   end
 end
