@@ -17,7 +17,7 @@ module Booklet
     end
 
     def value
-      strip_indent(raw)
+      raw.strip_heredoc
     end
 
     alias_method :to_s, :value

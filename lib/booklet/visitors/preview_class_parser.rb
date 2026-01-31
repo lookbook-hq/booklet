@@ -21,9 +21,9 @@ module Booklet
 
       spec.data.yard_object = class_object
 
-      comments = strip_whitespace(class_object.docstring)
-      if comments.present?
-        spec.notes = TextSnippet.new(comments)
+      comment = class_object.docstring.strip_heredoc
+      if comment.present?
+        spec.notes = TextSnippet.new(comment)
       end
 
       scenario_methods = class_object
@@ -47,7 +47,7 @@ module Booklet
 
       scenario.data.yard_object = method_object
 
-      comments = strip_whitespace(method_object.docstring)
+      comments = method_object.docstring.strip_heredoc
       scenario.notes = TextSnippet.new(comments) if comments.present?
       scenario
     end

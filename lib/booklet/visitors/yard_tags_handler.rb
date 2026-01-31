@@ -24,7 +24,7 @@ module Booklet
       label_tags = tags.grep(YARD::LabelTag)
       hidden_tags = tags.grep(YARD::HiddenTag)
       display_tags = tags.grep(YARD::DisplayOptionsTag)
-      other_tags = tags.difference(label_tags + hidden_tags + display_option_tags)
+      other_tags = tags.difference(label_tags + hidden_tags + display_tags)
 
       node.tap do |n|
         options_stack = [defaults[:display_options].to_h, display_tags.map(&:to_h), n.display_options]

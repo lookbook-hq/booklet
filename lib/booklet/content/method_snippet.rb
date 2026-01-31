@@ -12,9 +12,9 @@ module Booklet
     alias_method :to_s, :body
 
     protected def extract_method_body(source)
-      source = strip_indent(source)
+      source = source.strip_heredoc
       output = source.sub(/^def \w+\s?(\([^)]+\))?/m, "").split("\n")[0..-2].join("\n")
-      strip_whitespace(output)
+      output.strip_heredoc
     end
 
     class << self
