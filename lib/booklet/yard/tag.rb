@@ -5,6 +5,10 @@ require "yard/tags/tag"
 module Booklet
   module YARD
     class Tag < ::YARD::Tags::Tag
+      def options_string
+        @options_string || ""
+      end
+
       class << self
         def tag_name(tagname = nil)
           tagname.nil? ? yard_tag_name : self.yard_tag_name = tagname

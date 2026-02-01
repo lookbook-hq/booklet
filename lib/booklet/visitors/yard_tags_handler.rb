@@ -3,40 +3,31 @@
 module Booklet
   class YardTagsHandler < Visitor
     visit SpecNode do |spec|
-      return spec if spec.errors? || visited?(spec)
+      return spec if !spec.data.yard_tags || spec.errors? || visited?(spec)
 
       apply_tags(spec)
       visit_each(spec.scenarios)
-
       spec
     end
 
     visit ScenarioNode do |scenario|
-      return scenario if scenario.errors? || visited?(scenario)
+      return scenario if !scenario.data.yard_tags || scenario.errors? || visited?(scenario)
 
-      apply_tags(scenario, display_options: scenario.spec.display_options)
-
-      scenario
+      apply_tags(scenario)
     end
 
-    private def apply_tags(node, **defaults)
-      tags = node.data.yard_object&.tags || []
-      label_tags = tags.grep(YARD::LabelTag)
-      hidden_tags = tags.grep(YARD::HiddenTag)
-      display_tags = tags.grep(YARD::DisplayOptionsTag)
-      other_tags = tags.difference(label_tags + hidden_tags + display_tags)
+    private def apply_tags(node)
+      tags = node.data.yard_tags
 
       node.tap do |n|
-        options_stack = [defaults[:display_options].to_h, display_tags.map(&:to_h), n.display_options]
+        node.label = tags.label_tag.value if tags.label_tag
+        node.hidden = tags.hidden_tag.value if tags.hidden_tag
 
-        n.label = label_tags.last&.value
-        n.hidden = hidden_tags.last&.value
-        n.display_options = options_stack.flatten.inject(&:merge)
+        tags.param_tags.each { node.add_param(_1.value) }
+        tags.display_tags.each { node.add_display_option(_1.value) }
 
-        other_tags.each do |tag|
-          if n.respond_to?(tag.tag_name)
-            n.public_send("#{tag.tag_name}=", tag.value)
-          end
+        tags.other_tags.each do |tag|
+          node.try("#{tag.tag_name}=", tag.value)
         end
       end
     end

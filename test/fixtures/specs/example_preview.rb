@@ -25,7 +25,9 @@ class ExamplePreview < ViewComponent::Preview
   # @display text white
   # @display attrs {class_name: "bg-pink", id: "root"}
   # @label Tags Example
-  def with_tags
+  # @param text "The text to display"
+  # @param size [Symbol] select { choices: [small, medium, large] }
+  def with_tags(text: "foo", size: :medium)
     render ExampleComponent.new
   end
 

@@ -2,16 +2,21 @@ module Booklet
   class ScenarioNode < Node
     include Nameable
     include Hideable
+    include AcceptsParams
+    include AcceptsDisplayOptions
 
     prop :notes, _Nilable(TextSnippet), reader: :public, writer: :public
     prop :source, CodeSnippet, reader: :public
-    prop :parameters, Array, reader: :public, writer: :public, default: -> { [] }
-    prop :display_options, _Nilable(Options), reader: :public, default: -> { {} } do |value|
-      Options.from(value)
+    prop :method_parameters, Array, reader: :public, writer: :public, default: -> { [] }
+
+    def display_options
+      Options.new(@display_options)
     end
 
-    def display_options=(options)
-      @display_options = Options.from(options.to_h)
+    def params
+      @params.uniq { _1[:name] }.map do |param_data|
+        ScenarioParam.new(**param_data)
+      end
     end
 
     def lookup_value = name
