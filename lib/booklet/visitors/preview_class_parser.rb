@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "active_support/dependencies/require_dependency"
+require "view_component/preview"
+require "lookbook/preview"
 
 module Booklet
   class PreviewClassParser < Visitor

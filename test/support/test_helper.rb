@@ -4,9 +4,7 @@ require "shoulda-context"
 require "pretty_please"
 require "pd"
 
-require "lookbook"
-require "view_component"
-require "lookbooklet"
+require "booklet"
 
 require_relative "fixtures"
 require_relative "test_utils"
