@@ -21,18 +21,38 @@ class ExamplePreview < ViewComponent::Preview
     render ExampleComponent.new(size: :large)
   end
 
+  # Tag parsing tests example
+  # -------------------------
+  #
   # @hidden true
   # @display text white
   # @display attrs {class_name: "bg-pink", id: "root"}
   # @label Tags Example
+  #
+  # @param name
   # @param text "The text to display"
   # @param size [Symbol] select { choices: [small, medium, large] }
-  def with_tags(text: "foo", size: :medium)
-    render ExampleComponent.new
+  # @param theme [Symbol] select :theme_options
+  def with_tags(name:, text: default_text_provider, size: :medium, theme: "sparkly")
+    render ExampleComponent.new(name:, text:, size:)
   end
 
   private
 
   def not_a_scenario
+  end
+
+  def theme_options
+    {
+      choices: [
+        ["Default", "sparkly"],
+        ["Rainbow", "multicolor"],
+        ["Plain", nil]
+      ]
+    }
+  end
+
+  def default_text_provider
+    "default text"
   end
 end

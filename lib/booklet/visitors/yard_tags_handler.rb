@@ -23,12 +23,20 @@ module Booklet
         node.label = tags.label_tag.value if tags.label_tag
         node.hidden = tags.hidden_tag.value if tags.hidden_tag
 
-        tags.display_tags.each do |display_tag|
-          node.display_options = node.display_options.merge(display_tag.value)
+        tags.display_tags.each do |tag|
+          node.display_options = node.display_options.merge(tag.value)
         end
 
-        tags.param_tags.each do |param_tag|
-          node.params.update(param_tag.name, param_tag.value)
+        tags.param_tags.each do |tag|
+          param_data = tag.value
+
+          if tag.options_string.present?
+            context = node.try(:context) || Object
+            options = Options.resolve_from(context.new, tag.options_string)
+            options.merge!(param_data)
+          end
+
+          node.params.update(tag.name, param_data)
         end
 
         tags.other_tags.each do |tag|

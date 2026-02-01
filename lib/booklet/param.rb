@@ -2,24 +2,36 @@
 
 module Booklet
   class Param < Booklet::Object
-    # PARAM_OPTIONS = %i[label description hint choices]
-
     prop :name, Symbol, :positional, reader: :public
-    prop :label, _Nilable(String), reader: :public, writer: :public
+    prop :label, _Nilable(String), writer: :public
     prop :description, _Nilable(String), reader: :public, writer: :public
-    prop :input_options, _Nilable(Options), reader: :public do |value|
-      Options.new(value)
-    end
-    prop :input_name, _Nilable(Symbol), reader: :public, writer: :public
+    prop :input_name, _Nilable(Symbol), writer: :public
     prop :value_type, _Nilable(Symbol), writer: :public
-    prop :value, _Nilable(_Any), writer: :public
+    prop :default_value, _Nilable(_Any)
+    prop :value, _Nilable(_Any), writer: :protected
+    prop :required, _Boolean, writer: :public, default: false
+    prop :input_options, Hash, :**, reader: :public, default: -> { {} }
 
-    # prop :default_value, _Nilable(_Any)
-    # prop :rest, _Nilable(_Any), :**
-    # prop :hint, _Nilable(String), reader: :public
+    def label
+      @label ||= name.to_s.titleize
+    end
+
+    def with_value(value)
+      deep_dup.tap do |param|
+        param.value = Param.cast_string_value(value, value_type)
+      end
+    end
+
+    def value
+      @value || @default_value
+    end
 
     def value_type
       @value_type || guess_value_type
+    end
+
+    def default_value
+      @default_value.respond_to?(:call) ? @default_value.call : @default_value
     end
 
     def input_name
@@ -30,29 +42,7 @@ module Booklet
       @input_options.fetch(:choices, [])
     end
 
-    # def default_value
-    # @default_value ||= begin
-    #   return nil unless default_value?
-    #   proc {
-    #     preview_class_instance.instance_eval(method_parameter_data.value)
-    #   }.call
-    # end
-    # end
-
-    # def default_value_string
-    # unless default_value.nil?
-    #   ParamValueStringifier.call(default_value)
-    # end
-    # end
-
-    # def default_value?
-    # method_parameter_data.present?
-    # end
-
-    # def cast_value(value_str)
-    # return value_str unless value_str.is_a?(String)
-    # ParamValueParser.call(value_str, value_type)
-    # end
+    def required? = !!@required
 
     private def guess_input_name
       if @value_type == :boolean || (@value_type.nil? && Helpers.boolean?(value))
@@ -78,57 +68,46 @@ module Booklet
       end
     end
 
-    # private def method_parameter_data
-    # if @scenario.method_parameters[name]
-    #   Options.new(name: name, value: @scenario.method_parameters[name])
-    # end
-    # end
-
     class << self
-      def parse_options(str, context)
-        return {} if str.blank?
+      def cast_string_value(value, type)
+        return value unless value.is_a?(String)
 
-        opts = if str.start_with?(":")
-          resolve_method_options(str, context)
-        elsif str.start_with?("{{")
-          resolve_eval_options(str, context)
-        elsif str[0].in?(["{", "["])
-          resolve_yaml_options(str)
-        elsif str.match?(/\.(json|yml)$/)
-          resolve_file_options
-        else
-          {}
-        end
+        type = type.to_s.downcase
+        cast_method = :"cast_to_#{type}"
+        raise ArgumentError, "Unable to cast to `#{type}`" unless respond_to?(cast_method, true)
 
-        opts = opts.is_a?(Array) ? {choices: opts} : opts.to_h
-        opts.deep_symbolize_keys!
+        send(cast_method, value)
       end
 
-      # def parse_options_later(...)
-      #   -> { Param.parse_options(...) }
-      # end
+      protected def cast_to_string(value) = value.to_s
 
-      private def resolve_yaml_options(str)
-        YAML.safe_load(str)
+      protected def cast_to_symbol(value)
+        value.delete_prefix(":").to_sym if value.present?
       end
 
-      private def resolve_method_options(str, context)
-        method_name = str.delete_prefix(":").to_sym
-        if context.respond_to?(method_name, true)
-          context.send(method_name)
-        else
-          raise NoMethodError, "Missing param data method `#{method_name}`"
-        end
+      protected def cast_to_datetime(value) = DateTime.parse(value)
+
+      protected def cast_to_boolean(value) = active_model_cast(value, :boolean)
+
+      protected def cast_to_integer(value) = active_model_cast(value, :integer)
+
+      protected def cast_to_float(value) = active_model_cast(value, :integer)
+
+      protected def cast_to_hash(value)
+        result = YAML.safe_load(value)
+        raise "'#{value}' is not a YAML Hash" unless result.is_a?(Hash)
+        result
       end
 
-      private def resolve_eval_options(str, context)
-        body = options_string[/\{\{\s?(.*)\s?\}\}$/, 1]
-        # proc { preview_class_instance.instance_eval(code_str) }.call
-        context.instance_eval(body)
+      protected def cast_to_array(value)
+        result = YAML.safe_load(value)
+        raise "'#{value}' is not a YAML Array" unless result.is_a?(Array)
+        result
       end
 
-      private def resolve_file_options
-        raise "Loading scenario options from files is no longer supported"
+      private def active_model_cast(value, type)
+        type_class = "ActiveModel::Type::#{type.to_s.camelize}".constantize
+        type_class.new.cast(value)
       end
     end
   end

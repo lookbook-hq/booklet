@@ -72,6 +72,10 @@ module Booklet
           @scenario = @spec.scenarios.find { _1.ref == "with_tags" }
         end
 
+        should "have notes" do
+          assert @scenario.notes.present?
+        end
+
         should "be hidden" do
           assert_equal true, @scenario.hidden?
         end
@@ -87,21 +91,34 @@ module Booklet
           assert_equal "bg-pink", @scenario.display_options.attrs.class_name
         end
 
-        should "have preview params" do
+        should "have params" do
           assert_kind_of ParamSet, @scenario.params
+        end
 
-          text_param = @scenario.params.find { _1.name == :text }
+        context "preview param parser" do
+          setup do
+            @name_param = @scenario.params.find!(:name)
+            @text_param = @scenario.params.find!(:text)
+            @size_param = @scenario.params.find!(:size)
+            @theme_param = @scenario.params.find!(:theme)
+          end
 
-          refute_nil text_param
-          assert_equal :text, text_param.name
-          assert_equal "The text to display", text_param.description
+          should "extract param descriptions when available" do
+            assert_equal "The text to display", @text_param.description
+            assert_nil @size_param.description
+          end
 
-          size_param = @scenario.params.find { _1.name == :size }
+          should "identify required params" do
+            assert @name_param.required?
+            refute @size_param.required?
+          end
 
-          refute_nil size_param
-          assert_equal :size, size_param.name
-          assert_nil size_param.description
-          assert_equal :symbol, size_param.value_type
+          should "resolve default values" do
+            assert_nil @name_param.default_value
+            assert_equal "default text", @text_param.default_value
+            assert_equal :medium, @size_param.default_value
+            assert_equal "sparkly", @theme_param.default_value
+          end
         end
       end
     end

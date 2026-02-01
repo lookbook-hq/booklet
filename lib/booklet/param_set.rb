@@ -11,14 +11,17 @@ module Booklet
       props.to_h.except(:name).each { param.try("#{_1}=", _2) }
     end
 
+    def push(*params)
+      @params.push(*params.flatten)
+    end
+
     def find!(name)
       param = find { _1.name == name }
       raise "Unknown param #{param}" unless param
       param
     end
 
-    def <<(...) = @params.push(...)
-
     delegate :each, to: :@params
+    delegate_missing_to :@params
   end
 end

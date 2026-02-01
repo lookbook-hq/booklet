@@ -53,10 +53,13 @@ module Booklet
         scenario.notes = TextSnippet.new(notes) if notes.present?
 
         method_params = method_object.parameters.map { [_1.first.delete_suffix(":").to_sym, _1.last] }.to_h
-        method_params.each do |name, string_value|
-          value_evaluator = -> { scenario.context.new.instance_eval(string_value) }
-          scenario.params << Param.new(name, value: value_evaluator)
-        end
+        scenario.params.push(
+          method_params.map do |name, raw_value|
+            Param.new(name,
+              required: raw_value.nil?,
+              default_value: raw_value.nil? ? nil : -> { scenario.context.new.instance_eval(raw_value) })
+          end
+        )
 
         scenario.data.tap do |data|
           data.yard_object = method_object
