@@ -3,7 +3,7 @@
 module Booklet
   class Options < ActiveSupport::InheritableOptions
     def initialize(value)
-      super(value.to_h.symbolize_keys.transform_values { Options.from(_1) })
+      super(value.to_h.symbolize_keys.transform_values { Options.transform(_1) })
     end
 
     def to_h
@@ -14,16 +14,15 @@ module Booklet
       Options.new(to_h.merge(*opts.map(&:to_h)))
     end
 
-    delegate :keys, :values, :compact, :reject, :select,
-      :slice, :transform_keys, :transform_values, to: :to_h
+    delegate :keys, :values, to: :to_h
 
     class << self
-      def from(value)
+      def transform(value)
         case value
         when Hash
           Options.new(value)
         when Array
-          value.map { from(_1) }
+          value.map { transform(_1) }
         else
           value
         end

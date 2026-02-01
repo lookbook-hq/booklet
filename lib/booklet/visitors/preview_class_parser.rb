@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "active_support/dependencies/require_dependency"
+
 module Booklet
   class PreviewClassParser < Visitor
     after_initialize do
@@ -19,10 +21,10 @@ module Booklet
 
       return spec unless class_object
 
-      comment = class_object.docstring.strip_heredoc
-      if comment.present?
-        spec.notes = TextSnippet.new(comment)
-      end
+      require_dependency class_object.file
+
+      notes = class_object.docstring.strip_heredoc
+      spec.notes = TextSnippet.new(notes) if notes.present?
 
       tags = YARD::TagSet.new(class_object.tags)
       spec.data.tap do |data|
@@ -30,28 +32,31 @@ module Booklet
         data.yard_tags = tags
       end
 
-      scenario_methods = class_object
+      inherited_scenario_tags = [*tags.param_tags, *tags.display_tags]
+
+      scenarios = class_object
         .meths(inherited: false, included: false)
         .filter { _1.visibility == :public }
-
-      scenarios = scenario_methods.map do |method|
-        create_scenario(method, default_tags: [*tags.param_tags, *tags.display_tags])
-      end
+        .map { create_scenario(_1, inherited_scenario_tags) }
 
       spec.add_warning("No scenarios defined") if scenarios.none?
-
       spec.push(*scenarios)
       spec
     end
 
-    private def create_scenario(method_object, default_tags: [])
-      ScenarioNode.new(
-        method_object.name,
-        name: method_object.name,
-        source: MethodSnippet.from_method_object(method_object)
-      ).tap do |scenario|
-        comments = method_object.docstring.strip_heredoc
-        scenario.notes = TextSnippet.new(comments) if comments.present?
+    private def create_scenario(method_object, default_tags = [])
+      ScenarioNode.new(method_object.name, name: method_object.name).tap do |scenario|
+        scenario.source = MethodSnippet.from_method_object(method_object)
+        scenario.context = method_object.parent.path.constantize
+
+        notes = method_object.docstring.strip_heredoc
+        scenario.notes = TextSnippet.new(notes) if notes.present?
+
+        method_params = method_object.parameters.map { [_1.first.delete_suffix(":").to_sym, _1.last] }.to_h
+        method_params.each do |name, string_value|
+          value_evaluator = -> { scenario.context.new.instance_eval(string_value) }
+          scenario.params << Param.new(name, value: value_evaluator)
+        end
 
         scenario.data.tap do |data|
           data.yard_object = method_object

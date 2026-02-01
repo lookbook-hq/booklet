@@ -1,14 +1,16 @@
-module Docs::Usage
-  class BasicPreview < Lookbook::Preview
-    def view_component
-      render SomeComponent.new do
-        "ViewComponent"
+module Docs
+  module Usage
+    class BasicPreview < Lookbook::Preview
+      def view_component
+        render SomeComponent.new do
+          "ViewComponent"
+        end
       end
-    end
 
-    def phlex
-      render AnotherComponent do
-        plain "Phlex"
+      def phlex
+        render AnotherComponent do
+          plain "Phlex"
+        end
       end
     end
   end

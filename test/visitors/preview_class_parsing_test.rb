@@ -88,7 +88,7 @@ module Booklet
         end
 
         should "have preview params" do
-          assert_kind_of Array, @scenario.params
+          assert_kind_of ParamSet, @scenario.params
 
           text_param = @scenario.params.find { _1.name == :text }
 

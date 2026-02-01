@@ -23,8 +23,13 @@ module Booklet
         node.label = tags.label_tag.value if tags.label_tag
         node.hidden = tags.hidden_tag.value if tags.hidden_tag
 
-        tags.param_tags.each { node.add_param(_1.value) }
-        tags.display_tags.each { node.add_display_option(_1.value) }
+        tags.display_tags.each do |display_tag|
+          node.display_options = node.display_options.merge(display_tag.value)
+        end
+
+        tags.param_tags.each do |param_tag|
+          node.params.update(param_tag.name, param_tag.value)
+        end
 
         tags.other_tags.each do |tag|
           node.try("#{tag.tag_name}=", tag.value)

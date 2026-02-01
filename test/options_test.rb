@@ -6,7 +6,7 @@ module Booklet
       context "nested hash" do
         setup do
           @hash = {hash_1: {hash_2: {string_1: "chunky"}}, array_1: [{hash_3: {string_2: "bacon"}}]}
-          @options = Options.from(@hash)
+          @options = Options.new(@hash)
         end
 
         should "return an Options instance" do

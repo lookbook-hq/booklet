@@ -4,20 +4,20 @@ require "literal"
 require "active_support"
 require "active_support/core_ext"
 
-loader = Zeitwerk::Loader.new
-
-loader.push_dir("#{__dir__}/booklet", namespace: Booklet)
-loader.collapse("#{__dir__}/booklet/{content,issues,nodes,visitors,parsers}")
-loader.collapse("#{__dir__}/booklet/{content,issues,nodes,visitors,parsers}/*")
-loader.collapse("#{__dir__}/booklet/yard/concerns")
-loader.ignore("#{__dir__}/booklet/version.rb")
-loader.inflector.inflect("yard" => "YARD")
-
-loader.setup
-loader.eager_load_dir("#{__dir__}/booklet/nodes") # `Booklet::Node#subclasses`
-loader.eager_load_dir("#{__dir__}/booklet/yard") # `Booklet::YARD::Tag#subclasses`
-
 module Booklet
+  Loader = Zeitwerk::Loader.new
+
+  Loader.push_dir("#{__dir__}/booklet", namespace: Booklet)
+  Loader.collapse("#{__dir__}/booklet/{content,issues,nodes,visitors,parsers}")
+  Loader.collapse("#{__dir__}/booklet/{content,issues,nodes,visitors,parsers}/*")
+  Loader.collapse("#{__dir__}/booklet/yard/concerns")
+  Loader.ignore("#{__dir__}/booklet/version.rb")
+  Loader.inflector.inflect("yard" => "YARD")
+  Loader.setup
+
+  Loader.eager_load_dir("#{__dir__}/booklet/nodes") # `Booklet::Node#subclasses`
+  Loader.eager_load_dir("#{__dir__}/booklet/yard") # `Booklet::YARD::Tag#subclasses`
+
   class << self
     delegate :analyze, :update, to: Analyzer
 

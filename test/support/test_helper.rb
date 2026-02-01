@@ -1,9 +1,12 @@
-require "lookbooklet"
 require "minitest/autorun"
 require "shoulda-context"
 
 require "pretty_please"
 require "pd"
+
+require "lookbook"
+require "view_component"
+require "lookbooklet"
 
 require_relative "fixtures"
 require_relative "test_utils"
