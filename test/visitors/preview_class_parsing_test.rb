@@ -13,12 +13,6 @@ module Booklet
         should "be hidden" do
           assert_equal true, @spec.hidden?
         end
-
-        should "have display options" do
-          assert_kind_of Options, @spec.display_options
-
-          assert_equal "green", @spec.display_options.text
-        end
       end
 
       context "scenarios" do
@@ -91,6 +85,23 @@ module Booklet
 
           assert_equal "white", @scenario.display_options.text
           assert_equal "bg-pink", @scenario.display_options.attrs.class_name
+        end
+
+        should "have preview params" do
+          assert_kind_of Array, @scenario.params
+
+          text_param = @scenario.params.find { _1.name == :text }
+
+          refute_nil text_param
+          assert_equal :text, text_param.name
+          assert_equal "The text to display", text_param.description
+
+          size_param = @scenario.params.find { _1.name == :size }
+
+          refute_nil size_param
+          assert_equal :size, size_param.name
+          assert_nil size_param.description
+          assert_equal :symbol, size_param.value_type
         end
       end
     end

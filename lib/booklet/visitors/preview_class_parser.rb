@@ -19,18 +19,24 @@ module Booklet
 
       return spec unless class_object
 
-      spec.data.yard_object = class_object
-
       comment = class_object.docstring.strip_heredoc
       if comment.present?
         spec.notes = TextSnippet.new(comment)
+      end
+
+      tags = YARD::TagSet.new(class_object.tags)
+      spec.data.tap do |data|
+        data.yard_object = class_object
+        data.yard_tags = tags
       end
 
       scenario_methods = class_object
         .meths(inherited: false, included: false)
         .filter { _1.visibility == :public }
 
-      scenarios = scenario_methods.map(&method(:to_scenario))
+      scenarios = scenario_methods.map do |method|
+        create_scenario(method, default_tags: [*tags.param_tags, *tags.display_tags])
+      end
 
       spec.add_warning("No scenarios defined") if scenarios.none?
 
@@ -38,18 +44,20 @@ module Booklet
       spec
     end
 
-    private def to_scenario(method_object)
-      scenario = ScenarioNode.new(
+    private def create_scenario(method_object, default_tags: [])
+      ScenarioNode.new(
         method_object.name,
         name: method_object.name,
         source: MethodSnippet.from_method_object(method_object)
-      )
+      ).tap do |scenario|
+        comments = method_object.docstring.strip_heredoc
+        scenario.notes = TextSnippet.new(comments) if comments.present?
 
-      scenario.data.yard_object = method_object
-
-      comments = method_object.docstring.strip_heredoc
-      scenario.notes = TextSnippet.new(comments) if comments.present?
-      scenario
+        scenario.data.tap do |data|
+          data.yard_object = method_object
+          data.yard_tags = YARD::TagSet.new([*default_tags, *method_object.tags])
+        end
+      end
     end
   end
 

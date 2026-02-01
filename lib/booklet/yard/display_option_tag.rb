@@ -2,7 +2,7 @@
 
 module Booklet
   module YARD
-    class DisplayOptionsTag < Tag
+    class DisplayOptionTag < Tag
       include KeyValueTag
 
       tag_name :display

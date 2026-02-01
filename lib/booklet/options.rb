@@ -10,7 +10,11 @@ module Booklet
       super.transform_values { Options.hashify(_1) }
     end
 
-    delegate :keys, :values, :compact, :merge, :deep_merge, :reject, :select,
+    def merge(*opts)
+      Options.new(to_h.merge(*opts.map(&:to_h)))
+    end
+
+    delegate :keys, :values, :compact, :reject, :select,
       :slice, :transform_keys, :transform_values, to: :to_h
 
     class << self
