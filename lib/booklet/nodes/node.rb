@@ -80,17 +80,6 @@ module Booklet
       end
     end
 
-    def remove_child(node)
-      return nil unless node
-
-      @children.delete(node)
-      node.detatch!
-    end
-
-    def remove_from_parent
-      parent.remove_child(self) unless root?
-    end
-
     def children=(nodes)
       @children.each(&:detatch!)
       @children.clear
@@ -161,17 +150,55 @@ module Booklet
 
     # @!endgroup
 
-    # @!group Adding children
+    # @!group Managing child nodes
 
-    def add(node)
-      validate_child!(node)
+    def insert_child(child, at_index = -1)
+      validate_child!(child)
 
-      @children << node
-      node.parent = self
-      node
+      raise ArgumentError, "Attempting to insert a child at a non-existent location" unless insertion_range.include?(at_index)
+
+      child.remove_from_parent
+
+      @children.insert(at_index, child)
+
+      child.parent = self
+      child
     end
 
-    alias_method :<<, :add
+    def insert_child_before(child, target)
+      index = @children.index(target)
+      raise ArgumentError, "Cannot find node to insert before" if index.nil?
+
+      insert_child(child, index)
+    end
+
+    def insert_child_after(child, target)
+      index = @children.index(target)
+      raise ArgumentError, "Cannot find node to insert before" if index.nil?
+
+      insert_child(child, index + 1)
+    end
+
+    def add_child(child) = insert_child(child, -1)
+
+    alias_method :<<, :add_child
+
+    def remove_child(child)
+      return nil unless child
+
+      @children.delete(child)
+      child.detatch!
+    end
+
+    def remove_from_parent
+      parent.remove_child(self) unless root?
+    end
+
+    private def insertion_range
+      max = @children.size
+      min = -(max + 1)
+      min..max
+    end
 
     # @!endgroup
 
@@ -188,7 +215,7 @@ module Booklet
     end
 
     def push(*children)
-      children.each { add(_1) }
+      children.each { add_child(_1) }
       self
     end
 
