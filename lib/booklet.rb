@@ -38,7 +38,7 @@ module Booklet
     end
 
     def spec_visitors
-      [PreviewClassParser, YardTagsHandler]
+      [PreviewClassParser, YardTagsHandler, ScenarioGrouper]
     end
 
     def page_visitors

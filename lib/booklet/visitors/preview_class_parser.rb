@@ -50,6 +50,7 @@ module Booklet
       ScenarioNode.new(method_object.name, name: method_object.name).tap do |scenario|
         scenario.source = MethodSnippet.from_method_object(method_object)
         scenario.context = method_object.parent.path.constantize
+        scenario.group = method_object.group
 
         notes = method_object.docstring.strip_heredoc
         scenario.notes = TextSnippet.new(notes) if notes.present?

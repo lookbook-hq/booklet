@@ -5,6 +5,7 @@ module Booklet
     include AcceptsParams
     include AcceptsDisplayOptions
 
+    prop :group, _Nilable(String), reader: :public, writer: :public
     prop :notes, _Nilable(TextSnippet), reader: :public, writer: :public
     prop :source, _Nilable(CodeSnippet), reader: :public, writer: :public
     prop :context, _Nilable(Class), reader: :public, writer: :public

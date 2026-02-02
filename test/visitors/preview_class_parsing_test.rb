@@ -6,7 +6,8 @@ module Booklet
       setup do
         @spec_path = Fixtures.file("specs/example_preview.rb")
         @spec = SpecNode.from(@spec_path)
-        @spec.accept(PreviewClassParser.new).accept(YardTagsHandler.new)
+        @spec.accept(PreviewClassParser.new)
+          .accept(YardTagsHandler.new)
       end
 
       context "tags" do
@@ -120,6 +121,23 @@ module Booklet
             assert_equal "sparkly", @theme_param.default_value
           end
         end
+      end
+    end
+
+    context "with scenario groups" do
+      setup do
+        @grouped_spec_path = Fixtures.file("specs/grouped_preview.rb")
+        @grouped_spec = SpecNode.from(@grouped_spec_path)
+        @grouped_spec.accept(PreviewClassParser.new)
+          .accept(YardTagsHandler.new)
+          .accept(ScenarioGrouper.new)
+      end
+
+      should "have a scenario added for each group" do
+        @group = @grouped_spec.scenarios.find { _1.ref == "sizes" }
+
+        assert_kind_of ScenarioNode, @group
+        assert_equal "Sizes", @group.label
       end
     end
   end
