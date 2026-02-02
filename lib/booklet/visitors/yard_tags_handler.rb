@@ -31,9 +31,10 @@ module Booklet
           param_data = tag.value
 
           if tag.options_string.present?
-            context = node.try(:context) || Object
-            options = Options.resolve_from(context.new, tag.options_string)
-            options.merge!(param_data)
+            param_data[:options] = lambda do
+              context = node.try(:context) || Object
+              Options.resolve_from(context, tag.options_string)
+            end
           end
 
           node.params.update(tag.name, param_data)

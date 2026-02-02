@@ -6,6 +6,10 @@
 # @hidden true
 # @display text green
 class ExamplePreview < ViewComponent::Preview
+  ICON_PARAM_OPTIONS = {
+    label: "Example icon"
+  }
+
   # Notes specific to the _default_ scenario.
   def default
     render ExampleComponent.new
@@ -33,8 +37,15 @@ class ExamplePreview < ViewComponent::Preview
   # @param text "The text to display"
   # @param size [Symbol] select { choices: [small, medium, large] }
   # @param theme [Symbol] select :theme_options
-  def with_tags(name:, text: default_text_provider, size: :medium, theme: "sparkly")
-    render ExampleComponent.new(name:, text:, size:)
+  # @param icon [Boolean] checkbox {{ ICON_PARAM_OPTIONS }}
+  def with_tags(
+    name:,
+    text: default_text_provider,
+    size: :medium,
+    theme: "sparkly",
+    icon: false
+  )
+    render ExampleComponent.new(name:, text:, size:, theme:)
   end
 
   private

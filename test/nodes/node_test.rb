@@ -25,7 +25,7 @@ module Booklet
         @greatgrandchild_2 = Node.new("paragraph-2")
       end
 
-      context "Node#add" do
+      context "Node#add_child" do
         should "allow child nodes to be added" do
           @root << @child
           @root << @child_2

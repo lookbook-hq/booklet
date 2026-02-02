@@ -96,12 +96,13 @@ module Booklet
           assert_kind_of ParamSet, @scenario.params
         end
 
-        context "preview param parser" do
+        context "params" do
           setup do
             @name_param = @scenario.params.find!(:name)
             @text_param = @scenario.params.find!(:text)
             @size_param = @scenario.params.find!(:size)
             @theme_param = @scenario.params.find!(:theme)
+            @icon_param = @scenario.params.find!(:icon)
           end
 
           should "extract param descriptions when available" do
@@ -119,6 +120,25 @@ module Booklet
             assert_equal "default text", @text_param.default_value
             assert_equal :medium, @size_param.default_value
             assert_equal "sparkly", @theme_param.default_value
+          end
+
+          context "options" do
+            should "be resolved from YAML" do
+              assert_kind_of Options, @size_param.options
+              assert_equal ["small", "medium", "large"], @size_param.options.choices
+            end
+
+            should "be resolved from instance methods using `:method_name` declarations" do
+              assert_kind_of Options, @theme_param.options
+              assert_kind_of Array, @theme_param.options.choices
+              assert_equal ["Default", "sparkly"], @theme_param.options.choices.first
+            end
+
+            should "be resolved from `{{ statement }}` syntax declarations" do
+              assert_kind_of Options, @icon_param.options
+              assert_equal "Example icon", @icon_param.options.label
+              assert_equal "Example icon", @icon_param.label
+            end
           end
         end
       end

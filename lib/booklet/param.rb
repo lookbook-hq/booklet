@@ -2,18 +2,24 @@
 
 module Booklet
   class Param < Booklet::Object
+    PARAM_OPTIONS = %i[default label description hint choices]
+
     prop :name, Symbol, :positional, reader: :public
     prop :label, _Nilable(String), writer: :public
-    prop :description, _Nilable(String), reader: :public, writer: :public
+    prop :description, _Nilable(String), writer: :public
     prop :input_name, _Nilable(Symbol), writer: :public
     prop :value_type, _Nilable(Symbol), writer: :public
     prop :default_value, _Nilable(_Any)
     prop :value, _Nilable(_Any), writer: :protected
     prop :required, _Boolean, writer: :public, default: false
-    prop :input_options, Hash, :**, reader: :public, default: -> { {} }
+    prop :options, _Union(Hash, Proc), default: -> { {} }
 
     def label
-      @label ||= name.to_s.titleize
+      @label ||= options.label || name.to_s.titleize
+    end
+
+    def description
+      @description ||= options.description || options.hint
     end
 
     def with_value(value)
@@ -31,7 +37,11 @@ module Booklet
     end
 
     def default_value
-      @default_value.respond_to?(:call) ? @default_value.call : @default_value
+      @resolved_default_value ||= if @default_value.respond_to?(:call)
+        @default_value.call
+      else
+        @default_value.nil? ? options.default : @default_value
+      end
     end
 
     def input_name
@@ -39,7 +49,21 @@ module Booklet
     end
 
     def input_choices
-      @input_options.fetch(:choices, [])
+      input_options.fetch(:choices, [])
+    end
+
+    def input_options
+      @input_options ||= Options.new(options.except(PARAM_OPTIONS))
+    end
+
+    def options=(opts)
+      @options = opts
+      @resolved_options = nil
+      @input_options = nil
+    end
+
+    def options
+      @resolved_options ||= Options.new(@options.respond_to?(:call) ? @options.call : @options)
     end
 
     def required? = !!@required

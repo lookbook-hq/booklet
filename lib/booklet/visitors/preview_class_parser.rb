@@ -23,7 +23,7 @@ module Booklet
 
       return spec unless class_object
 
-      require_dependency class_object.file
+      require_dependency class_object.file # TODO: handle this more elegantly?
 
       notes = class_object.docstring.strip_heredoc
       spec.notes = TextSnippet.new(notes) if notes.present?
@@ -49,7 +49,7 @@ module Booklet
     private def create_scenario(method_object, default_tags = [])
       ScenarioNode.new(method_object.name, name: method_object.name).tap do |scenario|
         scenario.source = MethodSnippet.from_method_object(method_object)
-        scenario.context = method_object.parent.path.constantize
+        scenario.context_path = method_object.parent.path
         scenario.group = method_object.group
 
         notes = method_object.docstring.strip_heredoc
@@ -60,7 +60,7 @@ module Booklet
           method_params.map do |name, raw_value|
             Param.new(name,
               required: raw_value.nil?,
-              default_value: raw_value.nil? ? nil : -> { scenario.context.new.instance_eval(raw_value) })
+              default_value: raw_value.nil? ? nil : -> { scenario.context.instance_eval(raw_value) })
           end
         )
 

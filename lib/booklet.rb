@@ -13,6 +13,7 @@ module Booklet
   Loader.collapse("#{__dir__}/booklet/yard/concerns")
   Loader.ignore("#{__dir__}/booklet/version.rb")
   Loader.inflector.inflect("yard" => "YARD")
+  Loader.enable_reloading
   Loader.setup
 
   Loader.eager_load_dir("#{__dir__}/booklet/nodes") # `Booklet::Node#subclasses`
