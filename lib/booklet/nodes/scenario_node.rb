@@ -16,8 +16,6 @@ module Booklet
       Options.new(@display_options)
     end
 
-    def lookup_value = name
-
     alias_method :spec, :parent
   end
 end

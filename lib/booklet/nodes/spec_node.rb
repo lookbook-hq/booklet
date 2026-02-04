@@ -12,8 +12,6 @@ module Booklet
 
     def scenarios = children.grep(ScenarioNode)
 
-    def lookup_value = @lookup_value ||= name
-
     def format
       case path.to_s
       when /.*(_preview\.rb)$/

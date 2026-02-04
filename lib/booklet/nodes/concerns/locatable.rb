@@ -18,8 +18,6 @@ module Booklet
 
       def dirty? = @ctime.before?(path.ctime)
 
-      def lookup_value = @lookup_value ||= FileHelpers.file_name(path)
-
       def locatable? = true
     end
 

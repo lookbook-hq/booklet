@@ -6,8 +6,6 @@ module Booklet
 
     MIME_TYPES = %w[text/css text/javascript]
 
-    def lookup_value = @lookup_value ||= path.basename
-
     class << self
       def from(path, **props)
         mime_type = FileHelpers.mime_type(path)

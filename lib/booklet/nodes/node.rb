@@ -22,7 +22,7 @@ module Booklet
 
     def ref = @node_ref ||= NodeRef.new(@ref)
 
-    def id = Helpers.hexdigest(lookup_path { _1.lookup_value })
+    def id = Helpers.hexdigest(tree_path { _1.ref })
 
     def issues = @issues ||= Issues.new
 
@@ -286,15 +286,13 @@ module Booklet
 
     # @!endgroup
 
-    # @!group Tree node lookup
+    # @!group Tree node path
 
-    def lookup_path(separator: "/", &block)
+    def tree_path(separator: "/", &block)
       nodes = [ancestors&.reverse, self].flatten.compact
-      values = block ? nodes.map { block.call(_1) } : nodes.map { _1.lookup_value }
+      values = block ? nodes.map { block.call(_1) } : nodes.map { _1.ref }
       values.compact.join(separator)
     end
-
-    def lookup_value = ref
 
     # @!endgroup
 
