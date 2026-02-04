@@ -34,12 +34,14 @@ module Booklet
         data.yard_tags = tags
       end
 
-      inherited_scenario_tags = [*tags.param_tags, *tags.display_tags]
+      # Any @param and @display tags set at the class level
+      # act as defaults for all scenario methods, unless overridden.
+      default_tags = [*tags.param_tags, *tags.display_tags]
 
       scenarios = class_object
         .meths(inherited: false, included: false)
         .filter { _1.visibility == :public }
-        .map { create_scenario(_1, inherited_scenario_tags) }
+        .map { create_scenario(_1, default_tags) }
 
       spec.add_warning("No scenarios defined") if scenarios.none?
       spec.push(*scenarios)
@@ -47,22 +49,24 @@ module Booklet
     end
 
     private def create_scenario(method_object, default_tags = [])
-      ScenarioNode.new(method_object.name, name: method_object.name).tap do |scenario|
-        scenario.source = MethodSnippet.from_method_object(method_object)
-        scenario.context_path = method_object.parent.path
+      name = method_object.name
+      context = method_object.parent.path.constantize.new
+
+      ScenarioNode.new(name, name:, context:).tap do |scenario|
+        scenario.source = MethodSnippet.from_code_object(method_object)
         scenario.group = method_object.group
 
         notes = method_object.docstring.strip_heredoc
         scenario.notes = TextSnippet.new(notes) if notes.present?
 
         method_params = method_object.parameters.map { [_1.first.delete_suffix(":").to_sym, _1.last] }.to_h
-        scenario.params.push(
-          method_params.map do |name, raw_value|
-            Param.new(name,
-              required: raw_value.nil?,
-              default_value: raw_value.nil? ? nil : -> { scenario.context.instance_eval(raw_value) })
-          end
-        )
+        params = method_params.map do |name, raw_value|
+          Param.new(name,
+            required: raw_value.nil?,
+            default_value: raw_value.nil? ? nil : -> { context.instance_eval(raw_value) })
+        end
+
+        scenario.params.push(params)
 
         scenario.data.tap do |data|
           data.yard_object = method_object

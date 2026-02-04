@@ -31,7 +31,7 @@ module Booklet
           param_data = tag.value
 
           if tag.options_string.present?
-            param_data[:options] = lambda do
+            param_data[:options] = proc do
               context = node.try(:context) || Object
               Options.resolve_from(context, tag.options_string)
             end

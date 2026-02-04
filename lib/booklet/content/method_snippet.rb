@@ -18,12 +18,12 @@ module Booklet
     end
 
     class << self
-      def from_method_object(obj)
+      def from_code_object(code_object)
         MethodSnippet.new(
-          obj.source,
-          name: obj.path,
-          lang: obj.source_type,
-          location: [obj.file, obj.line]
+          code_object.source,
+          name: code_object.path,
+          lang: code_object.source_type,
+          location: [code_object.file, code_object.line]
         )
       end
     end
