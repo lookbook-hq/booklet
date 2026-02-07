@@ -16,9 +16,7 @@ module Booklet
       end
     end
 
-    def value
-      raw.strip_heredoc
-    end
+    def value = raw.strip_heredoc
 
     alias_method :to_s, :value
   end
