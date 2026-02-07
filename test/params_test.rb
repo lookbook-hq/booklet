@@ -16,8 +16,8 @@ module Booklet
           end
 
           should "correctly cast string values to a symbol" do
-            assert_equal :foo, @explicit_type.with_value("foo").value
-            assert_equal :bar, @inferred_type.with_value("bar").value
+            assert_equal :foo, @explicit_type.cast_value("foo")
+            assert_equal :bar, @inferred_type.cast_value("bar")
           end
         end
       end

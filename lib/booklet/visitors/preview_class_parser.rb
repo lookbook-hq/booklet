@@ -49,9 +49,14 @@ module Booklet
 
     private def create_scenario(method_object, default_tags = [])
       name = method_object.name
-      context = method_object.parent.path
+      context = method_object.parent.path.constantize.new
 
-      ScenarioNode.new(name, name:, context:).tap do |scenario|
+      scenario = ScenarioNode.new(name, name:) do |view_context, **params|
+        preview_class = method_object.parent.path.constantize
+        preview_class.new(view_context).public_send(name, **params)
+      end
+
+      scenario.tap do |scenario|
         scenario.source = MethodSnippet.from_code_object(method_object)
         scenario.group = method_object.group
 
@@ -62,7 +67,7 @@ module Booklet
         params = method_params.map do |name, raw_value|
           Param.new(name,
             required: raw_value.nil?,
-            default_value: raw_value.nil? ? nil : -> { scenario.context.instance_eval(raw_value) })
+            default_value: raw_value.nil? ? nil : context.instance_eval(raw_value))
         end
 
         scenario.params.push(params)

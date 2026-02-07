@@ -65,6 +65,8 @@ module Booklet
       end
 
       private def options_from_method(str, context)
+        raise "Cannot resolve options without a context" if context.nil?
+
         method_name = str.delete_prefix(":").to_sym
         if context.respond_to?(method_name, true)
           context.send(method_name)
@@ -74,6 +76,8 @@ module Booklet
       end
 
       private def options_from_context(str, context)
+        raise "Cannot resolve options without a context" if context.nil?
+
         body = str[/\{\{\s?(.*)\s?\}\}$/, 1]
         context.instance_eval(body)
       end

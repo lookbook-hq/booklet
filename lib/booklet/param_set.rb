@@ -6,6 +6,19 @@ module Booklet
 
     prop :params, _Array(Param), :positional, reader: :protected, default: -> { [] }
 
+    def to_values_hash(values)
+      @params.map do |param|
+        key = param.name
+        value = if values.key?(key)
+          param.cast_value(values[key])
+        else
+          param.default_value
+        end
+
+        [key, value]
+      end.to_h
+    end
+
     def update(name, props)
       param = find!(name)
       props.to_h.except(:name).each { param.try("#{_1}=", _2) }

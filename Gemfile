@@ -12,7 +12,6 @@ group :development, :test do
   gem "puts_debuggerer"
   gem "pretty_please"
 
-  gem "lookbook"
   gem "view_component"
   gem "phlex"
 end

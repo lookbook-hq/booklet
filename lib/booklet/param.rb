@@ -9,8 +9,7 @@ module Booklet
     prop :description, _Nilable(String), writer: :public
     prop :input_name, _Nilable(Symbol), writer: :public
     prop :value_type, _Nilable(Symbol), writer: :public
-    prop :default_value, _Nilable(_Any)
-    prop :value, _Nilable(_Any), writer: :protected
+    prop :default_value, _Nilable(_Any), reader: :public
     prop :required, _Boolean, writer: :public, default: false
     prop :options, _Union(Hash, Proc), default: -> { {} }
 
@@ -22,26 +21,12 @@ module Booklet
       @description ||= options.description || options.hint
     end
 
-    def with_value(value)
-      deep_dup.tap do |param|
-        param.value = Param.cast_string_value(value, value_type)
-      end
-    end
-
-    def value
-      @value || @default_value
-    end
-
     def value_type
       @value_type || guess_value_type
     end
 
-    def default_value
-      @resolved_default_value ||= if @default_value.respond_to?(:call)
-        @default_value.call
-      else
-        @default_value.nil? ? options.default : @default_value
-      end
+    def cast_value(str)
+      Param.cast_string_value(str, value_type)
     end
 
     def input_name
@@ -69,7 +54,7 @@ module Booklet
     def required? = !!@required
 
     private def guess_input_name
-      if @value_type == :boolean || (@value_type.nil? && Helpers.boolean?(value))
+      if @value_type == :boolean || (@value_type.nil? && Helpers.boolean?(default_value))
         :checkbox
       else
         :text
@@ -81,9 +66,9 @@ module Booklet
         :boolean
       elsif input_name == :number
         :integer
-      elsif Helpers.boolean?(value)
+      elsif Helpers.boolean?(default_value)
         :boolean
-      elsif value.is_a?(Symbol)
+      elsif default_value.is_a?(Symbol)
         :symbol
       elsif input_name.in?([:date, :"datetime-local"]) || value.is_a?(DateTime)
         :datetime

@@ -5,7 +5,7 @@ module Booklet
     visit SpecNode do |spec|
       return spec if !spec.data.yard_tags || spec.errors? || visited?(spec)
 
-      apply_tags(spec)
+      apply_tags(spec, spec.data.yard_object)
       visit_each(spec.scenarios)
       spec
     end
@@ -13,10 +13,11 @@ module Booklet
     visit ScenarioNode do |scenario|
       return scenario if !scenario.data.yard_tags || scenario.errors? || visited?(scenario)
 
-      apply_tags(scenario)
+      apply_tags(scenario, scenario.spec.data.yard_object)
     end
 
-    private def apply_tags(node)
+    private def apply_tags(node, yard_object)
+      context = yard_object.path.constantize.new
       tags = node.data.yard_tags
 
       node.tap do |n|
@@ -29,10 +30,8 @@ module Booklet
 
         tags.param_tags.each do |tag|
           param_data = tag.value
-
           if tag.options_string.present?
             param_data[:options] = proc do
-              context = node.try(:context) || Object
               Options.resolve_from(context, tag.options_string)
             end
           end
