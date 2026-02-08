@@ -47,8 +47,8 @@ module Booklet
     end
 
     def input_choices
+      # Normalize choice options to all be [key, value] pairs.
       options.fetch(:choices, []).map do |option|
-        # Options are [text, value] pairs or strings used for both.
         case option
         when Array
           [option.first, option.last]
@@ -69,7 +69,6 @@ module Booklet
     end
 
     def options
-      pd (@options.respond_to?(:call) ? @options.call : @options).to_h
       @resolved_options ||= Options.new(@options.respond_to?(:call) ? @options.call : @options)
     end
 

@@ -6,8 +6,10 @@ module Booklet
   module YARD
     class Tag < ::YARD::Tags::Tag
       def options_string
-        @options_string || ""
+        (@options_string || "").strip
       end
+
+      def options? = false
 
       class << self
         def tag_name(tagname = nil)
