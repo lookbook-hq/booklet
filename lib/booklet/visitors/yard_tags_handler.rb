@@ -17,7 +17,7 @@ module Booklet
     end
 
     private def apply_tags(node, yard_object)
-      context = yard_object.path.constantize.new
+      preview_class = yard_object.path.constantize.new
       tags = node.data.yard_tags
 
       node.tap do |n|
@@ -32,7 +32,7 @@ module Booklet
           param_data = tag.value
           if tag.options_string.present?
             param_data[:options] = proc do
-              Options.resolve_from(context, tag.options_string)
+              Options.resolve_from(preview_class, tag.options_string)
             end
           end
 

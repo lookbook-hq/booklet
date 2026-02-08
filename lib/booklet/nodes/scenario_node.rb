@@ -7,12 +7,12 @@ module Booklet
 
     prop :group, _Nilable(String), reader: :public, writer: :public
     prop :notes, _Nilable(TextSnippet), reader: :public, writer: :public
-    prop :source, _Nilable(CodeSnippet), reader: :public, writer: :public
+    prop :source, _Nilable(_Union(CodeSnippet, String)), reader: :public, writer: :public
     prop :renderer, Proc, :&, writer: :public, default: -> { -> {} }
 
     def render(view_context = nil, **kwargs)
       params_hash = params.to_values_hash(kwargs)
-      @renderer.call(view_context, **params_hash)
+      view_context.instance_exec(**params_hash, &@renderer)
     end
 
     def display_options = Options.new(@display_options)

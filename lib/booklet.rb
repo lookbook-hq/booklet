@@ -3,6 +3,7 @@
 require "literal"
 require "active_support"
 require "active_support/core_ext"
+require "yard"
 
 module Booklet
   Loader = Zeitwerk::Loader.new
@@ -13,7 +14,6 @@ module Booklet
   Loader.collapse("#{__dir__}/booklet/yard/concerns")
   Loader.ignore("#{__dir__}/booklet/version.rb")
   Loader.inflector.inflect("yard" => "YARD")
-  Loader.enable_reloading
   Loader.setup
 
   Loader.eager_load_dir("#{__dir__}/booklet/nodes") # `Booklet::Node#subclasses`
@@ -44,6 +44,13 @@ module Booklet
 
     def page_visitors
       [FrontmatterExtractor]
+    end
+
+    def yard_parser
+      @yard_parser ||= begin
+        YardParser.define_tags(YARD::Tag.subclasses)
+        YardParser.new
+      end
     end
 
     attr_writer :loader, :visitors, :validator_visitors, :spec_visitors, :page_visitors

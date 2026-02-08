@@ -6,18 +6,21 @@ require "lookbook/preview"
 
 module Booklet
   class PreviewClassParser < Visitor
-    after_initialize do
-      @parser = YardParser.new
-    end
-
     visit SpecNode do |spec|
+      if spec.format == :preview_class && !spec.errors?
+        begin
+          require_dependency spec.path
+        rescue
+          # noop
+        end
+      end
+
       if (spec.format != :preview_class) || spec.errors? || visited?(spec)
         return spec
       end
 
       begin
-        class_object = @parser.parse_file(spec.path)
-        require_dependency class_object.file # TODO: handle this more elegantly?
+        class_object = Booklet.yard_parser.parse_file(spec.path)
       rescue => error
         spec.add_error(error)
       end
@@ -49,11 +52,11 @@ module Booklet
 
     private def create_scenario(method_object, default_tags = [])
       name = method_object.name
-      context = method_object.parent.path.constantize.new
+      preview_class_name = method_object.parent.path
 
-      scenario = ScenarioNode.new(name, name:) do |view_context, **params|
-        preview_class = method_object.parent.path.constantize
-        preview_class.new(view_context).public_send(name, **params)
+      scenario = ScenarioNode.new(name, name:) do |**params|
+        preview_class = preview_class_name.constantize
+        preview_class.new(self).public_send(name, **params)
       end
 
       scenario.tap do |scenario|
@@ -67,7 +70,7 @@ module Booklet
         params = method_params.map do |name, raw_value|
           Param.new(name,
             required: raw_value.nil?,
-            default_value: raw_value.nil? ? nil : context.instance_eval(raw_value))
+            default_value: (preview_class_name.constantize.new.instance_eval(raw_value) unless raw_value.nil?))
         end
 
         scenario.params.push(params)
@@ -79,6 +82,4 @@ module Booklet
       end
     end
   end
-
-  YardParser.define_tags(YARD::Tag.subclasses)
 end

@@ -1,20 +1,29 @@
 # frozen_string_literal: true
 
 require "yard"
+require "logger"
 
 module Booklet
   class YardParser < Booklet::Object
-    prop :log_level, Integer, default: ::YARD::Logger::ERROR.freeze
+    prop :log_level, Integer, default: Logger::ERROR.freeze
+
+    after_initialize do
+      @parsing = Monitor.new
+      @yard = ::YARD
+      @yard_logger = ::YARD::Logger.instance
+    end
 
     def parse(*path_sets)
-      paths = Array.wrap(path_sets).flatten.map(&:to_s)
+      @parsing.synchronize do
+        @yard::Registry.clear
 
-      ::YARD::Logger.instance.enter_level(@log_level) do
-        ::YARD.parse(paths)
-      end
+        paths = Array.wrap(path_sets).flatten.map(&:to_s)
 
-      ::YARD::Registry.all(:class).filter do |code_object|
-        paths.include?(code_object.file)
+        @yard_logger.enter_level(@log_level) { @yard.parse(paths) }
+
+        @yard::Registry.all(:class).filter do |code_object|
+          paths.include?(code_object.file)
+        end
       end
     end
 

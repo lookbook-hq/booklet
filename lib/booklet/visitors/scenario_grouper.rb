@@ -11,12 +11,12 @@ module Booklet
         unless key.nil?
           ref = key.parameterize
           scenario_group = ScenarioNode.new(ref, name: ref).tap do |group|
-            combined_source = scenarios.map(&:source).join("\n\n")
+            combined_source = scenarios.map(&:source).join("\n")
 
             group.source = CodeSnippet.new(combined_source, lang: :ruby) # TODO: handle mixed languages
-            group.renderer = lambda do |view_context, **params|
-              rendered_scenarios = scenarios.map { _1.render(view_context, **params) }
-              view_context.safe_join(rendered_scenarios, "\n\n")
+            group.renderer = lambda do |**params|
+              rendered_scenarios = scenarios.map { render(_1, **params) }
+              safe_join(rendered_scenarios, "\n")
             end
           end
 
