@@ -19,6 +19,12 @@ module Booklet
       end.to_h
     end
 
+    def with_values(values_hash)
+      @params.map do |param|
+        values_hash.key?(param.name) ? param.with_value(values_hash[:key]) : param.deep_dup
+      end
+    end
+
     def update(name, props)
       param = find!(name)
       props.to_h.except(:name).each { param.try("#{_1}=", _2) }

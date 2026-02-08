@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "active_model"
+
 module Booklet
   class Param < Booklet::Object
     PARAM_OPTIONS = %i[default label description hint choices]
@@ -10,6 +12,7 @@ module Booklet
     prop :input_name, _Nilable(Symbol), writer: :public
     prop :value_type, _Nilable(Symbol), writer: :public
     prop :default_value, _Nilable(_Any), reader: :public
+    prop :value, _Nilable(_Any), writer: :protected
     prop :required, _Boolean, writer: :public, default: false
     prop :options, _Union(Hash, Proc), default: -> { {} }
 
@@ -29,12 +32,30 @@ module Booklet
       Param.cast_string_value(str, value_type)
     end
 
+    def with_value(value)
+      deep_dup.tap do |param|
+        param.value = param.cast_value(value)
+      end
+    end
+
+    def value
+      @value || @default_value
+    end
+
     def input_name
       @input_name || guess_input_name
     end
 
     def input_choices
-      input_options.fetch(:choices, [])
+      options.fetch(:choices, []).map do |option|
+        # Options are [text, value] pairs or strings used for both.
+        case option
+        when Array
+          [option.first, option.last]
+        else
+          [option, option]
+        end
+      end
     end
 
     def input_options
@@ -48,13 +69,14 @@ module Booklet
     end
 
     def options
+      pd (@options.respond_to?(:call) ? @options.call : @options).to_h
       @resolved_options ||= Options.new(@options.respond_to?(:call) ? @options.call : @options)
     end
 
     def required? = !!@required
 
     private def guess_input_name
-      if @value_type == :boolean || (@value_type.nil? && Helpers.boolean?(default_value))
+      if @value_type == :boolean || (@value_type.nil? && Helpers.boolean?(value))
         :checkbox
       else
         :text
@@ -66,9 +88,9 @@ module Booklet
         :boolean
       elsif input_name == :number
         :integer
-      elsif Helpers.boolean?(default_value)
+      elsif Helpers.boolean?(value)
         :boolean
-      elsif default_value.is_a?(Symbol)
+      elsif value.is_a?(Symbol)
         :symbol
       elsif input_name.in?([:date, :"datetime-local"]) || value.is_a?(DateTime)
         :datetime
