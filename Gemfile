@@ -20,4 +20,5 @@ group :test do
   gem "minitest"
   gem "minitest-reporters"
   gem "shoulda-context"
+  gem "simplecov", require: false
 end
