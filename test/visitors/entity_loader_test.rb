@@ -1,8 +1,8 @@
 require "support/test_helper"
 
 module Booklet
-  class FilesystemLoaderTest < Minitest::Test
-    context "filesystem loader" do
+  class EntityLoaderTest < Minitest::Test
+    context "entity loader" do
       setup do
         @root_path = Fixtures.dir("mixed")
         @root = FolderNode.from(@root_path)

@@ -5,9 +5,8 @@ module Booklet
   class HerbValidatorTest < Minitest::Test
     context "Herb ERB validator" do
       setup do
-        @root = Fixtures.dir("mixed")
-        @result = Booklet.analyze(@root, visitors: [HerbValidator.new])
-        @erb_files_with_errors = Fixtures.files_within(@root, grep: /template_with_error/)
+        @result = analyze_fixture("mixed", visitors: [HerbValidator.new])
+        @erb_files_with_errors = Fixtures.files_within("mixed", grep: /template_with_error/)
       end
 
       should "identify all files with syntax errors" do

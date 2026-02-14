@@ -4,8 +4,7 @@ module Booklet
   class HashConverterTest < Minitest::Test
     context "hash converter" do
       setup do
-        @root = Fixtures.dir("mixed")
-        @result = Booklet.analyze(@root)
+        @result = analyze_fixture("mixed")
         @hash = @result.accept(HashConverter.new)
       end
 

@@ -3,18 +3,25 @@ require "support/test_helper"
 module Booklet
   class GlobalConfigTest < Minitest::Test
     context "Booklet global config options" do
+      setup do
+        @original_loader = Booklet.loader
+        @original_visitors = Booklet.visitors.dup
+      end
+
+      teardown do
+        Booklet.loader = @original_loader
+        Booklet.visitors.replace(@original_visitors)
+      end
+
       context "Booklet::loader" do
         should "returns the entity loader" do
           assert Booklet.loader == EntityLoader
         end
 
         should "be able to be replaced" do
-          default_loader = Booklet.loader
           Booklet.loader = EntityLoader.new
 
           assert_kind_of EntityLoader, Booklet.loader
-
-          Booklet.loader = default_loader
         end
       end
 
@@ -35,8 +42,6 @@ module Booklet
 
           assert Booklet.visitors.count == count + 1
           assert Booklet.visitors.include?(HashConverter)
-
-          Booklet.visitors.pop
         end
       end
     end

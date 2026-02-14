@@ -122,11 +122,6 @@ module Booklet
         end
       end
 
-      context "entities with unchanged files" do
-        should "be duplicated not built from scratch" do
-          # TODO
-        end
-      end
     end
   end
 end

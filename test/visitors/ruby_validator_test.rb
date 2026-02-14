@@ -5,9 +5,8 @@ module Booklet
   class RubyValidatorTest < Minitest::Test
     context "ruby file syntax validator" do
       setup do
-        @root = Fixtures.dir("mixed")
-        @result = Booklet.analyze(@root, visitors: [RubyValidator.new])
-        @ruby_files_with_errors = Fixtures.files_within(@root, grep: /syntax_error/)
+        @result = analyze_fixture("mixed", visitors: [RubyValidator.new])
+        @ruby_files_with_errors = Fixtures.files_within("mixed", grep: /syntax_error/)
       end
 
       should "identify all files with syntax errors" do

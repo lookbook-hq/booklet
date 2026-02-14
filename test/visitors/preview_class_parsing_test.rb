@@ -4,10 +4,7 @@ module Booklet
   class PreviewClassParserTest < Minitest::Test
     context "Preview classes" do
       setup do
-        @spec_path = Fixtures.file("specs/example_preview.rb")
-        @spec = SpecNode.from(@spec_path)
-        @spec.accept(PreviewClassParser.new)
-          .accept(YardTagsHandler.new)
+        @spec = spec_from_fixture("specs/example_preview.rb")
       end
 
       context "tags" do
@@ -146,11 +143,8 @@ module Booklet
 
     context "with scenario groups" do
       setup do
-        @grouped_spec_path = Fixtures.file("specs/grouped_preview.rb")
-        @grouped_spec = SpecNode.from(@grouped_spec_path)
-        @grouped_spec.accept(PreviewClassParser.new)
-          .accept(YardTagsHandler.new)
-          .accept(ScenarioGrouper.new)
+        @grouped_spec = spec_from_fixture("specs/grouped_preview.rb",
+          visitors: [PreviewClassParser, YardTagsHandler, ScenarioGrouper])
       end
 
       should "have a scenario added for each group" do

@@ -6,7 +6,7 @@ module Booklet
       context "with default visitors" do
         setup do
           @root = Fixtures.dir("mixed")
-          @result = Booklet.analyze(@root)
+          @result = analyze_fixture("mixed")
         end
 
         should "return an booklet entity tree" do
@@ -51,48 +51,31 @@ module Booklet
               dirs = Fixtures.files_within(@root).filter(&:directory?)
               folders = @result.grep(FolderNode).reject(&:root?)
 
-              assert_equal dirs.count, folders.count
-              assert_equal 0, folders.map(&:path).difference(dirs).count
+              assert_nodes_match_files folders, dirs
             end
           end
 
           context "SpecNode" do
             should "be created for each preview class" do
-              spec_files = Fixtures.spec_files_within(@root)
-              specs = @result.grep(SpecNode)
-
-              assert_equal spec_files.count, specs.count
-              assert_equal 0, specs.map(&:path).difference(spec_files).count
+              assert_nodes_match_files @result.grep(SpecNode), Fixtures.spec_files_within(@root)
             end
           end
 
           context "PageNode" do
             should "be created for each matching markdown file" do
-              doc_files = Fixtures.markdown_files_within(@root)
-              docs = @result.grep(PageNode)
-
-              assert_equal doc_files.count, docs.count
-              assert_equal 0, docs.map(&:path).difference(doc_files).count
+              assert_nodes_match_files @result.grep(PageNode), Fixtures.markdown_files_within(@root)
             end
           end
 
           context "AssetNode" do
             should "be created from each asset file" do
-              asset_files = Fixtures.asset_files_within(@root)
-              assets = @result.grep(AssetNode)
-
-              assert_equal asset_files.count, assets.count
-              assert_equal 0, assets.map(&:path).difference(asset_files).count
+              assert_nodes_match_files @result.grep(AssetNode), Fixtures.asset_files_within(@root)
             end
           end
 
           context "FileNode" do
             should "be created from all other files" do
-              unrecognised_files = Fixtures.anon_files_within(@root)
-              anon = @result.grep(FileNode)
-
-              assert_equal unrecognised_files.count, anon.count
-              assert_equal 0, anon.map(&:path).difference(unrecognised_files).count
+              assert_nodes_match_files @result.grep(FileNode), Fixtures.anon_files_within(@root)
             end
           end
         end

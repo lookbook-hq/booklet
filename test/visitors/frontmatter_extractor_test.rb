@@ -5,8 +5,7 @@ module Booklet
     context "Page without frontmatter" do
       setup do
         @page_path = Fixtures.file("pages/basic_page.md")
-        @page = PageNode.from(@page_path)
-        @page.accept(FrontmatterExtractor.new)
+        @page = page_from_fixture("pages/basic_page.md")
       end
 
       context "PageNode#contents" do
@@ -19,9 +18,7 @@ module Booklet
     context "Page with frontmatter" do
       context "valid frontmatter" do
         setup do
-          @page_path = Fixtures.file("pages/page_with_frontmatter.md")
-          @page = PageNode.from(@page_path)
-          @page.accept(FrontmatterExtractor.new)
+          @page = page_from_fixture("pages/page_with_frontmatter.md")
         end
 
         context "page label" do

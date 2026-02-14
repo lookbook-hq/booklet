@@ -9,6 +9,8 @@ require "booklet"
 require_relative "fixtures"
 require_relative "test_utils"
 
+Minitest::Test.include(TestUtils)
+
 PutsDebuggerer.header = "-" * 80
 PutsDebuggerer.print_engine = lambda do |object|
   output = case object
