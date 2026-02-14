@@ -12,15 +12,15 @@ Ruby >= 3.2 required. No Rails dependency (uses ActiveSupport/ActiveModel only).
 
 ```bash
 # Setup
-bundle install
+mise setup
 
 # Run all tests
-mise test
+mise test                   # alias: mise t
 
 # Run a single test file
 rake test TEST=test/nodes/spec_node_test.rb
 
-# Watch mode (requires mise + watchexec)
+# Watch mode (requires watchexec, installed by mise)
 mise test:watch             # alias: mise tw
 
 # Lint
