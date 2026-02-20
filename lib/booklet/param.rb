@@ -9,11 +9,11 @@ module Booklet
     prop :name, Symbol, :positional, reader: :public
     prop :label, _Nilable(String), writer: :public
     prop :description, _Nilable(String), writer: :public
-    prop :input_name, _Nilable(Symbol), writer: :public
+    prop :control_type, _Nilable(Symbol), writer: :public
     prop :value_type, _Nilable(Symbol), writer: :public
     prop :default_value, _Nilable(_Any), reader: :public
     prop :value, _Nilable(_Any), writer: :protected
-    prop :required, _Boolean, writer: :public, default: false
+    prop :required, _Boolean, writer: :public, reader: :public, default: false
     prop :options, _Union(Hash, Proc), default: -> { {} }
 
     def label
@@ -42,8 +42,8 @@ module Booklet
       @value || @default_value
     end
 
-    def input_name
-      @input_name || guess_input_name
+    def control_type
+      @control_type || guess_control_type
     end
 
     def input_choices
@@ -74,7 +74,7 @@ module Booklet
 
     def required? = !!@required
 
-    private def guess_input_name
+    private def guess_control_type
       if @value_type == :boolean || (@value_type.nil? && Helpers.boolean?(value))
         :checkbox
       else
@@ -83,15 +83,15 @@ module Booklet
     end
 
     private def guess_value_type
-      if input_name.in?([:toggle, :checkbox])
+      if control_type.in?([:toggle, :checkbox])
         :boolean
-      elsif input_name == :number
+      elsif control_type == :number
         :integer
       elsif Helpers.boolean?(value)
         :boolean
       elsif value.is_a?(Symbol)
         :symbol
-      elsif input_name.in?([:date, :"datetime-local"]) || value.is_a?(DateTime)
+      elsif control_type.in?([:date, :"datetime-local"]) || value.is_a?(DateTime)
         :datetime
       else
         :string

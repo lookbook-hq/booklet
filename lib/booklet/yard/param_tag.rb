@@ -15,14 +15,14 @@ module Booklet
         end
       end
 
-      def input_name = parts[:input_name]&.to_sym
+      def control_type = parts[:control_type]&.to_sym
 
       def description = parts[:description]
 
       def options_string = parts[:options_string] || super
 
       def value
-        {name:, value_type:, input_name:, description:, options_string:}
+        {name:, value_type:, control_type:, description:, options_string:}
       end
 
       alias_method :to_h, :value
@@ -58,7 +58,7 @@ module Booklet
         # Input type
         scanner.scan(/\s?(\w+)\s?/)
         if scanner.matched?
-          parts[:input_name] = scanner.captures.first
+          parts[:control_type] = scanner.captures.first
           last_pos = scanner.pos
         else
           scanner.pos = last_pos
