@@ -31,7 +31,7 @@ module Booklet
       spec.notes = TextSnippet.new(notes) if notes.present?
 
       tags = YARD::TagSet.new(class_object.tags)
-      spec.data.tap do |data|
+      spec.node_data.tap do |data|
         data.yard_object = class_object
         data.yard_tags = tags
       end
@@ -75,7 +75,7 @@ module Booklet
 
         scenario.params.push(params)
 
-        scenario.data.tap do |data|
+        scenario.node_data.tap do |data|
           data.yard_object = method_object
           data.yard_tags = YARD::TagSet.new([*default_tags, *method_object.tags])
         end

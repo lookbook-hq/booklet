@@ -36,7 +36,7 @@ module Booklet
 
     delegate :warnings, :errors, :warnings?, :errors?, to: :issues
 
-    def data = @data ||= Options.new({})
+    def node_data = @node_data ||= Options.new({})
 
     # @!group Ancestry
 

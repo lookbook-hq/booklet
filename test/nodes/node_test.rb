@@ -650,9 +650,9 @@ module Booklet
         end
       end
 
-      context "Node#data" do
+      context "Node#node_data" do
         should "return an Options instance" do
-          assert_kind_of Options, @root.data
+          assert_kind_of Options, @root.node_data
         end
       end
 

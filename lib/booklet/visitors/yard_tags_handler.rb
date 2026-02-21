@@ -3,22 +3,22 @@
 module Booklet
   class YardTagsHandler < Visitor
     visit SpecNode do |spec|
-      return spec if !spec.data.yard_tags || spec.errors? || visited?(spec)
+      return spec if !spec.node_data.yard_tags || spec.errors? || visited?(spec)
 
-      apply_tags(spec, spec.data.yard_object)
+      apply_tags(spec, spec.node_data.yard_object)
       visit_each(spec.scenarios)
       spec
     end
 
     visit ScenarioNode do |scenario|
-      return scenario if !scenario.data.yard_tags || scenario.errors? || visited?(scenario)
+      return scenario if !scenario.node_data.yard_tags || scenario.errors? || visited?(scenario)
 
-      apply_tags(scenario, scenario.spec.data.yard_object)
+      apply_tags(scenario, scenario.spec.node_data.yard_object)
     end
 
     private def apply_tags(node, yard_object)
       preview_class_name = yard_object.path
-      tags = node.data.yard_tags
+      tags = node.node_data.yard_tags
 
       node.tap do |n|
         node.label = tags.label_tag.value if tags.label_tag
