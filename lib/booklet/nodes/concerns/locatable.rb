@@ -16,10 +16,12 @@ module Booklet
         # Do nothing
       end
 
-      def dirty? = @ctime.before?(path.ctime)
-
-      def locatable? = true
+      alias_method :ref, :path
     end
+
+    def dirty? = @ctime.before?(path.ctime)
+
+    def locatable? = true
 
     class << self
       def entities = [FolderNode, AssetNode, PageNode, SpecNode, FileNode]

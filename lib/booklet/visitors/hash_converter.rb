@@ -43,7 +43,7 @@ module Booklet
         end
 
         props.with_defaults(
-          ref: ->(node) { node.ref.value },
+          ref: ->(node) { node.ref },
           type: ->(node) { node.type.name }
         )
       end

@@ -10,7 +10,7 @@ module Booklet
           raise ArgumentError, "Cannot create FileNode from directory #{path}"
         end
 
-        new(path, **props)
+        new(path:, **props)
       end
     end
   end

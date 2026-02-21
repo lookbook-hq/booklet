@@ -5,10 +5,6 @@ module Booklet
     include Enumerable
     include Comparable
 
-    prop :ref, String, :positional do |value|
-      value.to_s
-    end
-
     attr_reader :parent
     attr_accessor :dirty, :visited_by
     protected attr_writer :parent
@@ -20,7 +16,10 @@ module Booklet
       @visited_by = []
     end
 
-    def ref = @node_ref ||= NodeRef.new(@ref)
+    def ref
+      @ref ||= object_id
+      # raise "Node#ref must be defined by subclasses"
+    end
 
     def id = Helpers.hexdigest(tree_path { _1.ref })
 
@@ -144,8 +143,12 @@ module Booklet
     def previous_sibling
       return nil if root?
 
-      position = parent.children.index(self)
+      position = sibling_index
       parent.children.at(position - 1) if position&.positive?
+    end
+
+    def sibling_index
+      parent.children.index(self)
     end
 
     # @!endgroup

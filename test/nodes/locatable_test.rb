@@ -12,7 +12,7 @@ module Booklet
       context "instance methods" do
         setup do
           @fixture_file = Fixtures.file("mixed/overview.md")
-          @node = @locatable_class.new(@fixture_file)
+          @node = @locatable_class.new(path: @fixture_file)
         end
 
         context "Locatable#path" do

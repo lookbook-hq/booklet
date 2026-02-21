@@ -31,7 +31,7 @@ module Booklet
           .gsub("_preview", "")
           .gsub("_booklet", "")
           .gsub("_component", "")
-        new(path, name:, **props)
+        new(path:, name:, **props)
       end
     end
   end

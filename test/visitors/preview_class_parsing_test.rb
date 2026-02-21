@@ -15,7 +15,7 @@ module Booklet
 
       context "scenarios" do
         should "be created for each public instance method" do
-          assert_equal ["default", "with_notes", "no_notes", "with_tags"], @spec.scenarios.map { _1.ref.raw }
+          assert_equal ["default", "with_notes", "no_notes", "with_tags"], @spec.scenarios.map { _1.name }
 
           @spec.scenarios.each do |node|
             assert_kind_of ScenarioNode, node
@@ -23,13 +23,13 @@ module Booklet
         end
 
         should "not be created for private methods" do
-          refute @spec.scenarios.find { _1.ref == "not_a_scenario" }
+          refute @spec.scenarios.find { _1.name == "not_a_scenario" }
         end
       end
 
       context "`default` scenario" do
         setup do
-          @scenario = @spec.scenarios.find { _1.ref == "default" }
+          @scenario = @spec.scenarios.find { _1.name == "default" }
         end
 
         should "have a source snippet" do
@@ -46,7 +46,7 @@ module Booklet
 
       context "`with_notes` scenario" do
         setup do
-          @scenario = @spec.scenarios.find { _1.ref == "with_notes" }
+          @scenario = @spec.scenarios.find { _1.name == "with_notes" }
         end
 
         should "have notes" do
@@ -57,7 +57,7 @@ module Booklet
 
       context "`no_notes` scenario" do
         setup do
-          @scenario = @spec.scenarios.find { _1.ref == "no_notes" }
+          @scenario = @spec.scenarios.find { _1.name == "no_notes" }
         end
 
         should "not have notes" do
@@ -67,7 +67,7 @@ module Booklet
 
       context "scenario with tags" do
         setup do
-          @scenario = @spec.scenarios.find { _1.ref == "with_tags" }
+          @scenario = @spec.scenarios.find { _1.name == "with_tags" }
         end
 
         should "have notes" do
@@ -148,7 +148,7 @@ module Booklet
       end
 
       should "have a scenario added for each group" do
-        @group = @grouped_spec.scenarios.find { _1.ref == "sizes" }
+        @group = @grouped_spec.scenarios.find { _1.name == "sizes" }
 
         assert_kind_of ScenarioNode, @group
         assert_equal "Sizes", @group.label

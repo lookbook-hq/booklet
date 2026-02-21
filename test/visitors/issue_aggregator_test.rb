@@ -4,10 +4,10 @@ module Booklet
   class IssueAggregatorTest < Minitest::Test
     context "issue aggregator" do
       setup do
-        @root = Node.new("root")
-        @child = Node.new("child")
-        @child_2 = Node.new("child_2")
-        @grandchild = Node.new("grandchild")
+        @root = Node.new
+        @child = Node.new
+        @child_2 = Node.new
+        @grandchild = Node.new
 
         @root << @child
         @root << @child_2 << @grandchild

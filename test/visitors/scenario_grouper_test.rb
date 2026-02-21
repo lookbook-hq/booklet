@@ -10,21 +10,21 @@ module Booklet
 
       context "grouped scenarios" do
         should "create a combined ScenarioNode for each group" do
-          group = @spec.scenarios.find { _1.ref == "sizes" }
+          group = @spec.scenarios.find { _1.name == "sizes" }
 
           assert_kind_of ScenarioNode, group
         end
 
         should "label the group node from the group name" do
-          group = @spec.scenarios.find { _1.ref == "sizes" }
+          group = @spec.scenarios.find { _1.name == "sizes" }
 
           assert_equal "Sizes", group.label
         end
 
         should "hide individual grouped scenarios" do
-          small = @spec.scenarios.find { _1.ref == "small" }
-          medium = @spec.scenarios.find { _1.ref == "medium" }
-          large = @spec.scenarios.find { _1.ref == "large" }
+          small = @spec.scenarios.find { _1.name == "small" }
+          medium = @spec.scenarios.find { _1.name == "medium" }
+          large = @spec.scenarios.find { _1.name == "large" }
 
           assert small.hidden?
           assert medium.hidden?
@@ -32,8 +32,8 @@ module Booklet
         end
 
         should "not hide ungrouped scenarios" do
-          default = @spec.scenarios.find { _1.ref == "default" }
-          themed = @spec.scenarios.find { _1.ref == "themed" }
+          default = @spec.scenarios.find { _1.name == "default" }
+          themed = @spec.scenarios.find { _1.name == "themed" }
 
           refute default.hidden?
           refute themed.hidden?
@@ -42,9 +42,9 @@ module Booklet
 
       context "group node position" do
         should "insert group before the first grouped scenario" do
-          children_refs = @spec.children.map { _1.ref.raw }
-          sizes_index = children_refs.index("sizes")
-          small_index = children_refs.index("small")
+          child_names = @spec.children.map { _1.name }
+          sizes_index = child_names.index("sizes")
+          small_index = child_names.index("small")
 
           assert sizes_index < small_index
         end

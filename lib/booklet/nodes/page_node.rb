@@ -60,7 +60,7 @@ module Booklet
         path = Pathname(path)
         name = FileHelpers.file_name(path)
 
-        new(path, name:, **props)
+        new(path:, name:, **props)
       end
     end
   end

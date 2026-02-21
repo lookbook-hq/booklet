@@ -17,7 +17,7 @@ module Booklet
 
         name = FileHelpers.file_name(path)
 
-        new(path, name:, **props)
+        new(path:, name:, **props)
       end
     end
   end

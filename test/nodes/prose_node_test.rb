@@ -4,7 +4,7 @@ module Booklet
   class ProseNodeTest < Minitest::Test
     context "ProseNode" do
       setup do
-        @prose = ProseNode.new("prose-ref", "Some markdown content")
+        @prose = ProseNode.new("Some markdown content")
       end
 
       context "#snippet" do
@@ -19,7 +19,7 @@ module Booklet
 
       context "initialization" do
         should "coerce string to TextSnippet" do
-          prose = ProseNode.new("ref", "raw text")
+          prose = ProseNode.new("raw text")
           assert_kind_of TextSnippet, prose.snippet
         end
       end

@@ -4,7 +4,7 @@ module Booklet
   class ScenarioNodeTest < Minitest::Test
     context "ScenarioNode" do
       setup do
-        @scenario = ScenarioNode.new("example", name: "example")
+        @scenario = ScenarioNode.new(name: "example")
       end
 
       context "#spec" do

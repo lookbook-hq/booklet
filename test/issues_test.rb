@@ -4,7 +4,7 @@ module Booklet
   class IssuesTest < Minitest::Test
     context "Issues" do
       setup do
-        @node = Node.new("test-node")
+        @node = Node.new
         @issues = Issues.new
       end
 

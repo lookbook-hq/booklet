@@ -23,5 +23,7 @@ module Booklet
       params = view_context.try(:request)&.query_parameters || {}
       render(view_context, **params)
     end
+
+    alias_method :ref, :name
   end
 end

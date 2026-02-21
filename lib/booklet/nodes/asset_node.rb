@@ -18,7 +18,7 @@ module Booklet
           raise ArgumentError, "Cannot create AssetNode from file of mime type #{mime_type}"
         end
 
-        new(path, **props)
+        new(path:, **props)
       end
     end
   end

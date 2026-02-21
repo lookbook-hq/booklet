@@ -24,7 +24,7 @@ module Booklet
           current = @hash
           while ancestor_refs.any?
             ref = ancestor_refs.shift
-            entry = current[:children].find { _1[:ref] == ref.value }
+            entry = current[:children].find { _1[:ref] == ref }
             assert entry
             current = entry
           end

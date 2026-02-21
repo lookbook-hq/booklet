@@ -54,7 +54,7 @@ module Booklet
       name = method_object.name
       preview_class_name = method_object.parent.path
 
-      scenario = ScenarioNode.new(name, name:) do |**params|
+      scenario = ScenarioNode.new(name:) do |**params|
         preview_class = preview_class_name.constantize
         preview_class.new(self).public_send(name, **params)
       end

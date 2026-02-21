@@ -9,8 +9,8 @@ module Booklet
 
       spec.scenarios.group_by(&:group).each do |key, scenarios|
         unless key.nil?
-          ref = key.parameterize
-          scenario_group = ScenarioNode.new(ref, name: ref).tap do |group|
+          name = key.parameterize
+          scenario_group = ScenarioNode.new(name:).tap do |group|
             combined_source = scenarios.map { _1.source.to_s.strip }.join("\n\n")
 
             group.source = CodeSnippet.new(combined_source, lang: :ruby) # TODO: handle mixed languages

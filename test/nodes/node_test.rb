@@ -2,27 +2,15 @@ require "support/test_helper"
 
 module Booklet
   class NodeTest < Minitest::Test
-    context "class methods" do
-      context "NodeTest::new" do
-        should "succeeds when instatiated with a <String> value for the :ref property" do
-          assert_kind_of Node, Node.new("chunky-bacon")
-        end
-
-        should "raise an argument error if a :ref is not provided" do
-          assert_raises(ArgumentError) { Node.new }
-        end
-      end
-    end
-
     context "instance methods" do
       setup do
-        @root = Node.new("book")
-        @child = Node.new("section-1")
-        @child_2 = Node.new("section-2")
-        @child_3 = Node.new("section-3")
-        @grandchild = Node.new("chapter-1")
-        @greatgrandchild = Node.new("paragraph-1")
-        @greatgrandchild_2 = Node.new("paragraph-2")
+        @root = Node.new
+        @child = Node.new
+        @child_2 = Node.new
+        @child_3 = Node.new
+        @grandchild = Node.new
+        @greatgrandchild = Node.new
+        @greatgrandchild_2 = Node.new
       end
 
       context "Node#add_child" do
@@ -78,7 +66,7 @@ module Booklet
 
         should "return a copy of the children so they cannot be mutated" do
           children = @root.children
-          children << Node.new("blixy")
+          children << Node.new
 
           assert_equal 4, children.size
           assert_equal 3, @root.children.size
@@ -98,24 +86,24 @@ module Booklet
           @child_2 << @grandchild << @greatgrandchild
           @grandchild << @greatgrandchild_2
 
-          @node_refs = %w[book section-1 section-2 chapter-1 paragraph-1 paragraph-2 section-3]
+          @ordered_nodes = [@root, @child, @child_2, @grandchild, @greatgrandchild, @greatgrandchild_2, @child_3]
         end
 
         should "return a _depth-first_, _left-to-right_ iterator for [node, *descendants]" do
           assert_equal 7, @root.each_node.count
 
-          assert_equal @node_refs, @root.each_node.map(&:ref).map(&:raw)
+          assert_equal @ordered_nodes, @root.to_a
         end
 
         should "yield each node from [node, *descendants] when a block is provided" do
-          refs = []
+          nodes = []
 
           @root.each_node do |node|
             assert_kind_of Node, node
-            refs << node.ref.raw
+            nodes << node
           end
 
-          assert_equal @node_refs, refs
+          assert_equal @ordered_nodes, nodes
         end
       end
 
@@ -124,7 +112,6 @@ module Booklet
           @root << @child << @grandchild
 
           assert_equal @root, @grandchild.root
-          assert @root.ref == "book"
         end
       end
 
@@ -156,7 +143,7 @@ module Booklet
 
       context "issues" do
         setup do
-          @node = Node.new("issues")
+          @node = Node.new
         end
 
         context "Node#add_warning" do
@@ -245,7 +232,7 @@ module Booklet
           @root << @child
           @root << @child_2
 
-          new_child = Node.new("new-child")
+          new_child = Node.new
           @root.children = [new_child]
 
           assert_equal 1, @root.children.size
@@ -329,14 +316,13 @@ module Booklet
         should "find child by ref and type" do
           @root << @child
 
-          matching_node = Node.new("section-1")
-          assert @root.has_child?(matching_node)
+          assert @root.has_child?(@child)
         end
 
         should "return nil when child not found" do
           @root << @child
 
-          other = Node.new("not-present")
+          other = Node.new
           refute @root.has_child?(other)
         end
       end
@@ -644,9 +630,9 @@ module Booklet
         should "support block for custom value extraction" do
           @root << @child
 
-          path = @child.tree_path { _1.ref.raw }
+          path = @child.tree_path { _1.ref }
 
-          assert_equal "book/section-1", path
+          assert_equal "#{@root.ref}/#{@child.ref}", path
         end
       end
 
