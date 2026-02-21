@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/ordered_options"
+require "commonmarker"
 
 module Booklet
   class PageNode < Node
@@ -19,6 +20,8 @@ module Booklet
     prop :header, _Boolean?, writer: :public, default: false
     prop :landing, _Boolean?, writer: :public, default: false
 
+    prop :ast, _Nilable(_Union(Commonmarker::Node, Proc)), writer: :public
+
     def data=(value)
       @data = Options.new(value)
     end
@@ -34,6 +37,19 @@ module Booklet
     def header? = @header
 
     def landing? = @landing
+
+    def ast
+      case @ast
+      when Commonmarker::Node
+        @ast
+      when Proc
+        @ast = @ast.call
+      else
+        @ast
+      end
+    end
+
+    def to_html(...) = ast&.to_html(...)
 
     class << self
       def from(path, **props)

@@ -43,7 +43,7 @@ module Booklet
     end
 
     def page_visitors
-      [FrontmatterExtractor]
+      [FrontmatterExtractor, MarkdownParser]
     end
 
     def yard_parser
