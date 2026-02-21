@@ -33,7 +33,7 @@ module Booklet
         end
 
         should "have a source snippet" do
-          assert_kind_of MethodSnippet, @scenario.source
+          assert_kind_of CodeNode, @scenario.source
           assert_equal "render ExampleComponent.new", @scenario.source.to_s
         end
 
@@ -50,7 +50,7 @@ module Booklet
         end
 
         should "have notes" do
-          assert_kind_of TextSnippet, @scenario.notes
+          assert_kind_of TextNode, @scenario.notes
           assert_equal "Notes specific to the _with notes_ scenario.", @scenario.notes.to_s
         end
       end

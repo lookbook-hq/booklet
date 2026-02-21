@@ -6,9 +6,11 @@ module Booklet
     include AcceptsParams
     include AcceptsDisplayOptions
 
-    prop :notes, _Nilable(TextSnippet), reader: :public, writer: :public
+    # prop :notes, _Nilable(TextSnippet), reader: :public, writer: :public
 
-    permit_child_nodes :scenario, :prose
+    permit_child_nodes ScenarioNode, TextNode
+
+    def notes = children.grep(TextNode)&.first
 
     def scenarios = children.grep(ScenarioNode)
 

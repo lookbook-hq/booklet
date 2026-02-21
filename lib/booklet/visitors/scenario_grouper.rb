@@ -13,7 +13,8 @@ module Booklet
           scenario_group = ScenarioNode.new(name:).tap do |group|
             combined_source = scenarios.map { _1.source.to_s.strip }.join("\n\n")
 
-            group.source = CodeSnippet.new(combined_source, lang: :ruby) # TODO: handle mixed languages
+            group << CodeNode.new(combined_source, lang: :ruby) # TODO: handle mixed languages
+
             group.renderer = lambda do |**params|
               rendered_scenarios = scenarios.map { render(_1, **params).to_s.strip.html_safe }
               safe_join(rendered_scenarios, "\n\n")

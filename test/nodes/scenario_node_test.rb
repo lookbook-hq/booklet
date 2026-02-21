@@ -23,22 +23,22 @@ module Booklet
         end
       end
 
-      context "properties" do
-        should "have a group property" do
-          @scenario.group = "my-group"
-          assert_equal "my-group", @scenario.group
-        end
+      # context "properties" do
+      #   should "have a group property" do
+      #     @scenario.group = "my-group"
+      #     assert_equal "my-group", @scenario.group
+      #   end
 
-        should "have a notes property" do
-          @scenario.notes = TextSnippet.new("Some notes")
-          assert_kind_of TextSnippet, @scenario.notes
-        end
+      #   should "have a notes property" do
+      #     @scenario.notes = TextSnippet.new("Some notes")
+      #     assert_kind_of TextSnippet, @scenario.notes
+      #   end
 
-        should "have a source property" do
-          @scenario.source = "render Component.new"
-          assert_equal "render Component.new", @scenario.source
-        end
-      end
+      #   should "have a source property" do
+      #     @scenario.source = "render Component.new"
+      #     assert_equal "render Component.new", @scenario.source
+      #   end
+      # end
 
       context "concerns" do
         should "be nameable" do

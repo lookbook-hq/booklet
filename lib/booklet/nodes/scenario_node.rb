@@ -6,9 +6,15 @@ module Booklet
     include AcceptsDisplayOptions
 
     prop :group, _Nilable(String), reader: :public, writer: :public
-    prop :notes, _Nilable(TextSnippet), reader: :public, writer: :public
-    prop :source, _Nilable(_Union(CodeSnippet, String)), reader: :public, writer: :public
+    # prop :notes, _Nilable(TextSnippet), reader: :public, writer: :public
+    # prop :source, _Nilable(_Union(CodeSnippet, String)), reader: :public, writer: :public
     prop :renderer, Proc, :&, writer: :public, default: -> { -> {} }
+
+    permit_child_nodes TextNode, CodeNode
+
+    def notes = children.grep(TextNode)&.first
+
+    def source = children.grep(CodeNode)&.first
 
     def render(view_context = nil, **kwargs)
       params_hash = params.to_values_hash(kwargs)

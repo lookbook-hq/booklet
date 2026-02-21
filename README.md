@@ -150,7 +150,7 @@ entity_tree
   .accept(FrontmatterExtractor.new)
 ```
 
-* The `PreviewClassParser` visitor uses the [YARD parser](https://yardoc.org/) to extract annotations data from preview class files and creates and appends corresponding `ScenarioNode` and `ProseNode` children to the appropriate `SpecNode` instance.
+* The `PreviewClassParser` visitor uses the [YARD parser](https://yardoc.org/) to extract annotations data from preview class files and creates and appends corresponding `ScenarioNode` and `TextNode` children to the appropriate `SpecNode` instance.
 * The `FrontmatterExtractor` visitor extracts YAML-formatted 'frontmatter' from the contents of markdown files and updates the related `PageNode` instances with the parsed data.
 
 Additional entity node vistors can be applied here as needed to make changes to the entity tree nodes before the finalised entity tree is returned for use by the calling code. 
