@@ -43,7 +43,7 @@ module Booklet
     end
 
     def page_visitors
-      [FrontmatterExtractor, MarkdownParser]
+      [FrontmatterExtractor]
     end
 
     def yard_parser
@@ -51,6 +51,10 @@ module Booklet
         YardParser.define_tags(YARD::Tag.subclasses)
         YardParser.new
       end
+    end
+
+    def markdown
+      @markdown_parser ||= MarkdownParser.new
     end
 
     attr_writer :loader, :visitors, :validator_visitors, :spec_visitors, :page_visitors

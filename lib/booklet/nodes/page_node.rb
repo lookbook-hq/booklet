@@ -11,7 +11,6 @@ module Booklet
 
     EXTENSIONS = [".md", ".md.erb"]
 
-    prop :contents, _String?, writer: :public
     prop :data, _Nilable(Options), reader: :public do
       Options.new(_1)
     end
@@ -20,14 +19,10 @@ module Booklet
     prop :header, _Boolean?, writer: :public, default: false
     prop :landing, _Boolean?, writer: :public, default: false
 
-    prop :ast, _Nilable(_Union(Commonmarker::Node, Proc)), writer: :public
+    permit_child_nodes TextNode
 
     def data=(value)
       @data = Options.new(value)
-    end
-
-    def contents
-      @contents ||= File.read(path)
     end
 
     def hidden? = @hidden
@@ -38,18 +33,29 @@ module Booklet
 
     def landing? = @landing
 
-    def ast
-      case @ast
-      when Commonmarker::Node
-        @ast
-      when Proc
-        @ast = @ast.call
+    def contents = content_node&.to_s || ""
+
+    def contents=(str)
+      if content_node.present?
+        content_node.raw = str.to_s
       else
-        @ast
+        add_child(TextNode.new(str.to_s))
       end
     end
 
-    def to_html(...) = ast&.to_html(...)
+    def insert_child(child, ...)
+      if child.is_a?(TextNode) && content_node
+        raise "Pages can only have a single text node"
+      else
+        super
+      end
+    end
+
+    delegate :to_html, to: :content_node
+
+    protected def content_node
+      children.grep(TextNode).first
+    end
 
     class << self
       def from(path, **props)
@@ -59,8 +65,11 @@ module Booklet
 
         path = Pathname(path)
         name = FileHelpers.file_name(path)
+        contents = File.read(path)
 
-        new(path:, name:, **props)
+        page = new(path:, name:, **props)
+        page.contents = contents
+        page
       end
     end
   end

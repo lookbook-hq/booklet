@@ -7,12 +7,19 @@ module Booklet
     context "instance methods" do
       setup do
         @fixture_file = Fixtures.file("pages/basic_page.md")
+        @file_contents = File.read(@fixture_file)
         @page = subject.from(@fixture_file)
       end
 
       context "PageNode#contents" do
-        should "returns the page file contents as a string" do
-          assert_equal File.read(@fixture_file), @page.contents
+        should "return the page file contents as a string" do
+          assert_equal @file_contents, @page.contents
+        end
+      end
+
+      context "PageNode#to_html" do
+        should "convert the contents from markdown to html" do
+          assert @page.to_html.include?("<p>#{@file_contents.strip}</p>")
         end
       end
     end

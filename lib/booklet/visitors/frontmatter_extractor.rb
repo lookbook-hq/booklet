@@ -10,7 +10,7 @@ module Booklet
       return page if page.errors? || visited?(page)
 
       begin
-        frontmatter, contents = @parser.parse_file(page.path)
+        frontmatter, contents = @parser.parse(page.contents)
         frontmatter.each do |k, v|
           page.public_send("#{k}=", v)
         end

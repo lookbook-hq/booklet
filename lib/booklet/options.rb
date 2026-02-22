@@ -40,6 +40,10 @@ module Booklet
           value
         end
       end
+
+      def coerce_to_options(value) = Options.new(value.to_h)
+
+      def coerce = method(:coerce_to_options)
     end
   end
 end

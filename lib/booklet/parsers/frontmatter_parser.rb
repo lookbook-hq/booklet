@@ -4,11 +4,10 @@ module Booklet
   class FrontmatterParser < Booklet::Object
     FRONTMATTER_REGEX = /\A---(.|\n)*?---/
 
-    def parse_file(path)
-      contents = File.read(path)
+    def parse(str)
       [
-        FrontmatterParser.extract_frontmatter(contents),
-        FrontmatterParser.strip_frontmatter(contents)
+        FrontmatterParser.extract_frontmatter(str.to_s),
+        FrontmatterParser.strip_frontmatter(str.to_s)
       ]
     end
 

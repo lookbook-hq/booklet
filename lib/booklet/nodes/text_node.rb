@@ -1,10 +1,19 @@
 module Booklet
   class TextNode < Node
-    prop :raw, String, :positional, reader: :protected
-    prop :markdown, _Boolean, reader: :public, default: true
+    prop :raw, String, :positional, reader: :public, writer: :public
 
-    def ref = Helpers.hexdigest(raw)
+    def ref = "text_node_#{object_id}"
 
-    def to_s = raw
+    def to_ast
+      Booklet.markdown.parse(raw)
+    end
+
+    def to_html
+      Booklet.markdown.format(to_ast)
+    end
+
+    def to_s
+      raw.to_s
+    end
   end
 end

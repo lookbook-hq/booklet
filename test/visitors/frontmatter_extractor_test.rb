@@ -10,7 +10,7 @@ module Booklet
 
       context "PageNode#contents" do
         should "return the entire contents of the file" do
-          assert_equal File.read(@page_path).strip, @page.contents
+          assert_equal File.read(@page_path).strip, @page.contents.strip
         end
       end
     end

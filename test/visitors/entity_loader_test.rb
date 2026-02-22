@@ -11,7 +11,7 @@ module Booklet
       should "recursively create entity nodes for all files" do
         @root.accept(EntityLoader.new)
 
-        assert_equal Fixtures.files_within(@root_path).size, @root.descendants.size
+        assert_equal Fixtures.files_within(@root_path).size, @root.descendants.grep(Locatable).size
       end
 
       should "not create entities for ignored files" do
@@ -20,7 +20,7 @@ module Booklet
 
         assert_equal(
           Fixtures.files_within(@root_path).size - ignored_files.count,
-          @root.descendants.size
+          @root.descendants.grep(Locatable).size
         )
       end
 

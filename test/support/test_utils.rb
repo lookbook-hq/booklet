@@ -30,7 +30,7 @@ module TestUtils
     spec
   end
 
-  def page_from_fixture(path, visitors: [Booklet::FrontmatterExtractor, Booklet::MarkdownParser])
+  def page_from_fixture(path, visitors: [Booklet::FrontmatterExtractor])
     page = Booklet::PageNode.from(Fixtures.file(path))
     visitors.each { |v| page.accept(v.is_a?(Class) ? v.new : v) }
     page
