@@ -46,15 +46,15 @@ module Booklet
       [FrontmatterExtractor]
     end
 
-    def yard_parser
-      @yard_parser ||= begin
-        YardParser.define_tags(YARD::Tag.subclasses)
-        YardParser.new
+    def yard
+      @yard ||= begin
+        YARD::Parser.define_tags(YARD::Tag.subclasses)
+        YARD::Parser.new
       end
     end
 
     def markdown
-      @markdown_parser ||= MarkdownParser.new
+      @markdown ||= Markdown.new
     end
 
     attr_writer :loader, :visitors, :validator_visitors, :spec_visitors, :page_visitors

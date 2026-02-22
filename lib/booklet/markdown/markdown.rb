@@ -3,7 +3,7 @@
 require "commonmarker"
 
 module Booklet
-  class MarkdownParser < Booklet::Object
+  class Markdown < Booklet::Object
     prop :parse, Options, reader: :public, default: -> { {} }, &Options.coerce
     prop :render, Options, reader: :public, default: -> { {} }, &Options.coerce
     prop :extension, Options, reader: :public, default: -> { {} }, &Options.coerce

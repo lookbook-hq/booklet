@@ -20,7 +20,7 @@ module Booklet
       end
 
       begin
-        class_object = Booklet.yard_parser.parse_file(spec.path)
+        class_object = Booklet.yard.parse_file(spec.path)
       rescue => error
         spec.add_error(error)
       end
